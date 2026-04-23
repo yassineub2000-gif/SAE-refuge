@@ -23,7 +23,7 @@ def setup_company(ctx):
     b64_logo = b64encode(logo_content)
 
     values = {
-        'name': "test17",
+        'name': "refuge_aventuriers",
         'street': "",
         'zip': "",
         'city': "",

@@ -4,9 +4,9 @@ with open("VERSION") as fd:
     version = fd.read().strip()
 
 setup(
-    name="test17-odoo",
+    name="refuge-aventuriers-odoo",
     version=version,
-    description="test17 Odoo",
+    description="refuge_aventuriers Odoo",
     license="GNU Affero General Public License v3 or later (AGPLv3+)",
     author="Kal-It",
     author_email="info@kal-it.fr",

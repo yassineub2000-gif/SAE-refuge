@@ -5,6 +5,7 @@ migration:
         pre:
           - odoo -i base --stop-after-init --workers=0 --no-xmlrpc
           - anthem songs.install.pre::main
+          - odoo -i refuge_aventuriers,refuge_table_order,refuge_planning --stop-after-init --workers=0 --no-xmlrpc
       modes:
         sample:
           operations:
@@ -17,3 +18,6 @@ migration:
       addons:
         upgrade:
           - base
+          - refuge_aventuriers
+          - refuge_table_order
+          - refuge_planning

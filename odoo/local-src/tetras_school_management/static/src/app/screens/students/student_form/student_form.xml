@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-     <t t-name="tetras_school_management.StudentFormScreen">
-         <div t-on-click="() => this.tetras.showScreen('StudentListScreen')">Back</div>
-         <span>Name: <t t-esc="props.student.name" /></span>
-         <span>Phone: <t t-esc="props.student.phone" /></span>
-         <span>Email: <t t-esc="props.student.email" /></span>
-    </t>
-</templates>

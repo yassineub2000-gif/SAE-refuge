@@ -7,7 +7,7 @@ from anthem.lyrics.loaders import load_csv, load_csv_stream
 from anthem.lyrics.records import switch_company
 from pkg_resources import Requirement, resource_stream
 
-req = Requirement.parse('test17-odoo')
+req = Requirement.parse('refuge-aventuriers-odoo')
 
 
 def load_users_csv(ctx, path, delimiter=','):

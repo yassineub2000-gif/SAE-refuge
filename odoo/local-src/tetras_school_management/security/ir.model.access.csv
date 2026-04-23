@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-tetras_school_management.access_tetras_grade,access_tetras_grade,tetras_school_management.model_tetras_grade,base.group_user,1,1,1,1
-tetras_school_management.access_tetras_student,access_tetras_student,tetras_school_management.model_tetras_student,base.group_user,1,1,1,1
-tetras_school_management.access_tetras_teacher,access_tetras_teacher,tetras_school_management.model_tetras_teacher,base.group_user,1,1,1,1

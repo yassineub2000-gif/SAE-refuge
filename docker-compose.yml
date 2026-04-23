@@ -15,8 +15,8 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - 8069
-      - 8072
+      - "32776:8069"
+      - "32775:8072"
     volumes:
       - "data-odoo:/odoo/data/odoo"
       - "data-odoo-db-cache:/.cachedb"
@@ -32,7 +32,7 @@ services:
     environment:
       DB_USER: odoo
       DB_PASSWORD: odoo
-      DB_NAME: odoodb3
+      DB_NAME: refuge_aventuriers
       ADMIN_PASSWD: admin
       RUNNING_ENV: dev
       MARABUNTA_MODE: sample  # 'full' for the db with all the data

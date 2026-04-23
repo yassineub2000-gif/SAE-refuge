@@ -10,3 +10,7 @@ odoo/dev_requirements.txt
 
 # local dev composition
 docker-compose.override.yml
+
+# Python caches (équipe Refuge)
+**/__pycache__/
+*.pyc

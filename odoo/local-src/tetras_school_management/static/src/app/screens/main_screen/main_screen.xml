@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-     <t t-name="tetras_school_management.MainScreen">
-         <div class="student-button main-button"
-              t-on-click="() => tetras.showScreen('StudentListScreen')">Students</div>
-         <div class="teacher-button main-button"
-              t-on-click="() => tetras.showScreen('TeacherListScreen')">Teachers</div>
-    </t>
-</templates>

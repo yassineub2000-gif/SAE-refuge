@@ -1,9 +1,9 @@
-customer_name: test17
+customer_name: refuge_aventuriers
 odoo_version: '17.0'
-customer_shortname: test17
-repo_name: test17_kerp
+customer_shortname: refuge_aventuriers
+repo_name: refuge_aventuriers_kerp
 project_id: '0000'
-project_name: test17_kerp
-odoo_company_name: test17
+project_name: refuge_aventuriers_kerp
+odoo_company_name: refuge_aventuriers
 odoo_main_lang: fr_FR
 odoo_aux_langs: 
