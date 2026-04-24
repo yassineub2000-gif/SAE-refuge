@@ -1,0 +1,7 @@
+from . import res_partner
+from . import product_template
+from . import hr_employee
+from . import loyalty_card
+from . import pos_order
+from . import pos_session
+from . import refuge_demo_loader
