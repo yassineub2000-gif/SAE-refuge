@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_partner_form_refuge" model="ir.ui.view">
+    <field name="name">res.partner.form.refuge</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='internal_notes']" position="after">
+        <page string="Refuge des Aventuriers" name="refuge">
+          <group>
+            <field name="refuge_loyalty_points_initial"/>
+            <field name="refuge_last_order_date"/>
+            <field name="refuge_loyalty_expired" readonly="1"/>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

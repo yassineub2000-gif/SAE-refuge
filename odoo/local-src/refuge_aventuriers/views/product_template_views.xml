@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_product_template_form_refuge" model="ir.ui.view">
+    <field name="name">product.template.form.refuge</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='categ_id']" position="after">
+        <field name="refuge_is_cocktail"/>
+        <field name="refuge_unit_cost" widget="monetary"
+               options="{'currency_field': 'currency_id'}"/>
+        <field name="refuge_unit_margin" widget="monetary"
+               options="{'currency_field': 'currency_id'}"
+               decoration-success="refuge_unit_margin &gt; 0"
+               decoration-danger="refuge_unit_margin &lt;= 0"/>
+      </xpath>
+      <xpath expr="//field[@name='image_1920']" position="after">
+        <button name="action_refuge_refresh_image" type="object"
+                string="Actualiser depuis fichier / SVG"
+                class="btn-link"
+                help="Reprend l'image depuis refuge_aventuriers/static/src/img/products/&lt;xmlid&gt;.{jpg,png,webp}. Si absent, régénère le placeholder SVG."/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

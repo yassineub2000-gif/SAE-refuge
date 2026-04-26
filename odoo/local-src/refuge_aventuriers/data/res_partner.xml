@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="partner_sup_weihenstephaner" model="res.partner">
+    <field name="name">Weihenstephaner</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">Alte Akademie 2, 85354 Freising</field>
+    <field name="city">Freising</field>
+    <field name="email">orders@weihenstephaner.de</field>
+    <field name="phone">+49 8161 536 0</field>
+    <field name="comment">Délai livraison : 5 jours — 30 jours nets</field>
+  </record>
+  <record id="partner_sup_brasserie_du_mont_blanc" model="res.partner">
+    <field name="name">Brasserie du Mont Blanc</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">Zone Artisanale, 74700 Sallanches</field>
+    <field name="city">Sallanches</field>
+    <field name="email">contact@brasserie-montblanc.fr</field>
+    <field name="phone">04 50 58 10 23</field>
+    <field name="comment">Délai livraison : 3 jours — 30 jours nets</field>
+  </record>
+  <record id="partner_sup_il_cancelliere" model="res.partner">
+    <field name="name">IL CANCELLIERE</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">Contrada Perrazzone, 83040 AV</field>
+    <field name="city">Montemarano</field>
+    <field name="email">info@ilcancelliere.it</field>
+    <field name="phone">+39 0827 63024</field>
+    <field name="comment">Délai livraison : 7 jours — 45 jours nets</field>
+  </record>
+  <record id="partner_sup_loire_vins" model="res.partner">
+    <field name="name">Loire Vins</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">12 Quai de la Fosse, 44000 Nantes</field>
+    <field name="city">Nantes</field>
+    <field name="email">commercial@loire-vins.fr</field>
+    <field name="phone">02 40 12 34 56</field>
+    <field name="comment">Délai livraison : 4 jours — 30 jours nets</field>
+  </record>
+  <record id="partner_sup_maison_hugel" model="res.partner">
+    <field name="name">Maison Hugel</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">3 Rue de la 1ère Armée, 68340</field>
+    <field name="city">Riquewihr</field>
+    <field name="email">contact@hugel.com</field>
+    <field name="phone">03 89 47 92 15</field>
+    <field name="comment">Délai livraison : 5 jours — 30 jours nets</field>
+  </record>
+  <record id="partner_sup_metro" model="res.partner">
+    <field name="name">Metro</field>
+    <field name="is_company" eval="True"/>
+    <field name="supplier_rank">1</field>
+    <field name="street">Route de Lyon, 73000 Chambéry</field>
+    <field name="city">Chambéry</field>
+    <field name="email">chambery@metro.fr</field>
+    <field name="phone">04 79 60 00 00</field>
+    <field name="comment">Délai livraison : 1 jours — Comptant</field>
+  </record>
+  <record id="partner_cli_jean_martin" model="res.partner">
+    <field name="name">Jean Martin</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">jean.martin@email.fr</field>
+    <field name="phone">06 12 34 56 78</field>
+    <field name="comment">Client régulier, fan de Mojito · Inscrit le 12/01/2023 — Total dépensé historique : 680€</field>
+    <field name="refuge_loyalty_points_initial">340</field>
+  </record>
+  <record id="partner_cli_sophie_durand" model="res.partner">
+    <field name="name">Sophie Durand</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">s.durand@gmail.com</field>
+    <field name="phone">07 23 45 67 89</field>
+    <field name="comment">Inscrit le 05/03/2023 — Total dépensé historique : 250€</field>
+    <field name="refuge_loyalty_points_initial">125</field>
+  </record>
+  <record id="partner_cli_marc_leroy" model="res.partner">
+    <field name="name">Marc Leroy</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">marc.leroy@outlook.fr</field>
+    <field name="phone">06 34 56 78 90</field>
+    <field name="comment">VIP — palier 200 pts atteint · Inscrit le 18/06/2022 — Total dépensé historique : 1020€</field>
+    <field name="refuge_loyalty_points_initial">510</field>
+  </record>
+  <record id="partner_cli_elise_petit" model="res.partner">
+    <field name="name">Élise Petit</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">elise.petit@yahoo.fr</field>
+    <field name="phone">07 45 67 89 01</field>
+    <field name="comment">Inscrit le 01/02/2024 — Total dépensé historique : 120€</field>
+    <field name="refuge_loyalty_points_initial">60</field>
+  </record>
+  <record id="partner_cli_thomas_bernard" model="res.partner">
+    <field name="name">Thomas Bernard</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">t.bernard@hotmail.com</field>
+    <field name="phone">06 56 78 90 12</field>
+    <field name="comment">Inscrit le 14/09/2023 — Total dépensé historique : 176€</field>
+    <field name="refuge_loyalty_points_initial">88</field>
+  </record>
+  <record id="partner_cli_celine_moreau" model="res.partner">
+    <field name="name">Céline Moreau</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">celine.moreau@sfr.fr</field>
+    <field name="phone"></field>
+    <field name="comment">Palier 200 pts atteint · Inscrit le 20/11/2023 — Total dépensé historique : 420€</field>
+    <field name="refuge_loyalty_points_initial">210</field>
+  </record>
+  <record id="partner_cli_lucas_simon" model="res.partner">
+    <field name="name">Lucas Simon</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">lucas.simon@free.fr</field>
+    <field name="phone">06 78 90 12 34</field>
+    <field name="comment">Inscrit le 03/07/2023 — Total dépensé historique : 90€</field>
+    <field name="refuge_loyalty_points_initial">45</field>
+  </record>
+  <record id="partner_cli_aurore_michel" model="res.partner">
+    <field name="name">Aurore Michel</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">aurore.michel@gmail.com</field>
+    <field name="phone">07 89 01 23 45</field>
+    <field name="comment">Meilleure cliente — 3 ans d&#x27;ancienneté · Inscrit le 28/04/2022 — Total dépensé historique : 1360€</field>
+    <field name="refuge_loyalty_points_initial">680</field>
+  </record>
+  <record id="partner_cli_raphael_garcia" model="res.partner">
+    <field name="name">Raphaël Garcia</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">r.garcia@email.fr</field>
+    <field name="phone">06 90 12 34 56</field>
+    <field name="comment">Nouveau client · Inscrit le 11/01/2024 — Total dépensé historique : 60€</field>
+    <field name="refuge_loyalty_points_initial">30</field>
+  </record>
+  <record id="partner_cli_nathalie_roux" model="res.partner">
+    <field name="name">Nathalie Roux</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">nathalie.roux@laposte.net</field>
+    <field name="phone">07 01 23 45 67</field>
+    <field name="comment">Inscrit le 07/08/2023 — Total dépensé historique : 310€</field>
+    <field name="refuge_loyalty_points_initial">155</field>
+  </record>
+  <record id="partner_cli_kevin_blanc" model="res.partner">
+    <field name="name">Kevin Blanc</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">kevin.blanc@gmail.com</field>
+    <field name="phone">06 11 22 33 44</field>
+    <field name="comment">Inscrit le 22/10/2023 — Total dépensé historique : 190€</field>
+    <field name="refuge_loyalty_points_initial">95</field>
+  </record>
+  <record id="partner_cli_isabelle_fontaine" model="res.partner">
+    <field name="name">Isabelle Fontaine</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">i.fontaine@orange.fr</field>
+    <field name="phone">07 22 33 44 55</field>
+    <field name="comment">Aime les vins italiens · Inscrit le 14/05/2022 — Total dépensé historique : 840€</field>
+    <field name="refuge_loyalty_points_initial">420</field>
+  </record>
+  <record id="partner_cli_sebastien_henry" model="res.partner">
+    <field name="name">Sébastien Henry</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">s.henry@free.fr</field>
+    <field name="phone">06 33 44 55 66</field>
+    <field name="comment">Nouveau client · Inscrit le 30/03/2024 — Total dépensé historique : 30€</field>
+    <field name="refuge_loyalty_points_initial">15</field>
+  </record>
+  <record id="partner_cli_manon_girard" model="res.partner">
+    <field name="name">Manon Girard</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">manon.girard@outlook.fr</field>
+    <field name="phone">07 44 55 66 77</field>
+    <field name="comment">Inscrit le 09/12/2023 — Total dépensé historique : 140€</field>
+    <field name="refuge_loyalty_points_initial">70</field>
+  </record>
+  <record id="partner_cli_philippe_rousseau" model="res.partner">
+    <field name="name">Philippe Rousseau</field>
+    <field name="is_company" eval="False"/>
+    <field name="customer_rank">1</field>
+    <field name="email">p.rousseau@gmail.com</field>
+    <field name="phone">06 55 66 77 88</field>
+    <field name="comment">Inscrit le 15/02/2023 — Total dépensé historique : 560€</field>
+    <field name="refuge_loyalty_points_initial">280</field>
+  </record>
+</odoo>

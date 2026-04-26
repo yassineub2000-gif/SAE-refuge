@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="prod_vitus_50_cl" model="product.product">
+    <field name="name">Vitus 50 cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">2.95</field>
+    <field name="standard_price">2</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+  </record>
+  <record id="prod_blonde_du_mont_blanc_50cl" model="product.product">
+    <field name="name">Blonde du Mont Blanc 50cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">5</field>
+    <field name="standard_price">3.2</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+  </record>
+  <record id="prod_kellerbier_1516_50cl" model="product.product">
+    <field name="name">KELLERBIER 1516 50cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">2.9</field>
+    <field name="standard_price">1.9</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+  </record>
+  <record id="prod_biere_ambree_savoie_33cl" model="product.product">
+    <field name="name">Bière Ambrée Savoie 33cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">4.5</field>
+    <field name="standard_price">2.8</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+  </record>
+  <record id="prod_ipa_houblonnee_33cl" model="product.product">
+    <field name="name">IPA Houblonnée 33cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">5.5</field>
+    <field name="standard_price">3.5</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+    <field name="description_sale">Saisonnière</field>
+  </record>
+  <record id="prod_biere_sans_alcool_33cl" model="product.product">
+    <field name="name">Bière Sans Alcool 33cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_biere"/>
+    <field name="list_price">3.5</field>
+    <field name="standard_price">2.1</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_biere')])]"/>
+  </record>
+  <record id="prod_taurasi_nero_ne_75cl" model="product.product">
+    <field name="name">Taurasi &#x27;Nero Né&#x27; - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_rouge"/>
+    <field name="list_price">45</field>
+    <field name="standard_price">33</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_rouge')])]"/>
+    <field name="description_sale">Cuvée prestige</field>
+  </record>
+  <record id="prod_pinot_nero_75cl" model="product.product">
+    <field name="name">Pinot Nero - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_rouge"/>
+    <field name="list_price">11</field>
+    <field name="standard_price">6.7</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_rouge')])]"/>
+  </record>
+  <record id="prod_cotes_du_rhone_75cl" model="product.product">
+    <field name="name">Côtes du Rhône - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_rouge"/>
+    <field name="list_price">9.5</field>
+    <field name="standard_price">5.8</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_rouge')])]"/>
+  </record>
+  <record id="prod_malbec_argentine_75cl" model="product.product">
+    <field name="name">Malbec Argentine - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_rouge"/>
+    <field name="list_price">13</field>
+    <field name="standard_price">8.2</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_rouge')])]"/>
+  </record>
+  <record id="prod_muscadet_75cl" model="product.product">
+    <field name="name">Muscadet - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_blanc"/>
+    <field name="list_price">7</field>
+    <field name="standard_price">4.3</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_blanc')])]"/>
+  </record>
+  <record id="prod_chardonnay_75cl" model="product.product">
+    <field name="name">Chardonnay - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_blanc"/>
+    <field name="list_price">6.75</field>
+    <field name="standard_price">3.5</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_blanc')])]"/>
+  </record>
+  <record id="prod_sauvignon_blanc_75cl" model="product.product">
+    <field name="name">Sauvignon Blanc - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_blanc"/>
+    <field name="list_price">8.5</field>
+    <field name="standard_price">5.1</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_blanc')])]"/>
+  </record>
+  <record id="prod_riesling_alsace_75cl" model="product.product">
+    <field name="name">Riesling Alsace - 75cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_vin_blanc"/>
+    <field name="list_price">12</field>
+    <field name="standard_price">7.5</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_vin_blanc')])]"/>
+  </record>
+  <record id="prod_margarita" model="product.product">
+    <field name="name">Margarita</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">8</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">5 cl Tequila
+3 cl Cointreau
+2 cl Citron vert</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_mojito" model="product.product">
+    <field name="name">Mojito</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">10</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">4 cl Rhum Blanc
+1/2 Citron vert
+10 feuilles de menthe
+2 cl Sirop de canne
+10 cl Perrier</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_old_fashioned" model="product.product">
+    <field name="name">Old Fashioned</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">12</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">5 cl Whisky
+2 gouttes Angostura Bitters
+1 cl Sirop de canne
+1 tranche d&#x27;orange</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_cafe_bauju" model="product.product">
+    <field name="name">Café Bauju</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">6</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">5 cl Vodka
+15 cl Ginger beer
+1/2 Citron vert
+2 cl Sirop de Canne
+5 feuilles de Menthe</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_aperol_spritz" model="product.product">
+    <field name="name">Aperol Spritz</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">9</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">9 cl Prosecco
+6 cl Aperol
+3 cl Eau gazeuse
+1 tranche d&#x27;orange</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_cosmopolitan" model="product.product">
+    <field name="name">Cosmopolitan</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">11</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">4 cl Vodka
+2 cl Cointreau
+3 cl Cranberry
+1 cl Citron vert</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_negroni" model="product.product">
+    <field name="name">Negroni</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_cocktail"/>
+    <field name="list_price">11</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_cocktail')])]"/>
+    <field name="description_sale">3 cl Gin
+3 cl Campari
+3 cl Vermouth Rouge
+1 zeste d&#x27;orange</field>
+    <field name="refuge_is_cocktail" eval="True"/>
+  </record>
+  <record id="prod_verre_de_tequila" model="product.product">
+    <field name="name">Verre de Tequila</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_alcool_fort"/>
+    <field name="list_price">4</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_alcool_fort')])]"/>
+    <field name="description_sale">7 cl Tequila</field>
+  </record>
+  <record id="prod_verre_de_whisky" model="product.product">
+    <field name="name">Verre de Whisky</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_alcool_fort"/>
+    <field name="list_price">5</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_alcool_fort')])]"/>
+    <field name="description_sale">7 cl Whisky</field>
+  </record>
+  <record id="prod_verre_de_vodka" model="product.product">
+    <field name="name">Verre de Vodka</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_alcool_fort"/>
+    <field name="list_price">4.5</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_alcool_fort')])]"/>
+    <field name="description_sale">7 cl Vodka</field>
+  </record>
+  <record id="prod_verre_de_rhum" model="product.product">
+    <field name="name">Verre de Rhum</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_alcool_fort"/>
+    <field name="list_price">5</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_alcool_fort')])]"/>
+    <field name="description_sale">7 cl Rhum Blanc</field>
+  </record>
+  <record id="prod_verre_de_gin" model="product.product">
+    <field name="name">Verre de Gin</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_alcool_fort"/>
+    <field name="list_price">5.5</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="False"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_alcool_fort')])]"/>
+    <field name="description_sale">7 cl Gin</field>
+  </record>
+  <record id="prod_perrier_1l" model="product.product">
+    <field name="name">Perrier 1L</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_soft"/>
+    <field name="list_price">1.5</field>
+    <field name="standard_price">0.65</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_soft')])]"/>
+  </record>
+  <record id="prod_coca_cola_33cl" model="product.product">
+    <field name="name">Coca-Cola 33cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_soft"/>
+    <field name="list_price">2.5</field>
+    <field name="standard_price">0.8</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_soft')])]"/>
+  </record>
+  <record id="prod_jus_d_orange_20cl" model="product.product">
+    <field name="name">Jus d&#x27;orange 20cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_soft"/>
+    <field name="list_price">2</field>
+    <field name="standard_price">0.6</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_soft')])]"/>
+  </record>
+  <record id="prod_eau_minerale_50cl" model="product.product">
+    <field name="name">Eau minérale 50cl</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_soft"/>
+    <field name="list_price">1</field>
+    <field name="standard_price">0.3</field>
+    <field name="sale_ok" eval="True"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="True"/>
+    <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_cat_soft')])]"/>
+  </record>
+  <record id="prod_vodka_75cl" model="product.product">
+    <field name="name">Vodka (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">15</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_tequila_75cl" model="product.product">
+    <field name="name">Tequila (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">20</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_cointreau_1l" model="product.product">
+    <field name="name">Cointreau (1L)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">25</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_citron_vert_la_piece" model="product.product">
+    <field name="name">Citron vert (la pièce)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">0.5</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_rhum_blanc_75cl" model="product.product">
+    <field name="name">Rhum Blanc (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">21.75</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_feuilles_de_menthe" model="product.product">
+    <field name="name">Feuilles de Menthe</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">0</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+    <field name="description_sale">Produit frais</field>
+  </record>
+  <record id="prod_ginger_beer_1l" model="product.product">
+    <field name="name">Ginger Beer (1L)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">1</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_sirop_de_canne_70cl" model="product.product">
+    <field name="name">Sirop de canne (70cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">3.5</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_whisky_scotch_75cl" model="product.product">
+    <field name="name">Whisky Scotch (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">40</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_orange_la_piece" model="product.product">
+    <field name="name">Orange (la pièce)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">0.75</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_angostura_bitters_20cl" model="product.product">
+    <field name="name">Angostura Bitters (20cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">12</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_prosecco_75cl" model="product.product">
+    <field name="name">Prosecco (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">8</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_aperol_1l" model="product.product">
+    <field name="name">Aperol (1L)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">18</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_cranberry_1l" model="product.product">
+    <field name="name">Cranberry (1L)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">2.5</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_gin_75cl" model="product.product">
+    <field name="name">Gin (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">22</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_campari_75cl" model="product.product">
+    <field name="name">Campari (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">19</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+  <record id="prod_vermouth_rouge_75cl" model="product.product">
+    <field name="name">Vermouth Rouge (75cl)</field>
+    <field name="type">product</field>
+    <field name="categ_id" ref="cat_ingredient"/>
+    <field name="list_price">0</field>
+    <field name="standard_price">9</field>
+    <field name="sale_ok" eval="False"/>
+    <field name="purchase_ok" eval="True"/>
+    <field name="available_in_pos" eval="False"/>
+  </record>
+</odoo>

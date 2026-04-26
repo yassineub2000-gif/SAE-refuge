@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="supinfo_prod_vitus_50_cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_vitus_50_cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_weihenstephaner"/>
+    <field name="price">2</field>
+    <field name="delay">5</field>
+  </record>
+  <record id="supinfo_prod_blonde_du_mont_blanc_50cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_blonde_du_mont_blanc_50cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_brasserie_du_mont_blanc"/>
+    <field name="price">3.2</field>
+    <field name="delay">3</field>
+  </record>
+  <record id="supinfo_prod_kellerbier_1516_50cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_kellerbier_1516_50cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_weihenstephaner"/>
+    <field name="price">1.9</field>
+    <field name="delay">5</field>
+  </record>
+  <record id="supinfo_prod_biere_ambree_savoie_33cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_biere_ambree_savoie_33cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_brasserie_du_mont_blanc"/>
+    <field name="price">2.8</field>
+    <field name="delay">3</field>
+  </record>
+  <record id="supinfo_prod_ipa_houblonnee_33cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_ipa_houblonnee_33cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_brasserie_du_mont_blanc"/>
+    <field name="price">3.5</field>
+    <field name="delay">3</field>
+  </record>
+  <record id="supinfo_prod_biere_sans_alcool_33cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_biere_sans_alcool_33cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_weihenstephaner"/>
+    <field name="price">2.1</field>
+    <field name="delay">5</field>
+  </record>
+  <record id="supinfo_prod_taurasi_nero_ne_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_taurasi_nero_ne_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_il_cancelliere"/>
+    <field name="price">33</field>
+    <field name="delay">7</field>
+  </record>
+  <record id="supinfo_prod_pinot_nero_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_pinot_nero_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_il_cancelliere"/>
+    <field name="price">6.7</field>
+    <field name="delay">7</field>
+  </record>
+  <record id="supinfo_prod_cotes_du_rhone_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_cotes_du_rhone_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">5.8</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_malbec_argentine_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_malbec_argentine_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">8.2</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_muscadet_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_muscadet_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">4.3</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_chardonnay_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_chardonnay_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">3.5</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_sauvignon_blanc_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_sauvignon_blanc_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">5.1</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_riesling_alsace_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_riesling_alsace_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_maison_hugel"/>
+    <field name="price">7.5</field>
+    <field name="delay">5</field>
+  </record>
+  <record id="supinfo_prod_perrier_1l" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_perrier_1l_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.65</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_coca_cola_33cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_coca_cola_33cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.8</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_jus_d_orange_20cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_jus_d_orange_20cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.6</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_eau_minerale_50cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_eau_minerale_50cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.3</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_vodka_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_vodka_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">15</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_tequila_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_tequila_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">20</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_cointreau_1l" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_cointreau_1l_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">25</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_citron_vert_la_piece" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_citron_vert_la_piece_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.5</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_rhum_blanc_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_rhum_blanc_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">21.75</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_ginger_beer_1l" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_ginger_beer_1l_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">1</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_sirop_de_canne_70cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_sirop_de_canne_70cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">3.5</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_whisky_scotch_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_whisky_scotch_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">40</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_orange_la_piece" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_orange_la_piece_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">0.75</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_angostura_bitters_20cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_angostura_bitters_20cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">12</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_prosecco_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_prosecco_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_loire_vins"/>
+    <field name="price">8</field>
+    <field name="delay">4</field>
+  </record>
+  <record id="supinfo_prod_aperol_1l" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_aperol_1l_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">18</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_cranberry_1l" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_cranberry_1l_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">2.5</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_gin_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_gin_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">22</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_campari_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_campari_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">19</field>
+    <field name="delay">1</field>
+  </record>
+  <record id="supinfo_prod_vermouth_rouge_75cl" model="product.supplierinfo">
+    <field name="product_tmpl_id" ref="prod_vermouth_rouge_75cl_product_template"/>
+    <field name="partner_id" ref="partner_sup_metro"/>
+    <field name="price">9</field>
+    <field name="delay">1</field>
+  </record>
+</odoo>

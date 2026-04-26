@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="cat_biere" model="product.category">
+    <field name="name">Bière</field>
+  </record>
+  <record id="cat_vin_rouge" model="product.category">
+    <field name="name">Vin / Rouge</field>
+  </record>
+  <record id="cat_vin_blanc" model="product.category">
+    <field name="name">Vin / Blanc</field>
+  </record>
+  <record id="cat_cocktail" model="product.category">
+    <field name="name">Cocktail</field>
+  </record>
+  <record id="cat_alcool_fort" model="product.category">
+    <field name="name">Alcool Fort</field>
+  </record>
+  <record id="cat_soft" model="product.category">
+    <field name="name">Soft</field>
+  </record>
+  <record id="cat_ingredient" model="product.category">
+    <field name="name">Ingrédient</field>
+  </record>
+  <record id="pos_cat_biere" model="pos.category">
+    <field name="name">Bière</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_vin_rouge" model="pos.category">
+    <field name="name">Vin / Rouge</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_vin_blanc" model="pos.category">
+    <field name="name">Vin / Blanc</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_cocktail" model="pos.category">
+    <field name="name">Cocktail</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_alcool_fort" model="pos.category">
+    <field name="name">Alcool Fort</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_soft" model="pos.category">
+    <field name="name">Soft</field>
+    <field name="sequence">10</field>
+  </record>
+  <record id="pos_cat_ingredient" model="pos.category">
+    <field name="name">Ingrédient</field>
+    <field name="sequence">10</field>
+  </record>
+</odoo>
