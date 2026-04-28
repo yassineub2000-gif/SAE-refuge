@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_employee_form_refuge" model="ir.ui.view">
+    <field name="name">hr.employee.form.refuge</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='personal_information']" position="after">
+        <page string="Refuge — Planning" name="refuge_planning">
+          <group>
+            <field name="refuge_weekly_hours"/>
+            <field name="refuge_available_days"/>
+            <field name="refuge_hour_preference"/>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

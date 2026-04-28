@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="bom_prod_margarita" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_margarita_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_margarita_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_margarita"/>
+    <field name="product_id" ref="prod_tequila_75cl"/>
+    <field name="product_qty">0.0667</field>
+  </record>
+  <record id="bom_prod_margarita_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_margarita"/>
+    <field name="product_id" ref="prod_cointreau_1l"/>
+    <field name="product_qty">0.03</field>
+  </record>
+  <record id="bom_prod_margarita_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_margarita"/>
+    <field name="product_id" ref="prod_citron_vert_la_piece"/>
+    <field name="product_qty">0.0267</field>
+  </record>
+  <record id="bom_prod_mojito" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_mojito_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_mojito_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_mojito"/>
+    <field name="product_id" ref="prod_rhum_blanc_75cl"/>
+    <field name="product_qty">0.0533</field>
+  </record>
+  <record id="bom_prod_mojito_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_mojito"/>
+    <field name="product_id" ref="prod_citron_vert_la_piece"/>
+    <field name="product_qty">0.5</field>
+  </record>
+  <record id="bom_prod_mojito_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_mojito"/>
+    <field name="product_id" ref="prod_sirop_de_canne_70cl"/>
+    <field name="product_qty">0.0286</field>
+  </record>
+  <record id="bom_prod_mojito_l3" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_mojito"/>
+    <field name="product_id" ref="prod_perrier_1l"/>
+    <field name="product_qty">0.1</field>
+  </record>
+  <record id="bom_prod_old_fashioned" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_old_fashioned_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_old_fashioned_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_old_fashioned"/>
+    <field name="product_id" ref="prod_whisky_scotch_75cl"/>
+    <field name="product_qty">0.0667</field>
+  </record>
+  <record id="bom_prod_old_fashioned_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_old_fashioned"/>
+    <field name="product_id" ref="prod_angostura_bitters_20cl"/>
+    <field name="product_qty">0.01</field>
+  </record>
+  <record id="bom_prod_old_fashioned_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_old_fashioned"/>
+    <field name="product_id" ref="prod_sirop_de_canne_70cl"/>
+    <field name="product_qty">0.0143</field>
+  </record>
+  <record id="bom_prod_cafe_bauju" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_cafe_bauju_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_cafe_bauju_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cafe_bauju"/>
+    <field name="product_id" ref="prod_vodka_75cl"/>
+    <field name="product_qty">0.0667</field>
+  </record>
+  <record id="bom_prod_cafe_bauju_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cafe_bauju"/>
+    <field name="product_id" ref="prod_ginger_beer_1l"/>
+    <field name="product_qty">0.15</field>
+  </record>
+  <record id="bom_prod_cafe_bauju_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cafe_bauju"/>
+    <field name="product_id" ref="prod_citron_vert_la_piece"/>
+    <field name="product_qty">0.5</field>
+  </record>
+  <record id="bom_prod_cafe_bauju_l3" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cafe_bauju"/>
+    <field name="product_id" ref="prod_sirop_de_canne_70cl"/>
+    <field name="product_qty">0.0286</field>
+  </record>
+  <record id="bom_prod_aperol_spritz" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_aperol_spritz_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_aperol_spritz_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_aperol_spritz"/>
+    <field name="product_id" ref="prod_prosecco_75cl"/>
+    <field name="product_qty">0.12</field>
+  </record>
+  <record id="bom_prod_aperol_spritz_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_aperol_spritz"/>
+    <field name="product_id" ref="prod_aperol_1l"/>
+    <field name="product_qty">0.06</field>
+  </record>
+  <record id="bom_prod_aperol_spritz_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_aperol_spritz"/>
+    <field name="product_id" ref="prod_perrier_1l"/>
+    <field name="product_qty">0.03</field>
+  </record>
+  <record id="bom_prod_cosmopolitan" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_cosmopolitan_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_cosmopolitan_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cosmopolitan"/>
+    <field name="product_id" ref="prod_vodka_75cl"/>
+    <field name="product_qty">0.0533</field>
+  </record>
+  <record id="bom_prod_cosmopolitan_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cosmopolitan"/>
+    <field name="product_id" ref="prod_cointreau_1l"/>
+    <field name="product_qty">0.02</field>
+  </record>
+  <record id="bom_prod_cosmopolitan_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cosmopolitan"/>
+    <field name="product_id" ref="prod_cranberry_1l"/>
+    <field name="product_qty">0.03</field>
+  </record>
+  <record id="bom_prod_cosmopolitan_l3" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_cosmopolitan"/>
+    <field name="product_id" ref="prod_citron_vert_la_piece"/>
+    <field name="product_qty">0.0133</field>
+  </record>
+  <record id="bom_prod_negroni" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_negroni_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_negroni_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_negroni"/>
+    <field name="product_id" ref="prod_gin_75cl"/>
+    <field name="product_qty">0.04</field>
+  </record>
+  <record id="bom_prod_negroni_l1" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_negroni"/>
+    <field name="product_id" ref="prod_campari_75cl"/>
+    <field name="product_qty">0.04</field>
+  </record>
+  <record id="bom_prod_negroni_l2" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_negroni"/>
+    <field name="product_id" ref="prod_vermouth_rouge_75cl"/>
+    <field name="product_qty">0.04</field>
+  </record>
+  <record id="bom_prod_verre_de_tequila" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_verre_de_tequila_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_verre_de_tequila_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_verre_de_tequila"/>
+    <field name="product_id" ref="prod_tequila_75cl"/>
+    <field name="product_qty">0.0933</field>
+  </record>
+  <record id="bom_prod_verre_de_whisky" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_verre_de_whisky_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_verre_de_whisky_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_verre_de_whisky"/>
+    <field name="product_id" ref="prod_whisky_scotch_75cl"/>
+    <field name="product_qty">0.0933</field>
+  </record>
+  <record id="bom_prod_verre_de_vodka" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_verre_de_vodka_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_verre_de_vodka_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_verre_de_vodka"/>
+    <field name="product_id" ref="prod_vodka_75cl"/>
+    <field name="product_qty">0.0933</field>
+  </record>
+  <record id="bom_prod_verre_de_rhum" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_verre_de_rhum_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_verre_de_rhum_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_verre_de_rhum"/>
+    <field name="product_id" ref="prod_rhum_blanc_75cl"/>
+    <field name="product_qty">0.0933</field>
+  </record>
+  <record id="bom_prod_verre_de_gin" model="mrp.bom">
+    <field name="product_tmpl_id" ref="prod_verre_de_gin_product_template"/>
+    <field name="product_qty">1</field>
+    <field name="type">phantom</field>
+  </record>
+  <record id="bom_prod_verre_de_gin_l0" model="mrp.bom.line">
+    <field name="bom_id" ref="bom_prod_verre_de_gin"/>
+    <field name="product_id" ref="prod_gin_75cl"/>
+    <field name="product_qty">0.0933</field>
+  </record>
+</odoo>

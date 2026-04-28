@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+  <record id="loyalty_refuge_program" model="loyalty.program">
+    <field name="name">Programme Fidélité — Refuge des Aventuriers</field>
+    <field name="program_type">loyalty</field>
+    <field name="applies_on">both</field>
+    <field name="trigger">auto</field>
+    <field name="portal_visible" eval="True"/>
+  </record>
+  <record id="loyalty_refuge_rule_1pt" model="loyalty.rule">
+    <field name="program_id" ref="loyalty_refuge_program"/>
+    <field name="reward_point_mode">money</field>
+    <field name="reward_point_amount">1.0</field>
+    <field name="minimum_amount">0</field>
+  </record>
+  <!-- Palier 50 pts: 5 % -->
+  <record id="loyalty_refuge_reward_50" model="loyalty.reward">
+    <field name="program_id" ref="loyalty_refuge_program"/>
+    <field name="description">5 % de réduction (palier 50 pts)</field>
+    <field name="reward_type">discount</field>
+    <field name="discount">5</field>
+    <field name="discount_mode">percent</field>
+    <field name="discount_applicability">order</field>
+    <field name="required_points">50</field>
+  </record>
+  <!-- Palier 100 pts: 10 % -->
+  <record id="loyalty_refuge_reward_100" model="loyalty.reward">
+    <field name="program_id" ref="loyalty_refuge_program"/>
+    <field name="description">10 % de réduction (palier 100 pts)</field>
+    <field name="reward_type">discount</field>
+    <field name="discount">10</field>
+    <field name="discount_mode">percent</field>
+    <field name="discount_applicability">order</field>
+    <field name="required_points">100</field>
+  </record>
+  <!-- Palier 200 pts: boisson offerte valeur max 8 € -->
+  <record id="loyalty_refuge_reward_200" model="loyalty.reward">
+    <field name="program_id" ref="loyalty_refuge_program"/>
+    <field name="description">Boisson offerte — valeur max 8 € (palier 200 pts)</field>
+    <field name="reward_type">discount</field>
+    <field name="discount">8</field>
+    <field name="discount_mode">per_order</field>
+    <field name="discount_applicability">order</field>
+    <field name="required_points">200</field>
+  </record>
+
+</odoo>
