@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <function model="refuge.demo.loader" name="load_refuge_core_demo"/>
+</odoo>

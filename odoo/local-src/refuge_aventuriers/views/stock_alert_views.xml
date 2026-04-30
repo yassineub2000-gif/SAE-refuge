@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="action_refuge_stock_alert" model="ir.actions.act_window">
+    <field name="name">Alertes stock minimum</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('refuge_stock_alert', '=', True)]</field>
+    <field name="context">{'search_default_filter_to_purchase': 1}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">Aucun produit en alerte.</p>
+      <p>Les ingrédients dont la quantité disponible est sous le seuil défini
+         par leur règle de réapprovisionnement apparaîtront ici.</p>
+    </field>
+  </record>
+
+  <record id="view_product_template_tree_refuge_alert" model="ir.ui.view">
+    <field name="name">product.template.tree.refuge.alert</field>
+    <field name="model">product.template</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+      <tree string="Alertes stock minimum"
+            decoration-danger="refuge_stock_alert"
+            create="false">
+        <field name="name"/>
+        <field name="categ_id"/>
+        <field name="qty_available"/>
+        <field name="uom_id"/>
+        <field name="refuge_unit_cost" widget="monetary"
+               options="{'currency_field': 'currency_id'}"/>
+        <field name="refuge_stock_alert" invisible="1"/>
+        <field name="currency_id" invisible="1"/>
+      </tree>
+    </field>
+  </record>
+
+  <menuitem id="menu_refuge_stock_alert"
+            name="Alertes stock"
+            parent="refuge_aventuriers.menu_refuge_root"
+            action="action_refuge_stock_alert"
+            sequence="40"/>
+</odoo>

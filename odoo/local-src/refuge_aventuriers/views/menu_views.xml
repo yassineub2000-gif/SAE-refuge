@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <menuitem id="menu_refuge_root"
+            name="Le Refuge des Aventuriers"
+            sequence="3"
+            web_icon="refuge_aventuriers,static/description/icon.png"/>
+
+  <record id="action_refuge_menu_products" model="ir.actions.act_window">
+    <field name="name">Carte</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="domain">[('available_in_pos', '=', True)]</field>
+  </record>
+
+  <menuitem id="menu_refuge_menu"
+            name="Carte"
+            parent="menu_refuge_root"
+            action="action_refuge_menu_products"
+            sequence="35"/>
+
+  <record id="action_refuge_menu_app" model="ir.actions.act_url">
+    <field name="name">Application menu client (OWL)</field>
+    <field name="url">/refuge/menu</field>
+    <field name="target">new</field>
+  </record>
+  <menuitem id="menu_refuge_menu_app"
+            name="App OWL Menu"
+            parent="menu_refuge_menu"
+            action="action_refuge_menu_app"
+            sequence="10"/>
+</odoo>
