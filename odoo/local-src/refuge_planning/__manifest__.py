@@ -1,0 +1,41 @@
+{
+    "name": "Refuge des Aventuriers — Planning (OWL)",
+    "summary": "Saisie des disponibilités employés et génération automatique du planning "
+               "hebdomadaire respectant les contraintes légales (10h/j, 11h repos, 20h/sem).",
+    "version": "17.0.1.0.0",
+    "author": "Équipe SAÉ 6.Integ.01",
+    "license": "AGPL-3",
+    "category": "Human Resources",
+    "depends": [
+        "base",
+        "web",
+        "hr",
+        "refuge_aventuriers",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/refuge_availability_data.xml",
+        "data/refuge_planning_setup.xml",
+        "views/refuge_planning_views.xml",
+        "views/assets.xml",
+    ],
+    "assets": {
+        "refuge_planning.assets_app": [
+            ("include", "web._assets_helpers"),
+            ("include", "web._assets_backend_helpers"),
+            "web/static/src/scss/pre_variables.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            ("include", "web._assets_bootstrap_backend"),
+            "web/static/src/libs/fontawesome/css/font-awesome.css",
+            "web/static/src/module_loader.js",
+            "web/static/lib/luxon/luxon.js",
+            "web/static/lib/owl/owl.js",
+            "web/static/lib/owl/odoo_module.js",
+            ("include", "web._assets_core"),
+            ("remove", "web/static/src/core/errors/error_handlers.js"),
+            "refuge_planning/static/src/**/*",
+        ],
+    },
+    "application": True,
+    "installable": True,
+}

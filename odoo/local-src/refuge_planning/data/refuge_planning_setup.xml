@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <function model="refuge.planning.shift" name="load_demo_planning"/>
+</odoo>

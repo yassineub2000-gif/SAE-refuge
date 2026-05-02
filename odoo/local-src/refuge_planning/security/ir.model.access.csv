@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_refuge_avail_user,refuge availability user,model_refuge_planning_availability,base.group_user,1,0,0,0
+access_refuge_avail_hr,refuge availability hr,model_refuge_planning_availability,hr.group_hr_user,1,1,1,1
+access_refuge_shift_user,refuge shift user,model_refuge_planning_shift,base.group_user,1,0,0,0
+access_refuge_shift_hr,refuge shift hr,model_refuge_planning_shift,hr.group_hr_user,1,1,1,1
+access_refuge_gen_hr,refuge generator hr,model_refuge_planning_generator,hr.group_hr_user,1,1,1,1

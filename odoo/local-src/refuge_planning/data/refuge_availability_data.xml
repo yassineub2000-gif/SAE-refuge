@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="avail_pierre_leblanc_w1" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">1</field>
+    <field name="status">available</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w2" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">2</field>
+    <field name="status">available</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w3" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">3</field>
+    <field name="status">available</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w4" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">4</field>
+    <field name="status">available</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w5" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">5</field>
+    <field name="status">available</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w6" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">6</field>
+    <field name="status">on_request</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_pierre_leblanc_w0" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
+    <field name="weekday">0</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">morning</field>
+  </record>
+  <record id="avail_marlene_dupont_w1" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">1</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w2" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">2</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w3" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">3</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w4" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">4</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w5" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">5</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w6" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">6</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_marlene_dupont_w0" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_marlene_dupont"/>
+    <field name="weekday">0</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w1" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">1</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w2" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">2</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w3" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">3</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w4" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">4</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w5" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">5</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w6" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">6</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_anthony_faure_w0" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_anthony_faure"/>
+    <field name="weekday">0</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w1" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">1</field>
+    <field name="status">on_request</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w2" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">2</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w3" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">3</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w4" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">4</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w5" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">5</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w6" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">6</field>
+    <field name="status">available</field>
+    <field name="hour_preference">evening</field>
+  </record>
+  <record id="avail_julie_perrin_w0" model="refuge.planning.availability">
+    <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
+    <field name="weekday">0</field>
+    <field name="status">unavailable</field>
+    <field name="hour_preference">evening</field>
+  </record>
+</odoo>
