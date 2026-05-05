@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.PlanningApp">
+    <div class="refuge-planning-root">
+      <header class="refuge-planning-header">
+        <h1>Planning — Le Refuge des Aventuriers</h1>
+        <div class="refuge-planning-nav">
+          <button class="refuge-btn refuge-btn-ghost" t-on-click="() => this.changeWeek(-7)">← Semaine précédente</button>
+          <span class="refuge-planning-week">Semaine du <t t-esc="state.weekStart"/></span>
+          <button class="refuge-btn refuge-btn-ghost" t-on-click="() => this.changeWeek(7)">Semaine suivante →</button>
+          <button class="refuge-btn refuge-btn-primary" t-on-click="generate"
+                  t-att-disabled="state.generating">
+            <t t-if="state.generating">Génération…</t>
+            <t t-else="">Générer le planning</t>
+          </button>
+        </div>
+      </header>
+
+      <div t-if="state.error" class="refuge-planning-error">Erreur : <t t-esc="state.error"/></div>
+      <div t-if="state.uncovered.length" class="refuge-planning-warning">
+        ⚠ Créneaux non couverts :
+        <ul>
+          <li t-foreach="state.uncovered" t-as="u" t-key="u[0] + '-' + u[1]">
+            <t t-esc="u[0]"/> — <t t-esc="u[1]"/>
+          </li>
+        </ul>
+      </div>
+
+      <section class="refuge-planning-section">
+        <h2>Disponibilités</h2>
+        <AvailabilityGrid employees="state.employees"
+                          availabilities="state.availabilities"
+                          weekdays="weekdayOrdered"
+                          weekdayLabels="weekdayLabels"
+                          onChange.bind="setAvailability"
+                          onChangePref.bind="setEmployeePreference"/>
+      </section>
+
+      <section class="refuge-planning-section">
+        <h2>Ajout manuel</h2>
+        <div class="refuge-manual-form">
+          <select t-att-value="state.manualShift.employee_id"
+                  t-on-change="(ev) => this.updateManualShift('employee_id', ev)">
+            <option value="">Choisir un employé</option>
+            <option t-foreach="state.employees" t-as="emp" t-key="emp.id" t-att-value="emp.id">
+              <t t-esc="emp.name"/>
+            </option>
+          </select>
+          <input type="date" t-att-value="state.manualShift.date"
+                 t-on-input="(ev) => this.updateManualShift('date', ev)"/>
+          <input type="number" min="0" max="23.5" step="0.5" t-att-value="state.manualShift.start_time"
+                 t-on-input="(ev) => this.updateManualShift('start_time', ev)"/>
+          <input type="number" min="0" max="23.5" step="0.5" t-att-value="state.manualShift.end_time"
+                 t-on-input="(ev) => this.updateManualShift('end_time', ev)"/>
+          <input type="text" placeholder="Note" t-att-value="state.manualShift.notes"
+                 t-on-input="(ev) => this.updateManualShift('notes', ev)"/>
+          <button class="refuge-btn refuge-btn-primary" t-on-click="createManualShift"
+                  t-att-disabled="!state.manualShift.employee_id">
+            Ajouter un shift
+          </button>
+        </div>
+        <p class="refuge-grid-help">Horaires au format décimal Odoo : 10 = 10h00, 18.5 = 18h30.</p>
+      </section>
+
+      <section class="refuge-planning-section">
+        <h2>Planning proposé</h2>
+        <ShiftTable shifts="state.shifts"
+                    employees="state.employees"
+                    weekStart="state.weekStart"
+                    onSetState.bind="setShiftState"
+                    onDelete.bind="deleteShift"/>
+      </section>
+    </div>
+  </t>
+
+</templates>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="planning_page" name="Refuge — Planning">&lt;!DOCTYPE html&gt;
+    <html>
+      <head>
+        <title>Le Refuge — Planning</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script type="text/javascript">
+          var odoo = <t t-out="json.dumps({
+            'csrf_token': request.csrf_token(None),
+            '__session_info__': request.env['ir.http'].session_info(),
+            'debug': debug,
+          })"/>;
+          odoo.loadMenusPromise = Promise.resolve();
+        </script>
+        <t t-call-assets="refuge_planning.assets_app"/>
+      </head>
+      <body class="refuge-planning">
+        <div id="refuge-planning-root"/>
+      </body>
+    </html>
+  </template>
+</odoo>

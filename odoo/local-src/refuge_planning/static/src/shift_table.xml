@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.ShiftTable">
+    <div class="refuge-shift-week">
+      <div class="refuge-shift-day" t-foreach="weekDays" t-as="d" t-key="d.iso">
+        <div class="refuge-shift-day-head"><t t-esc="d.label"/></div>
+        <div class="refuge-shift-day-body">
+          <t t-foreach="shiftsFor(d.iso)" t-as="s" t-key="s.id">
+            <div class="refuge-shift-card" t-att-class="s.is_generated ? 'generated' : 'manual'">
+              <div class="refuge-shift-emp"><t t-esc="s.employee_name"/></div>
+              <div class="refuge-shift-time">
+                <t t-esc="formatHour(s.start_time)"/> → <t t-esc="formatHour(s.end_time)"/>
+              </div>
+              <div class="refuge-shift-dur"><t t-esc="s.duration.toFixed(1)"/> h</div>
+              <div class="refuge-shift-state"><t t-esc="stateLabel(s.state)"/></div>
+              <div t-if="s.notes" class="refuge-shift-notes"><t t-esc="s.notes"/></div>
+              <div class="refuge-shift-actions">
+                <button class="refuge-btn refuge-btn-ghost" t-if="s.state !== 'confirmed'"
+                        t-on-click="() => props.onSetState(s.id, 'confirmed')">Valider</button>
+                <button class="refuge-btn refuge-btn-ghost" t-if="s.state !== 'draft'"
+                        t-on-click="() => props.onSetState(s.id, 'draft')">Brouillon</button>
+                <button class="refuge-btn refuge-btn-ghost" t-if="s.state !== 'cancelled'"
+                        t-on-click="() => props.onSetState(s.id, 'cancelled')">Annuler</button>
+                <button class="refuge-btn refuge-btn-ghost"
+                        t-on-click="() => props.onDelete(s.id)">Supprimer</button>
+              </div>
+            </div>
+          </t>
+          <div t-if="!shiftsFor(d.iso).length" class="refuge-shift-empty">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="refuge-shift-totals">
+      <h3>Total heures hebdo par employé</h3>
+      <table>
+        <tr t-foreach="props.employees" t-as="e" t-key="e.id">
+          <td><t t-esc="e.name"/></td>
+          <td class="refuge-total-value">
+            <t t-esc="(totalHoursPerEmployee()[e.id] || 0).toFixed(1)"/> / <t t-esc="e.weekly_hours.toFixed(0)"/> h
+          </td>
+        </tr>
+      </table>
+    </div>
+  </t>
+
+</templates>

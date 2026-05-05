@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.AvailabilityGrid">
+    <table class="refuge-grid">
+      <thead>
+        <tr>
+          <th>Employé</th>
+          <th t-foreach="props.weekdays" t-as="w" t-key="w">
+            <t t-esc="props.weekdayLabels[w]"/>
+          </th>
+          <th>Préférence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr t-foreach="props.employees" t-as="emp" t-key="emp.id">
+          <td><strong><t t-esc="emp.name"/></strong></td>
+          <td t-foreach="props.weekdays" t-as="w" t-key="w"
+              t-attf-class="refuge-grid-cell {{ labelFor(statusFor(emp.id, w)).cls }}"
+              t-on-click="() => this.cycleStatus(emp.id, w)"
+              t-att-title="labelFor(statusFor(emp.id, w)).title">
+            <t t-esc="labelFor(statusFor(emp.id, w)).label"/>
+          </td>
+          <td>
+            <select t-on-change="(ev) => this.changePref(emp.id, ev)"
+                    t-att-value="employeePref(emp.id)">
+              <option value="flexible">Flexible</option>
+              <option value="morning">Matin</option>
+              <option value="evening">Soir</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="refuge-grid-help">Cliquer sur une case pour basculer O / ~ / ✕.</p>
+  </t>
+
+</templates>

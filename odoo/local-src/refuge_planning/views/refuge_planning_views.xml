@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Disponibilités -->
+  <record id="view_refuge_availability_tree" model="ir.ui.view">
+    <field name="name">refuge.planning.availability.tree</field>
+    <field name="model">refuge.planning.availability</field>
+    <field name="arch" type="xml">
+      <tree string="Disponibilités" editable="bottom">
+        <field name="employee_id"/>
+        <field name="weekday"/>
+        <field name="status"/>
+        <field name="hour_preference"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_refuge_availability_form" model="ir.ui.view">
+    <field name="name">refuge.planning.availability.form</field>
+    <field name="model">refuge.planning.availability</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="employee_id"/>
+            <field name="weekday"/>
+            <field name="status"/>
+            <field name="hour_preference"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_refuge_availability" model="ir.actions.act_window">
+    <field name="name">Disponibilités</field>
+    <field name="res_model">refuge.planning.availability</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Shifts -->
+  <record id="view_refuge_shift_tree" model="ir.ui.view">
+    <field name="name">refuge.planning.shift.tree</field>
+    <field name="model">refuge.planning.shift</field>
+    <field name="arch" type="xml">
+      <tree string="Shifts" decoration-info="state=='draft'" decoration-success="state=='confirmed'"
+            decoration-muted="state=='cancelled'">
+        <field name="date"/>
+        <field name="employee_id"/>
+        <field name="start_time" widget="float_time"/>
+        <field name="end_time" widget="float_time"/>
+        <field name="duration" widget="float_time"/>
+        <field name="state"/>
+        <field name="is_generated"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_refuge_shift_form" model="ir.ui.view">
+    <field name="name">refuge.planning.shift.form</field>
+    <field name="model">refuge.planning.shift</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="employee_id"/>
+            <field name="date"/>
+            <field name="start_time" widget="float_time"/>
+            <field name="end_time" widget="float_time"/>
+            <field name="duration" widget="float_time"/>
+            <field name="state"/>
+            <field name="is_generated"/>
+            <field name="notes"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_refuge_shift_calendar" model="ir.ui.view">
+    <field name="name">refuge.planning.shift.calendar</field>
+    <field name="model">refuge.planning.shift</field>
+    <field name="arch" type="xml">
+      <calendar string="Planning" date_start="date" color="employee_id"
+                mode="week" hide_time="false">
+        <field name="employee_id"/>
+        <field name="start_time"/>
+        <field name="end_time"/>
+      </calendar>
+    </field>
+  </record>
+
+  <record id="action_refuge_shift" model="ir.actions.act_window">
+    <field name="name">Planning</field>
+    <field name="res_model">refuge.planning.shift</field>
+    <field name="view_mode">tree,form,calendar</field>
+  </record>
+
+  <!-- Générateur -->
+  <record id="view_refuge_generator_form" model="ir.ui.view">
+    <field name="name">refuge.planning.generator.form</field>
+    <field name="model">refuge.planning.generator</field>
+    <field name="arch" type="xml">
+      <form string="Générer le planning">
+        <sheet>
+          <group>
+            <field name="week_start"/>
+          </group>
+          <div class="alert alert-info" role="alert">
+            <p><strong>Algorithme :</strong> greedy sur 2 créneaux fixes par jour (10-18 / 18-01),
+              du mardi au dimanche. Respecte max 10h/j, 11h de repos, 20h/sem (tolérance +1h).
+              Les shifts ajoutés manuellement sont conservés, seuls les shifts générés sont écrasés.</p>
+            <p>Documentation complète : <code>addons/refuge_planning/docs/ALGORITHME.md</code>.</p>
+          </div>
+        </sheet>
+        <footer>
+          <button name="action_generate" type="object" string="Générer" class="btn-primary"/>
+          <button special="cancel" string="Annuler"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_refuge_generator" model="ir.actions.act_window">
+    <field name="name">Générer le planning</field>
+    <field name="res_model">refuge.planning.generator</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <!-- Menus -->
+  <menuitem id="menu_refuge_planning"
+            name="Planning"
+            parent="refuge_aventuriers.menu_refuge_root"
+            sequence="30"/>
+  <menuitem id="menu_refuge_availability"
+            name="Disponibilités"
+            parent="menu_refuge_planning"
+            action="action_refuge_availability"
+            sequence="10"/>
+  <menuitem id="menu_refuge_shift"
+            name="Shifts"
+            parent="menu_refuge_planning"
+            action="action_refuge_shift"
+            sequence="20"/>
+  <menuitem id="menu_refuge_generator"
+            name="Générer la semaine"
+            parent="menu_refuge_planning"
+            action="action_refuge_generator"
+            sequence="30"/>
+  <record id="action_refuge_planning_app" model="ir.actions.act_url">
+    <field name="name">Application planning (OWL)</field>
+    <field name="url">/refuge/planning</field>
+    <field name="target">self</field>
+  </record>
+  <menuitem id="menu_refuge_planning_app"
+            name="App OWL Planning"
+            parent="menu_refuge_planning"
+            action="action_refuge_planning_app"
+            sequence="40"/>
+</odoo>
