@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_refuge_table_user,refuge.table user,model_refuge_table,base.group_user,1,0,0,0
+access_refuge_table_manager,refuge.table manager,model_refuge_table,point_of_sale.group_pos_manager,1,1,1,1
+access_refuge_table_public,refuge.table public,model_refuge_table,base.group_public,1,0,0,0
+access_refuge_table_portal,refuge.table portal,model_refuge_table,base.group_portal,1,0,0,0
+access_refuge_table_reservation_user,refuge.table.reservation user,model_refuge_table_reservation,base.group_user,1,0,0,0
+access_refuge_table_reservation_manager,refuge.table.reservation manager,model_refuge_table_reservation,point_of_sale.group_pos_manager,1,1,1,1

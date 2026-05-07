@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Quelques tables de démo pour tester les QR codes. -->
+  <record id="table_1" model="refuge.table">
+    <field name="number">1</field>
+    <field name="name">Terrasse</field>
+    <field name="token">demo-token-table-1</field>
+  </record>
+  <record id="table_2" model="refuge.table">
+    <field name="number">2</field>
+    <field name="name">Comptoir</field>
+    <field name="token">demo-token-table-2</field>
+  </record>
+  <record id="table_3" model="refuge.table">
+    <field name="number">3</field>
+    <field name="name">Salle</field>
+    <field name="token">demo-token-table-3</field>
+  </record>
+</odoo>

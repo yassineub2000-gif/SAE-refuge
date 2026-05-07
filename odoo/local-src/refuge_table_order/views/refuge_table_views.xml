@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_refuge_table_tree" model="ir.ui.view">
+    <field name="name">refuge.table.tree</field>
+    <field name="model">refuge.table</field>
+    <field name="arch" type="xml">
+      <tree string="Tables">
+        <field name="number"/>
+        <field name="name"/>
+        <field name="qr_url"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_refuge_table_form" model="ir.ui.view">
+    <field name="name">refuge.table.form</field>
+    <field name="model">refuge.table</field>
+    <field name="arch" type="xml">
+      <form string="Table">
+        <header>
+          <button name="action_rotate_token" type="object"
+                  string="Régénérer le jeton QR" class="btn-secondary"
+                  confirm="Les QR Codes existants ne fonctionneront plus. Continuer ?"/>
+          <button name="action_print_qr" type="object"
+                  string="Imprimer le QR" class="btn-primary"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="number"/>
+              <field name="name"/>
+              <field name="active"/>
+              <field name="token" readonly="1"/>
+              <field name="qr_url" widget="url"/>
+            </group>
+            <group>
+              <field name="qr_image" widget="image" options="{'size': [280, 280]}"
+                     nolabel="1" readonly="1"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_refuge_table" model="ir.actions.act_window">
+    <field name="name">Tables (QR)</field>
+    <field name="res_model">refuge.table</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <record id="view_refuge_table_reservation_tree" model="ir.ui.view">
+    <field name="name">refuge.table.reservation.tree</field>
+    <field name="model">refuge.table.reservation</field>
+    <field name="arch" type="xml">
+      <tree string="Réservations" decoration-info="status=='confirmed'"
+            decoration-success="status=='seated' or status=='completed'"
+            decoration-muted="status=='cancelled'">
+        <field name="name"/>
+        <field name="reservation_datetime"/>
+        <field name="table_id"/>
+        <field name="partner_id"/>
+        <field name="party_size"/>
+        <field name="status"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_refuge_table_reservation_form" model="ir.ui.view">
+    <field name="name">refuge.table.reservation.form</field>
+    <field name="model">refuge.table.reservation</field>
+    <field name="arch" type="xml">
+      <form string="Réservation">
+        <sheet>
+          <group>
+            <field name="name" readonly="1"/>
+            <field name="partner_id"/>
+            <field name="phone"/>
+            <field name="table_id"/>
+            <field name="reservation_datetime"/>
+            <field name="party_size"/>
+            <field name="status"/>
+            <field name="notes"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_refuge_table_reservation" model="ir.actions.act_window">
+    <field name="name">Réservations</field>
+    <field name="res_model">refuge.table.reservation</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="menu_refuge_table"
+            name="Tables (QR)"
+            parent="refuge_aventuriers.menu_refuge_root"
+            action="action_refuge_table"
+            sequence="10"/>
+  <menuitem id="menu_refuge_reservation"
+            name="Réservations"
+            parent="refuge_aventuriers.menu_refuge_root"
+            action="action_refuge_table_reservation"
+            sequence="15"/>
+  <menuitem id="menu_refuge_barman"
+            name="Espace barman"
+            parent="refuge_aventuriers.menu_refuge_root"
+            sequence="20"/>
+  <record id="action_barman_open" model="ir.actions.act_url">
+    <field name="name">Ouvrir l'espace barman</field>
+    <field name="url">/refuge/barman</field>
+    <field name="target">new</field>
+  </record>
+  <menuitem id="menu_refuge_barman_open"
+            name="Ouvrir l'écran temps réel"
+            parent="menu_refuge_barman"
+            action="action_barman_open"
+            sequence="10"/>
+</odoo>

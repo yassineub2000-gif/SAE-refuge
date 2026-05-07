@@ -1,0 +1,52 @@
+{
+    "name": "Refuge des Aventuriers — Commande sur table (OWL)",
+    "summary": "Application OWL de commande depuis la table via QR Code + "
+               "espace barman temps réel. Écrit dans pos.order (cohabite avec le POS Odoo).",
+    "version": "17.0.1.0.0",
+    "author": "Équipe SAÉ 6.Integ.01",
+    "license": "AGPL-3",
+    "category": "Point of Sale",
+    "depends": [
+        "base",
+        "web",
+        "point_of_sale",
+        "refuge_aventuriers",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/refuge_table_data.xml",
+        "data/loyalty_discount_product.xml",
+        "data/refuge_reservation_setup.xml",
+        "views/refuge_table_views.xml",
+        "views/pos_order_views.xml",
+        "views/assets.xml",
+    ],
+    "assets": {
+        "refuge_table_order.assets_app": [
+            ("include", "web._assets_helpers"),
+            ("include", "web._assets_backend_helpers"),
+            "web/static/src/scss/pre_variables.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            ("include", "web._assets_bootstrap_backend"),
+            "web/static/src/libs/fontawesome/css/font-awesome.css",
+            "web/static/src/module_loader.js",
+            "web/static/lib/luxon/luxon.js",
+            "web/static/lib/owl/owl.js",
+            "web/static/lib/owl/odoo_module.js",
+            ("include", "web._assets_core"),
+            ("remove", "web/static/src/core/errors/error_handlers.js"),
+            "refuge_table_order/static/src/common/**/*",
+        ],
+        "refuge_table_order.assets_client": [
+            ("include", "refuge_table_order.assets_app"),
+            "refuge_table_order/static/src/client/**/*",
+        ],
+        "refuge_table_order.assets_barman": [
+            ("include", "refuge_table_order.assets_app"),
+            "refuge_table_order/static/src/barman/**/*",
+        ],
+    },
+    "post_init_hook": "post_init_sync_qr_menus",
+    "application": True,
+    "installable": True,
+}
