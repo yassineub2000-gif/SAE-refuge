@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.MenuScreen">
+    <div class="refuge-menu">
+      <nav class="refuge-menu-tabs">
+        <button t-foreach="props.categories" t-as="cat" t-key="cat.name"
+                class="refuge-menu-tab"
+                t-on-click="() => this.scrollToCategory(cat.name)">
+          <t t-esc="cat.name"/>
+        </button>
+      </nav>
+
+      <t t-foreach="props.categories" t-as="cat" t-key="cat.name">
+        <section class="refuge-menu-cat" t-att-id="categoryId(cat.name)">
+          <h2 class="refuge-menu-cat-title"><t t-esc="cat.name"/></h2>
+          <div class="refuge-card-grid">
+            <article class="refuge-card" t-foreach="cat.products" t-as="p" t-key="p.id"
+                     t-on-click="() => props.onAdd(p)">
+              <div class="refuge-card-image">
+                <img t-if="p.image_url" t-att-src="p.image_url" t-att-alt="p.name" loading="lazy"/>
+                <div t-else="" class="refuge-card-image-placeholder">🍹</div>
+                <div class="refuge-card-price-badge"><t t-esc="p.price.toFixed(2)"/> €</div>
+              </div>
+              <div class="refuge-card-body">
+                <div class="refuge-card-name"><t t-esc="p.name"/></div>
+                <div t-if="p.description" class="refuge-card-desc"><t t-esc="p.description"/></div>
+              </div>
+              <div class="refuge-card-add" aria-label="Ajouter">+</div>
+            </article>
+          </div>
+        </section>
+      </t>
+    </div>
+  </t>
+
+</templates>

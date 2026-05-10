@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.CartScreen">
+    <div class="refuge-cart">
+      <h2 class="refuge-cart-title">Votre panier</h2>
+
+      <div t-if="!props.cart.length" class="refuge-cart-empty">
+        <div class="refuge-cart-empty-icon">🍸</div>
+        <p>Votre panier est vide.</p>
+        <p class="refuge-cart-empty-hint">Ajoutez quelque chose depuis la carte.</p>
+      </div>
+
+      <ul class="refuge-cart-list" t-else="">
+        <li class="refuge-cart-item" t-foreach="props.cart" t-as="l" t-key="l.product_id">
+          <div class="refuge-cart-item-info">
+            <div class="refuge-cart-item-name"><t t-esc="l.name"/></div>
+            <div class="refuge-cart-item-unit"><t t-esc="l.price.toFixed(2)"/> €</div>
+          </div>
+          <div class="refuge-cart-stepper">
+            <button class="refuge-cart-step" t-on-click="() => props.onChangeQty(l.product_id, -1)" aria-label="Moins">−</button>
+            <span class="refuge-cart-qty"><t t-esc="l.qty"/></span>
+            <button class="refuge-cart-step" t-on-click="() => props.onChangeQty(l.product_id, +1)" aria-label="Plus">+</button>
+          </div>
+          <div class="refuge-cart-item-sub"><t t-esc="(l.price * l.qty).toFixed(2)"/> €</div>
+          <button class="refuge-cart-remove"
+                  t-on-click="() => props.onRemove(l.product_id)"
+                  aria-label="Retirer">✕</button>
+        </li>
+      </ul>
+
+      <div t-if="props.partner and props.cart.length" class="refuge-loyalty">
+        <div class="refuge-loyalty-head">
+          <span>Vos points</span>
+          <strong><t t-esc="props.partner.points"/> pts</strong>
+        </div>
+        <div class="refuge-loyalty-tiers">
+          <t t-set="balance" t-value="props.partner.points"/>
+          <button t-foreach="props.partner.tiers" t-as="tier" t-key="tier.points"
+                  class="refuge-loyalty-tier"
+                  t-att-class="(props.useTier === tier.points ? 'is-active ' : '') + (balance &gt;= tier.points ? '' : 'is-locked')"
+                  t-att-disabled="balance &lt; tier.points"
+                  t-on-click="() => props.onSetTier(tier.points)">
+            <div class="refuge-loyalty-pts"><t t-esc="tier.points"/> pts</div>
+            <div class="refuge-loyalty-lbl"><t t-esc="tier.label"/></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="refuge-cart-footer" t-if="props.cart.length">
+        <div t-if="props.discount > 0" class="refuge-cart-discount-row">
+          <span>Sous-total</span><span><t t-esc="props.total.toFixed(2)"/> €</span>
+        </div>
+        <div t-if="props.discount > 0" class="refuge-cart-discount-row refuge-cart-discount-neg">
+          <span>Remise fidélité</span><span>− <t t-esc="props.discount.toFixed(2)"/> €</span>
+        </div>
+        <div class="refuge-cart-total-row">
+          <span class="refuge-cart-total-label">Total</span>
+          <strong class="refuge-cart-total-amount"><t t-esc="props.finalTotal.toFixed(2)"/> €</strong>
+        </div>
+        <button class="refuge-btn refuge-btn-primary refuge-cart-submit"
+                t-att-disabled="!props.cart.length"
+                t-on-click="props.onSubmit">Passer la commande</button>
+        <p class="refuge-cart-note">Le paiement se fait au comptoir.</p>
+      </div>
+    </div>
+  </t>
+
+</templates>

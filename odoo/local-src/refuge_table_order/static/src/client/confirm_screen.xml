@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.ConfirmScreen">
+    <div class="refuge-confirm">
+      <div class="refuge-confirm-tick">✓</div>
+      <h2>Commande envoyée !</h2>
+      <p>Référence : <strong><t t-esc="props.reference"/></strong></p>
+      <p>Votre barman prépare votre commande. Le paiement se fera au comptoir.</p>
+      <button class="refuge-btn refuge-btn-primary" t-on-click="props.onNewOrder">Nouvelle commande</button>
+    </div>
+  </t>
+
+</templates>

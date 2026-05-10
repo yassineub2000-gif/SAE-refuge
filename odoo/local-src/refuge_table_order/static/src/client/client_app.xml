@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.ClientApp">
+    <div class="refuge-client-root">
+      <header class="refuge-client-header">
+        <div>
+          <div class="refuge-client-title">Le Refuge des Aventuriers</div>
+          <div class="refuge-client-sub">
+            Table <t t-esc="state.table.number"/>
+            <t t-if="state.table.label">— <t t-esc="state.table.label"/></t>
+            <t t-if="state.partner"> · <strong><t t-esc="state.partner.name"/></strong>
+              · <span class="refuge-pts"><t t-esc="state.partner.points"/> pts</span>
+              <button class="refuge-link" t-on-click="logout">déconnexion</button>
+            </t>
+          </div>
+        </div>
+        <button class="refuge-btn refuge-btn-ghost"
+                t-if="state.screen === 'menu' and state.cart.length"
+                t-on-click="() => this.goto('cart')">
+          Panier (<t t-esc="cartCount"/>)
+        </button>
+        <button class="refuge-btn refuge-btn-ghost"
+                t-if="state.screen === 'cart'"
+                t-on-click="() => this.goto('menu')">
+          ← Menu
+        </button>
+      </header>
+
+      <main class="refuge-client-main">
+        <div t-if="state.loading" class="refuge-client-empty">Chargement du menu…</div>
+        <div t-elif="state.error" class="refuge-client-error">Erreur : <t t-esc="state.error"/></div>
+        <MenuScreen t-elif="state.screen === 'menu'"
+                    categories="state.categories"
+                    onAdd.bind="addToCart"/>
+        <AuthScreen t-elif="state.screen === 'auth'"
+                    tableToken="state.table.token"
+                    onAuthenticated.bind="onAuthenticated"
+                    onGuest.bind="onGuest"
+                    onBack="() => this.goto('menu')"/>
+        <CartScreen t-elif="state.screen === 'cart'"
+                    cart="state.cart"
+                    total="cartTotal"
+                    discount="loyaltyDiscount"
+                    finalTotal="cartFinal"
+                    partner="state.partner"
+                    useTier="state.useTier"
+                    onChangeQty.bind="changeQty"
+                    onRemove.bind="removeFromCart"
+                    onSubmit.bind="submitOrder"
+                    onSetTier.bind="setTier"/>
+        <ConfirmScreen t-elif="state.screen === 'confirm'"
+                       reference="state.lastReference"
+                       onNewOrder="() => this.goto('menu')"/>
+      </main>
+    </div>
+  </t>
+
+</templates>
