@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.OrderCard">
+    <article class="refuge-order-card">
+      <div class="refuge-order-card-head">
+        <strong>Table <t t-esc="props.order.table"/></strong>
+        <span t-if="props.order.table_label">— <t t-esc="props.order.table_label"/></span>
+        <span class="refuge-order-time"><t t-esc="createdAt"/></span>
+      </div>
+      <div class="refuge-order-partner">
+        <t t-if="props.order.partner_name">
+          <span class="refuge-order-client">👤 <t t-esc="props.order.partner_name"/></span>
+          <button class="refuge-btn refuge-btn-ghost refuge-btn-xs"
+                  t-on-click="props.onAttachPartner">Modifier</button>
+        </t>
+        <t t-else="">
+          <button class="refuge-btn refuge-btn-ghost refuge-btn-xs"
+                  t-on-click="props.onAttachPartner">+ Associer un client</button>
+        </t>
+      </div>
+      <ul class="refuge-order-card-lines">
+        <li t-foreach="props.order.lines" t-as="l" t-key="l_index">
+          <span class="refuge-order-qty"><t t-esc="l.qty"/>×</span>
+          <span class="refuge-order-name"><t t-esc="l.name"/></span>
+        </li>
+      </ul>
+      <div class="refuge-order-card-foot">
+        <span class="refuge-order-ref"><t t-esc="props.order.reference"/></span>
+        <button class="refuge-btn refuge-btn-primary" t-on-click="props.onNext">
+          <t t-esc="props.nextLabel"/>
+        </button>
+      </div>
+    </article>
+  </t>
+
+</templates>

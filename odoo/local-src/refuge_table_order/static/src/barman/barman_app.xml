@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.BarmanApp">
+    <div class="refuge-barman-root">
+      <header class="refuge-barman-header">
+        <div class="refuge-barman-title">Espace barman — commandes table</div>
+        <div class="refuge-barman-meta" t-if="state.lastFetchedAt">
+          Dernière actualisation : <t t-esc="lastFetchedAtLabel"/>
+        </div>
+      </header>
+      <div t-if="state.error" class="refuge-barman-error">Erreur : <t t-esc="state.error"/></div>
+
+      <div class="refuge-barman-columns">
+        <section class="refuge-barman-col">
+          <h3>Nouvelles <span class="refuge-badge refuge-badge-new"><t t-esc="grouped.new.length"/></span></h3>
+          <OrderCard t-foreach="grouped.new" t-as="o" t-key="o.id" order="o"
+                     onNext="() => this.setStatus(o.id, 'in_preparation')" nextLabel="'Démarrer la préparation'"
+                     onAttachPartner="() => this.openPartnerPicker(o)"/>
+        </section>
+        <section class="refuge-barman-col">
+          <h3>En préparation <span class="refuge-badge refuge-badge-prep"><t t-esc="grouped.in_preparation.length"/></span></h3>
+          <OrderCard t-foreach="grouped.in_preparation" t-as="o" t-key="o.id" order="o"
+                     onNext="() => this.setStatus(o.id, 'ready')" nextLabel="'Marquer prête'"
+                     onAttachPartner="() => this.openPartnerPicker(o)"/>
+        </section>
+        <section class="refuge-barman-col">
+          <h3>Prêtes <span class="refuge-badge refuge-badge-ready"><t t-esc="grouped.ready.length"/></span></h3>
+          <OrderCard t-foreach="grouped.ready" t-as="o" t-key="o.id" order="o"
+                     onNext="() => this.setStatus(o.id, 'served')" nextLabel="'Servie (décrémente stock)'"
+                     onAttachPartner="() => this.openPartnerPicker(o)"/>
+        </section>
+      </div>
+
+      <PartnerPicker t-if="state.pickerOrder"
+                     order="state.pickerOrder"
+                     onAttached="fetchOrders.bind(this)"
+                     onClose="closePartnerPicker.bind(this)"/>
+    </div>
+  </t>
+
+</templates>

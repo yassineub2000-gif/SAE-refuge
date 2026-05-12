@@ -1,0 +1,34 @@
+.refuge-barman-root { padding: 1rem; min-height: 100vh; }
+.refuge-barman-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 0.75rem; border-bottom: 1px solid #2a2a30; margin-bottom: 1rem;
+}
+.refuge-barman-title { font-weight: 700; font-size: 1.3rem; }
+.refuge-barman-meta { color: #888; font-size: 0.85rem; }
+.refuge-barman-error { background: #5a1f1f; color: #fdd; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+
+.refuge-barman-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 900px) { .refuge-barman-columns { grid-template-columns: 1fr; } }
+.refuge-barman-col h3 {
+    font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: #ccc; margin: 0 0 0.75rem;
+}
+
+.refuge-order-card {
+    background: #22222a; border: 1px solid #33333c; border-radius: 10px;
+    padding: 1rem; margin-bottom: 0.75rem;
+}
+.refuge-order-card-head { display: flex; justify-content: space-between; gap: 0.5rem; }
+.refuge-order-time { color: #888; font-size: 0.85rem; }
+.refuge-order-card-lines { list-style: none; padding: 0; margin: 0.75rem 0; }
+.refuge-order-card-lines li { padding: 0.25rem 0; border-bottom: 1px dashed #33333c; }
+.refuge-order-qty { font-weight: 700; color: #c66; margin-right: 0.5rem; }
+.refuge-order-card-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 0.75rem;
+}
+.refuge-order-ref { color: #888; font-size: 0.85rem; font-family: monospace; }
