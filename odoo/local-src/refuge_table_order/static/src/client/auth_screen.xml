@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.AuthScreen">
+    <div class="refuge-auth">
+      <h2 class="refuge-auth-title">Avant de commander…</h2>
+
+      <div t-if="state.mode === 'choice'" class="refuge-auth-choices">
+        <p class="refuge-auth-lead">Identifiez-vous pour gagner et utiliser vos points fidélité,
+          ou continuez en invité.</p>
+        <button class="refuge-btn refuge-btn-primary refuge-auth-choice"
+                t-on-click="() => this.show('login')">J'ai déjà un compte</button>
+        <button class="refuge-btn refuge-btn-ghost refuge-auth-choice"
+                t-on-click="() => this.show('signup')">Créer un compte</button>
+        <button class="refuge-btn refuge-btn-ghost refuge-auth-choice refuge-auth-guest"
+                t-on-click="props.onGuest">Continuer en invité</button>
+      </div>
+
+      <form t-elif="state.mode === 'login' or state.mode === 'signup'"
+            class="refuge-auth-form"
+            t-on-submit.prevent="submit">
+        <div class="refuge-auth-form-head">
+          <button type="button" class="refuge-auth-back" t-on-click="() => this.show('choice')">← Retour</button>
+          <h3 t-esc="state.mode === 'login' ? 'Connexion' : 'Création de compte'"/>
+        </div>
+
+        <label class="refuge-auth-field" t-if="state.mode === 'signup'">
+          <span>Nom</span>
+          <input type="text" t-model="state.name" required="required" autocomplete="name"/>
+        </label>
+        <label class="refuge-auth-field">
+          <span>Email</span>
+          <input type="email" t-model="state.email" required="required" autocomplete="email"/>
+        </label>
+        <label class="refuge-auth-field">
+          <span>Code à 4-6 chiffres</span>
+          <input type="text" inputmode="numeric" pattern="[0-9]{4,6}" minlength="4" maxlength="6"
+                 t-model="state.pin" required="required" autocomplete="off"/>
+        </label>
+
+        <div t-if="state.error" class="refuge-auth-error"><t t-esc="state.error"/></div>
+
+        <button type="submit" class="refuge-btn refuge-btn-primary refuge-auth-submit"
+                t-att-disabled="state.loading">
+          <t t-if="state.loading">Patientez…</t>
+          <t t-else=""><t t-esc="state.mode === 'login' ? 'Se connecter' : 'Créer le compte'"/></t>
+        </button>
+      </form>
+    </div>
+  </t>
+
+</templates>
