@@ -1,0 +1,17 @@
+erDiagram
+    RES_PARTNER ||--o{ LOYALTY_CARD : possede
+    RES_PARTNER ||--o{ POS_ORDER : passe
+    RES_PARTNER ||--o{ REFUGE_TABLE_RESERVATION : reserve
+    REFUGE_TABLE ||--o{ POS_ORDER : rattachee
+    REFUGE_TABLE ||--o{ REFUGE_TABLE_RESERVATION : accueille
+    PRODUCT_TEMPLATE ||--o{ PRODUCT_PRODUCT : decline
+    PRODUCT_TEMPLATE ||--o{ MRP_BOM : recette
+    MRP_BOM ||--o{ MRP_BOM_LINE : compose
+    PRODUCT_PRODUCT ||--o{ MRP_BOM_LINE : ingredient
+    PRODUCT_PRODUCT ||--o{ STOCK_WAREHOUSE_ORDERPOINT : pilote
+    PRODUCT_PRODUCT ||--o{ STOCK_QUANT : stocke
+    POS_ORDER ||--o{ POS_ORDER_LINE : contient
+    POS_ORDER_LINE }o--|| PRODUCT_PRODUCT : refere
+    HR_EMPLOYEE ||--o{ REFUGE_PLANNING_AVAILABILITY : renseigne
+    HR_EMPLOYEE ||--o{ REFUGE_PLANNING_SHIFT : assure
+    LOYALTY_PROGRAM ||--o{ LOYALTY_CARD : emet
