@@ -7,6 +7,14 @@
     <field name="arch" type="xml">
       <xpath expr="//field[@name='categ_id']" position="after">
         <field name="refuge_is_cocktail"/>
+        <field name="refuge_stock_level" widget="badge"
+               decoration-success="refuge_stock_level == 'ok'"
+               decoration-warning="refuge_stock_level in ('critical', 'to_order')"
+               decoration-danger="refuge_stock_level == 'out'"/>
+        <field name="refuge_stock_min_qty"/>
+        <field name="refuge_stock_max_qty"/>
+        <field name="refuge_stock_qty_multiple"/>
+        <field name="refuge_stock_to_order_qty" readonly="1"/>
         <field name="refuge_unit_cost" widget="monetary"
                options="{'currency_field': 'currency_id'}"/>
         <field name="refuge_unit_margin" widget="monetary"

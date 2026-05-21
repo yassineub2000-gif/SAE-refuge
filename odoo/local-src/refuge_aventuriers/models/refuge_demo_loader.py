@@ -1,5 +1,6 @@
 import base64
 import json
+import math
 from datetime import timedelta
 from html import escape
 from pathlib import Path
@@ -440,6 +441,34 @@ class RefugeDemoLoader(models.Model):
                 product.image_1920 = base64.b64encode(svg.encode("utf-8"))
 
     @api.model
+    def _stock_limits_for_activity(self, product_data):
+        current_stock = float(product_data.get("stock") or 0.0)
+        configured_min = float(product_data.get("stock_min") or 0.0)
+        if not configured_min:
+            return None
+        is_ingredient = bool(product_data.get("is_ingredient"))
+        is_fast_service = product_data.get("category") in {"Bière", "Soft"}
+
+        if is_ingredient:
+            min_qty = max(configured_min, math.ceil(current_stock * 0.35))
+            max_qty = max(current_stock, min_qty * 3)
+            multiple = max(math.ceil(min_qty / 2), 1)
+        elif is_fast_service:
+            min_qty = max(configured_min, math.ceil(current_stock * 0.25))
+            max_qty = max(current_stock, min_qty * 2.5)
+            multiple = max(math.ceil(min_qty / 2), 1)
+        else:
+            min_qty = configured_min
+            max_qty = max(current_stock, min_qty * 2)
+            multiple = max(math.ceil(min_qty), 1)
+
+        return {
+            "min": float(min_qty),
+            "max": float(math.ceil(max_qty)),
+            "multiple": float(multiple),
+        }
+
+    @api.model
     def _ensure_orderpoints(self, raw_data):
         location = self._get_demo_location()
         warehouse = self._get_demo_warehouse()
@@ -452,6 +481,9 @@ class RefugeDemoLoader(models.Model):
                 or not product_data.get("stock_min")
             ):
                 continue
+            stock_limits = self._stock_limits_for_activity(product_data)
+            if not stock_limits:
+                continue
             product = self.env.ref(
                 f"refuge_aventuriers.{product_data['id']}",
                 raise_if_not_found=False,
@@ -462,9 +494,9 @@ class RefugeDemoLoader(models.Model):
                 "product_id": product.id,
                 "location_id": location.id,
                 "warehouse_id": warehouse.id,
-                "product_min_qty": float(product_data["stock_min"]),
-                "product_max_qty": float(max(product_data["stock"], product_data["stock_min"] * 2)),
-                "qty_multiple": float(max(product_data["stock_min"], 1)),
+                "product_min_qty": stock_limits["min"],
+                "product_max_qty": stock_limits["max"],
+                "qty_multiple": stock_limits["multiple"],
                 "trigger": "auto",
             }
             if buy_route:

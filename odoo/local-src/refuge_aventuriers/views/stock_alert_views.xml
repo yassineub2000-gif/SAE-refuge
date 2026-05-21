@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+  <record id="view_product_template_search_refuge_alert" model="ir.ui.view">
+    <field name="name">product.template.search.refuge.alert</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+      <search string="Pilotage stock">
+        <field name="name"/>
+        <field name="categ_id"/>
+        <filter name="refuge_needs_order"
+                string="À commander"
+                domain="[('refuge_stock_alert', '=', True)]"/>
+        <filter name="refuge_out"
+                string="Rupture"
+                domain="[('refuge_stock_level', '=', 'out')]"/>
+        <filter name="refuge_critical"
+                string="Critique"
+                domain="[('refuge_stock_level', '=', 'critical')]"/>
+        <filter name="refuge_to_order"
+                string="Sous seuil"
+                domain="[('refuge_stock_level', '=', 'to_order')]"/>
+        <filter name="refuge_configured"
+                string="Seuil configuré"
+                domain="[('refuge_stock_min_qty', '&gt;', 0)]"/>
+        <separator/>
+        <filter name="refuge_sellable"
+                string="Vendable POS"
+                domain="[('available_in_pos', '=', True)]"/>
+        <group expand="0" string="Regrouper par">
+          <filter name="group_category" string="Catégorie" context="{'group_by': 'categ_id'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
   <record id="action_refuge_stock_alert" model="ir.actions.act_window">
-    <field name="name">Alertes stock minimum</field>
+    <field name="name">Pilotage stock</field>
     <field name="res_model">product.template</field>
     <field name="view_mode">tree,form</field>
-    <field name="domain">[('refuge_stock_alert', '=', True)]</field>
-    <field name="context">{'search_default_filter_to_purchase': 1}</field>
+    <field name="search_view_id" ref="view_product_template_search_refuge_alert"/>
+    <field name="domain">[('type', '=', 'product'), ('purchase_ok', '=', True)]</field>
+    <field name="context">{'search_default_refuge_needs_order': 1}</field>
     <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">Aucun produit en alerte.</p>
-      <p>Les ingrédients dont la quantité disponible est sous le seuil défini
-         par leur règle de réapprovisionnement apparaîtront ici.</p>
+      <p class="o_view_nocontent_smiling_face">Aucun stock à surveiller.</p>
+      <p>Paramétrez un seuil minimum et un stock cible sur les ingrédients critiques :
+         l'écran indiquera automatiquement les quantités à recommander.</p>
     </field>
   </record>
 
@@ -18,23 +52,43 @@
     <field name="model">product.template</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-      <tree string="Alertes stock minimum"
-            decoration-danger="refuge_stock_alert"
+      <tree string="Pilotage stock"
+            editable="top"
+            decoration-danger="refuge_stock_level == 'out'"
+            decoration-warning="refuge_stock_level in ('critical', 'to_order')"
             create="false">
         <field name="name"/>
         <field name="categ_id"/>
-        <field name="qty_available"/>
+        <field name="refuge_stock_level" widget="badge"
+               decoration-success="refuge_stock_level == 'ok'"
+               decoration-warning="refuge_stock_level in ('critical', 'to_order')"
+               decoration-danger="refuge_stock_level == 'out'"/>
+        <field name="qty_available" string="Disponible"/>
         <field name="uom_id"/>
+        <field name="refuge_stock_min_qty"/>
+        <field name="refuge_stock_max_qty"/>
+        <field name="refuge_stock_qty_multiple"/>
+        <field name="refuge_stock_to_order_qty"/>
         <field name="refuge_unit_cost" widget="monetary"
                options="{'currency_field': 'currency_id'}"/>
+        <field name="standard_price" widget="monetary"
+               options="{'currency_field': 'currency_id'}"
+               optional="hide"/>
         <field name="refuge_stock_alert" invisible="1"/>
         <field name="currency_id" invisible="1"/>
       </tree>
     </field>
   </record>
 
+  <record id="action_refuge_stock_alert_tree" model="ir.actions.act_window.view">
+    <field name="sequence" eval="1"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="view_product_template_tree_refuge_alert"/>
+    <field name="act_window_id" ref="action_refuge_stock_alert"/>
+  </record>
+
   <menuitem id="menu_refuge_stock_alert"
-            name="Alertes stock"
+            name="Pilotage stock"
             parent="refuge_aventuriers.menu_refuge_root"
             action="action_refuge_stock_alert"
             sequence="40"/>

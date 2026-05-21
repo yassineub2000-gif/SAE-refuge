@@ -3,7 +3,7 @@
   <record id="base.main_company" model="res.company">
     <field name="point_of_sale_update_stock_quantities">real</field>
   </record>
-  <record id="pos_config_refuge" model="pos.config">
+  <record id="pos_config_refuge" model="pos.config" context="{'bypass_categories_forbidden_change': True}">
     <field name="name">Bar — Le Refuge des Aventuriers</field>
     <field name="iface_start_categ_id" ref="refuge_aventuriers.pos_cat_cocktail"/>
     <field name="iface_available_categ_ids" eval="[(6, 0, [

@@ -1,3 +1,4 @@
+import math
 from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
@@ -24,6 +25,80 @@ class TestRefugeDemoLoader(TransactionCase):
 
         quantity = self.env["stock.quant"]._get_available_quantity(self.product, self.location)
         self.assertGreater(quantity, 0, "Le produit de démonstration doit avoir du stock.")
+
+    def test_stock_alerts_expose_actionable_replenishment_levels(self):
+        template = self.product.product_tmpl_id
+        orderpoint = self.env["stock.warehouse.orderpoint"].search([
+            ("product_id", "=", self.product.id),
+            ("location_id", "=", self.location.id),
+        ], limit=1)
+        orderpoint.write({
+            "product_min_qty": 100,
+            "product_max_qty": 144,
+            "qty_multiple": 12,
+        })
+
+        self.assertTrue(template.refuge_stock_alert)
+        self.assertEqual(template.refuge_stock_level, "critical")
+        self.assertEqual(template.refuge_stock_min_qty, 100)
+        self.assertEqual(template.refuge_stock_max_qty, 144)
+        self.assertEqual(template.refuge_stock_to_order_qty, 96)
+
+    def test_stock_alert_fields_update_underlying_orderpoint(self):
+        template = self.product.product_tmpl_id
+        orderpoint = self.env["stock.warehouse.orderpoint"].search([
+            ("product_id", "=", self.product.id),
+            ("location_id", "=", self.location.id),
+        ], limit=1)
+
+        template.write({
+            "refuge_stock_min_qty": 18,
+            "refuge_stock_max_qty": 54,
+            "refuge_stock_qty_multiple": 6,
+        })
+        orderpoint.invalidate_recordset([
+            "product_min_qty",
+            "product_max_qty",
+            "qty_multiple",
+        ])
+
+        self.assertEqual(orderpoint.product_min_qty, 18)
+        self.assertEqual(orderpoint.product_max_qty, 54)
+        self.assertEqual(orderpoint.qty_multiple, 6)
+
+    def test_stock_alert_search_filters_find_critical_products(self):
+        template = self.product.product_tmpl_id
+        orderpoint = self.env["stock.warehouse.orderpoint"].search([
+            ("product_id", "=", self.product.id),
+            ("location_id", "=", self.location.id),
+        ], limit=1)
+        orderpoint.write({
+            "product_min_qty": 100,
+            "product_max_qty": 144,
+            "qty_multiple": 12,
+        })
+
+        critical_templates = self.env["product.template"].search([
+            ("refuge_stock_level", "=", "critical"),
+        ])
+        configured_templates = self.env["product.template"].search([
+            ("refuge_stock_min_qty", ">", 0),
+        ])
+
+        self.assertIn(template, critical_templates)
+        self.assertIn(template, configured_templates)
+
+    def test_demo_loader_raises_critical_ingredient_thresholds(self):
+        cointreau = self.env.ref("refuge_aventuriers.prod_cointreau_1l")
+        quantity = self.env["stock.quant"]._get_available_quantity(cointreau, self.location)
+        orderpoint = self.env["stock.warehouse.orderpoint"].search([
+            ("product_id", "=", cointreau.id),
+            ("location_id", "=", self.location.id),
+        ], limit=1)
+
+        self.assertTrue(orderpoint, "Les ingrédients critiques doivent avoir un seuil.")
+        self.assertGreaterEqual(orderpoint.product_min_qty, math.ceil(quantity * 0.35))
+        self.assertGreaterEqual(orderpoint.product_max_qty, orderpoint.product_min_qty * 3)
 
     def test_demo_loader_bootstraps_pos_accounting(self):
         company = self.env.company
