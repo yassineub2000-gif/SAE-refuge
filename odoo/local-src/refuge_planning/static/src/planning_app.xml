@@ -2,75 +2,217 @@
 <templates xml:space="preserve">
 
   <t t-name="refuge_planning.PlanningApp">
-    <div class="refuge-planning-root">
-      <header class="refuge-planning-header">
-        <h1>Planning — Le Refuge des Aventuriers</h1>
-        <div class="refuge-planning-nav">
-          <button class="refuge-btn refuge-btn-ghost" t-on-click="() => this.changeWeek(-7)">← Semaine précédente</button>
-          <span class="refuge-planning-week">Semaine du <t t-esc="state.weekStart"/></span>
-          <button class="refuge-btn refuge-btn-ghost" t-on-click="() => this.changeWeek(7)">Semaine suivante →</button>
-          <button class="refuge-btn refuge-btn-primary" t-on-click="generate"
-                  t-att-disabled="state.generating">
-            <t t-if="state.generating">Génération…</t>
-            <t t-else="">Générer le planning</t>
-          </button>
-        </div>
-      </header>
+    <div>
+      <AppHeader title="'Planning'"
+                 subtitle="fmtWeek()"
+                 showBack="true" backHref="'/refuge'" showLogout="true"/>
 
-      <div t-if="state.error" class="refuge-planning-error">Erreur : <t t-esc="state.error"/></div>
-      <div t-if="state.uncovered.length" class="refuge-planning-warning">
-        ⚠ Créneaux non couverts :
-        <ul>
-          <li t-foreach="state.uncovered" t-as="u" t-key="u[0] + '-' + u[1]">
-            <t t-esc="u[0]"/> — <t t-esc="u[1]"/>
-          </li>
-        </ul>
+      <div class="rp-root">
+
+        <div class="rp-toolbar">
+          <button class="refuge-btn refuge-btn-ghost"
+                  t-on-click="() => this.changeWeek(-7)">← Semaine précédente</button>
+          <button class="refuge-btn refuge-btn-ghost"
+                  t-on-click="() => this.changeWeek(7)">Semaine suivante →</button>
+          <span class="rp-spacer"/>
+          <t t-if="state.isAdmin">
+            <button class="refuge-btn refuge-btn-primary"
+                    t-on-click="generate" t-att-disabled="state.generating">
+              <t t-if="state.generating">Génération…</t>
+              <t t-else="">⚙ Générer la proposition</t>
+            </button>
+            <button t-if="draftCount > 0"
+                    class="refuge-btn refuge-btn-primary rp-validate-btn"
+                    t-on-click="validateWeek" t-att-disabled="state.validating">
+              <t t-if="state.validating">Validation…</t>
+              <t t-else="">✓ Valider la semaine (<t t-esc="draftCount"/> brouillon(s))</t>
+            </button>
+            <button class="refuge-btn refuge-btn-ghost"
+                    t-on-click="openNewShift">
+              + Ajouter un shift manuel
+            </button>
+          </t>
+        </div>
+
+        <nav class="rp-tabs">
+          <button class="rp-tab"
+                  t-att-class="state.tab === 'planning' ? 'is-active' : ''"
+                  t-on-click="() => this.setTab('planning')">
+            🗓 Planning
+          </button>
+          <button class="rp-tab"
+                  t-att-class="state.tab === 'avail' ? 'is-active' : ''"
+                  t-on-click="() => this.setTab('avail')">
+            📋 Disponibilités
+          </button>
+          <button class="rp-tab"
+                  t-att-class="state.tab === 'me' ? 'is-active' : ''"
+                  t-on-click="() => this.setTab('me')">
+            👤 Mon espace
+          </button>
+        </nav>
+
+        <div t-if="state.error" class="refuge-planning-error">
+          Erreur : <t t-esc="state.error"/>
+        </div>
+        <div t-if="state.lastReport and state.lastReport.uncovered and state.lastReport.uncovered.length"
+             class="refuge-planning-warning">
+          ⚠ <t t-esc="state.lastReport.uncovered.length"/> demi-heure(s) non couverte(s)
+          après génération — voir détail ci-dessous.
+        </div>
+
+        <!-- ============================== Onglet PLANNING ============== -->
+        <section t-if="state.tab === 'planning'" class="rp-tab-pane">
+          <SummaryCards employees="state.employees" shifts="state.shifts"/>
+          <div class="rp-manager-layout">
+            <div class="rp-manager-main">
+              <WeekCalendar employees="state.employees"
+                            shifts="state.shifts"
+                            weekStart="state.weekStart"
+                            canManage="state.isAdmin"
+                            ownEmployeeId="state.ownEmployeeId"
+                            onValidateShift.bind="validateShift"
+                            onCancelShift.bind="cancelShift"
+                            onDeleteShift.bind="deleteShift"
+                            onEditShift.bind="editShift"/>
+              <ShiftTable shifts="state.shifts"
+                          employees="state.employees"
+                          weekStart="state.weekStart"
+                          onSetState.bind="_setShiftState"
+                          onDelete.bind="deleteShift"
+                          onEdit.bind="editShift"/>
+            </div>
+
+            <aside t-if="state.isAdmin" class="rp-manager-side">
+              <div class="rp-side-card">
+                <h3>Édition manuelle</h3>
+                <p class="rp-side-copy">
+                  Ajuster, déplacer ou compléter la proposition automatique avant validation.
+                </p>
+                <div class="rp-shift-form">
+                  <label>
+                    <span>Employé</span>
+                    <select t-att-value="state.shiftEditor.employee_id || ''"
+                            t-on-change="(ev) => updateShiftEditor('employee_id', parseInt(ev.target.value || 0, 10) || false)">
+                      <option value="">Sélectionner…</option>
+                      <option t-foreach="orderedEmployees" t-as="emp" t-key="emp.id"
+                              t-att-value="emp.id">
+                        <t t-esc="emp.name"/>
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Date</span>
+                    <input type="date"
+                           t-att-value="state.shiftEditor.date"
+                           t-on-change="(ev) => updateShiftEditor('date', ev.target.value)"/>
+                  </label>
+                  <label>
+                    <span>Début</span>
+                    <select t-att-value="state.shiftEditor.start_time"
+                            t-on-change="(ev) => updateShiftEditor('start_time', parseFloat(ev.target.value))">
+                      <option t-foreach="formOptions()" t-as="opt" t-key="opt.value"
+                              t-att-value="opt.value">
+                        <t t-esc="opt.label"/>
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Fin</span>
+                    <select t-att-value="state.shiftEditor.end_time"
+                            t-on-change="(ev) => updateShiftEditor('end_time', parseFloat(ev.target.value))">
+                      <option t-foreach="formOptions().slice(1)" t-as="opt" t-key="opt.value"
+                              t-att-value="opt.value">
+                        <t t-esc="opt.label"/>
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>État</span>
+                    <select t-att-value="state.shiftEditor.state"
+                            t-on-change="(ev) => updateShiftEditor('state', ev.target.value)">
+                      <option t-foreach="shiftStateOptions" t-as="shiftState" t-key="shiftState"
+                              t-att-value="shiftState">
+                        <t t-esc="shiftState"/>
+                      </option>
+                    </select>
+                  </label>
+                  <label class="is-full">
+                    <span>Notes</span>
+                    <textarea rows="3"
+                              t-on-input="(ev) => updateShiftEditor('notes', ev.target.value)"><t t-esc="state.shiftEditor.notes"/></textarea>
+                  </label>
+                </div>
+                <div class="rp-shift-form-actions">
+                  <button class="refuge-btn refuge-btn-primary"
+                          t-att-disabled="state.savingShift or !state.shiftEditor.employee_id or !state.shiftEditor.date"
+                          t-on-click="saveShift">
+                    <t t-if="state.savingShift">Enregistrement…</t>
+                    <t t-elif="state.shiftEditor.id">Mettre à jour le shift</t>
+                    <t t-else="">Ajouter le shift</t>
+                  </button>
+                  <button class="refuge-btn refuge-btn-ghost"
+                          t-on-click="cancelShiftEditor">
+                    Réinitialiser
+                  </button>
+                </div>
+              </div>
+
+              <div class="rp-side-card">
+                <h3>Contrôles automatiques</h3>
+                <ul class="rp-side-list">
+                  <li>Pas de shift le lundi.</li>
+                  <li>Maximum 10h par jour et par employé.</li>
+                  <li>11h minimum entre deux shifts.</li>
+                  <li>24h hebdomadaires contractuelles respectées.</li>
+                  <li>Couverture continue des horaires 10h–01h.</li>
+                </ul>
+              </div>
+
+              <div t-if="state.lastReport and state.lastReport.uncovered and state.lastReport.uncovered.length"
+                   class="rp-uncovered">
+                <h4>Créneaux à traiter</h4>
+                <ul>
+                  <li t-foreach="state.lastReport.uncovered.slice(0, 24)" t-as="u" t-key="u_index">
+                    <t t-esc="u"/>
+                  </li>
+                </ul>
+                <p t-if="state.lastReport.uncovered.length > 24" class="rp-uncovered-more">
+                  … +<t t-esc="state.lastReport.uncovered.length - 24"/> autres
+                </p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section t-if="state.tab === 'avail'" class="rp-tab-pane">
+          <p class="rp-avail-intro">
+            Les préférences de disponibilité sont consultables ici par
+            <strong>demi-heure</strong> sur toute l'amplitude d'ouverture du bar.
+          </p>
+          <div class="rp-avail-info">
+            <strong>Consultation uniquement.</strong>
+            <br/>
+            Les disponibilités affichées ici servent de référence au planning
+            automatique. Leur modification se fait directement dans Odoo.
+          </div>
+          <AvailabilityHeatmap employees="state.employees"
+                               availabilities="state.availabilities"
+                               ownEmployeeId="state.ownEmployeeId"
+                               isAdmin="state.isAdmin"/>
+        </section>
+
+        <section t-if="state.tab === 'me'" class="rp-tab-pane">
+          <MySpace employees="state.employees"
+                   shifts="state.shifts"
+                   availabilities="state.availabilities"
+                   weekStart="state.weekStart"
+                   ownEmployeeId="state.ownEmployeeId"
+                   isAdmin="state.isAdmin"
+                   onGoToAvailabilities="() => this.setTab('avail')"/>
+        </section>
+
       </div>
-
-      <section class="refuge-planning-section">
-        <h2>Disponibilités</h2>
-        <AvailabilityGrid employees="state.employees"
-                          availabilities="state.availabilities"
-                          weekdays="weekdayOrdered"
-                          weekdayLabels="weekdayLabels"
-                          onChange.bind="setAvailability"
-                          onChangePref.bind="setEmployeePreference"/>
-      </section>
-
-      <section class="refuge-planning-section">
-        <h2>Ajout manuel</h2>
-        <div class="refuge-manual-form">
-          <select t-att-value="state.manualShift.employee_id"
-                  t-on-change="(ev) => this.updateManualShift('employee_id', ev)">
-            <option value="">Choisir un employé</option>
-            <option t-foreach="state.employees" t-as="emp" t-key="emp.id" t-att-value="emp.id">
-              <t t-esc="emp.name"/>
-            </option>
-          </select>
-          <input type="date" t-att-value="state.manualShift.date"
-                 t-on-input="(ev) => this.updateManualShift('date', ev)"/>
-          <input type="number" min="0" max="23.5" step="0.5" t-att-value="state.manualShift.start_time"
-                 t-on-input="(ev) => this.updateManualShift('start_time', ev)"/>
-          <input type="number" min="0" max="23.5" step="0.5" t-att-value="state.manualShift.end_time"
-                 t-on-input="(ev) => this.updateManualShift('end_time', ev)"/>
-          <input type="text" placeholder="Note" t-att-value="state.manualShift.notes"
-                 t-on-input="(ev) => this.updateManualShift('notes', ev)"/>
-          <button class="refuge-btn refuge-btn-primary" t-on-click="createManualShift"
-                  t-att-disabled="!state.manualShift.employee_id">
-            Ajouter un shift
-          </button>
-        </div>
-        <p class="refuge-grid-help">Horaires au format décimal Odoo : 10 = 10h00, 18.5 = 18h30.</p>
-      </section>
-
-      <section class="refuge-planning-section">
-        <h2>Planning proposé</h2>
-        <ShiftTable shifts="state.shifts"
-                    employees="state.employees"
-                    weekStart="state.weekStart"
-                    onSetState.bind="setShiftState"
-                    onDelete.bind="deleteShift"/>
-      </section>
     </div>
   </t>
 

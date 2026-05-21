@@ -9,30 +9,59 @@
           <th t-foreach="props.weekdays" t-as="w" t-key="w">
             <t t-esc="props.weekdayLabels[w]"/>
           </th>
-          <th>Préférence</th>
+          <th>Défaut</th>
         </tr>
       </thead>
       <tbody>
-        <tr t-foreach="props.employees" t-as="emp" t-key="emp.id">
-          <td><strong><t t-esc="emp.name"/></strong></td>
+        <tr t-foreach="props.employees" t-as="emp" t-key="emp.id"
+            t-att-class="'refuge-grid-row ' + rowClass(emp.id)">
+          <td class="refuge-grid-emp">
+            <strong><t t-esc="emp.name"/></strong>
+            <span t-if="!canEdit(emp.id)" class="refuge-grid-lock"
+                  title="Lecture seule — vous ne pouvez éditer que votre propre ligne.">🔒</span>
+          </td>
           <td t-foreach="props.weekdays" t-as="w" t-key="w"
-              t-attf-class="refuge-grid-cell {{ labelFor(statusFor(emp.id, w)).cls }}"
-              t-on-click="() => this.cycleStatus(emp.id, w)"
-              t-att-title="labelFor(statusFor(emp.id, w)).title">
-            <t t-esc="labelFor(statusFor(emp.id, w)).label"/>
+              t-attf-class="refuge-grid-cell rf-day {{ labelFor(statusFor(emp.id, w)).cls }}">
+            <button class="refuge-grid-status"
+                    t-att-disabled="!canEdit(emp.id)"
+                    t-on-click="() => this.cycleStatus(emp.id, w)"
+                    t-att-title="labelFor(statusFor(emp.id, w)).title + ' (cliquer pour changer)'">
+              <t t-esc="labelFor(statusFor(emp.id, w)).label"/>
+            </button>
+            <div t-if="statusFor(emp.id, w) !== 'unavailable'" class="refuge-grid-range">
+              <div class="refuge-grid-range-label">
+                <t t-esc="rangeLabel(startFor(emp.id, w), endFor(emp.id, w))"/>
+              </div>
+              <input type="range" class="refuge-grid-range-input"
+                     t-att-min="hourMin()" t-att-max="hourMax() - 1" step="1"
+                     t-att-value="startFor(emp.id, w)"
+                     t-att-disabled="!canEdit(emp.id)"
+                     t-on-input="(ev) => this.updateStart(emp.id, w, ev.target.value)"
+                     aria-label="Début préféré"/>
+              <input type="range" class="refuge-grid-range-input"
+                     t-att-min="hourMin() + 1" t-att-max="hourMax()" step="1"
+                     t-att-value="endFor(emp.id, w)"
+                     t-att-disabled="!canEdit(emp.id)"
+                     t-on-input="(ev) => this.updateEnd(emp.id, w, ev.target.value)"
+                     aria-label="Fin préférée"/>
+            </div>
           </td>
           <td>
-            <select t-on-change="(ev) => this.changePref(emp.id, ev)"
-                    t-att-value="employeePref(emp.id)">
-              <option value="flexible">Flexible</option>
-              <option value="morning">Matin</option>
-              <option value="evening">Soir</option>
-            </select>
+            <button class="refuge-btn refuge-btn-ghost refuge-btn-xs"
+                    t-att-disabled="!canEdit(emp.id)"
+                    t-on-click="() => this.resetEmp(emp.id)"
+                    title="Réinitialiser les disponibilités de cet employé selon la spec officielle">
+              ↻ Défaut
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <p class="refuge-grid-help">Cliquer sur une case pour basculer O / ~ / ✕.</p>
+    <p class="refuge-grid-help">
+      Cliquer sur le statut (<strong>O</strong> / <strong>✕</strong>) pour
+      basculer disponible / indisponible. Régler la plage préférée avec les
+      deux curseurs. Les autres employés sont en lecture seule.
+    </p>
   </t>
 
 </templates>

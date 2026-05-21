@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.WeekCalendar">
+    <div class="rp-cal-wrap">
+      <div class="rp-cal">
+        <!-- Header : coin vide puis 6 colonnes jours -->
+        <div class="rp-cal-cell rp-cal-corner"/>
+        <div t-foreach="dayIndices" t-as="d" t-key="d"
+             class="rp-cal-cell rp-cal-day-head">
+          <div class="rp-cal-day-name"><t t-esc="dayLabel(d)"/></div>
+          <div class="rp-cal-day-date"><t t-esc="dateFor(d)"/></div>
+        </div>
+
+        <!-- Lignes horaires : label heure + 6 cellules de fond par ligne -->
+        <t t-foreach="hourRange" t-as="h" t-key="h">
+          <div class="rp-cal-cell rp-cal-hour"><t t-esc="hourLabels[h_index]"/></div>
+          <div t-foreach="dayIndices" t-as="d" t-key="d"
+               class="rp-cal-cell rp-cal-slot"
+               t-attf-style="grid-row: #{h_index + 2}; grid-column: #{d_index + 2};"/>
+        </t>
+
+        <!-- Blocs shift positionnés en absolu via grid-row/column -->
+        <t t-foreach="dayIndices" t-as="d" t-key="d">
+          <t t-foreach="shiftsOfDay(d)" t-as="s" t-key="s.id">
+            <div class="rp-cal-shift"
+                 t-att-class="(s.state === 'draft' ? 'is-draft ' : '') + (s.state === 'cancelled' ? 'is-cancelled ' : '') + (canEditShift(s) ? 'is-editable' : 'is-readonly')"
+                 t-att-style="shiftStyle(s, {col: d_index, empIdx: empColorIndex(s.employee_id)})">
+              <div class="rp-cal-shift-head">
+                <span class="rp-cal-shift-name"><t t-esc="s.employee_name"/></span>
+                <span class="rp-cal-shift-state"
+                      t-att-class="'rp-state-' + s.state">
+                  <t t-if="s.state === 'draft'">brouillon</t>
+                  <t t-elif="s.state === 'confirmed'">✓</t>
+                  <t t-elif="s.state === 'cancelled'">annulé</t>
+                </span>
+              </div>
+              <div class="rp-cal-shift-time">
+                <t t-esc="fmtRange(s.start_time, s.end_time)"/>
+                <span class="rp-cal-shift-dur"> · <t t-esc="durationFor(s).toFixed(1)"/>h</span>
+              </div>
+              <div t-if="canEditShift(s)" class="rp-cal-shift-actions">
+                <button class="rp-cal-act-btn"
+                        t-on-click="() => props.onEditShift(s.id)"
+                        title="Modifier">✎</button>
+                <button t-if="s.state === 'draft' and props.canManage"
+                        class="rp-cal-act-btn is-ok"
+                        t-on-click="() => props.onValidateShift(s.id)"
+                        title="Valider ce shift">✓</button>
+                <button t-if="s.state !== 'cancelled'"
+                        class="rp-cal-act-btn is-warn"
+                        t-on-click="() => props.onCancelShift(s.id)"
+                        title="Annuler">∅</button>
+                <button class="rp-cal-act-btn is-danger"
+                        t-on-click="() => props.onDeleteShift(s.id)"
+                        title="Supprimer">×</button>
+              </div>
+            </div>
+          </t>
+        </t>
+      </div>
+
+      <!-- Bandeau couverture en bas -->
+      <div class="rp-cov">
+        <div t-foreach="dayIndices" t-as="d" t-key="d"
+             class="rp-cov-cell"
+             t-attf-class="rp-cov-cell {{ coverageFor(d) === 100 ? 'is-full' : (coverageFor(d) >= 70 ? 'is-partial' : 'is-low') }}">
+          <span class="rp-cov-label"><t t-esc="dayLabel(d).slice(0, 3)"/></span>
+          <span class="rp-cov-pct"><t t-esc="coverageFor(d)"/>%</span>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>

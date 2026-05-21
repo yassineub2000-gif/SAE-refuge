@@ -6,6 +6,7 @@
         <title>Le Refuge — Planning</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script type="text/javascript">(function(){try{var k='refuge-theme',t=localStorage.getItem(k);if(!t){t=(window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
         <script type="text/javascript">
           var odoo = <t t-out="json.dumps({
             'csrf_token': request.csrf_token(None),

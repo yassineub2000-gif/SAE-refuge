@@ -10,12 +10,13 @@ export class ShiftTable extends Component {
         weekStart: String,
         onSetState: Function,
         onDelete: Function,
+        onEdit: Function,
     };
 
     get weekDays() {
         const out = [];
         const start = new Date(this.props.weekStart);
-        for (let i = 0; i < 7; i++) {
+        for (let i = 1; i < 7; i++) {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
             out.push({
@@ -32,14 +33,15 @@ export class ShiftTable extends Component {
     }
 
     formatHour(h) {
-        const hh = Math.floor(h);
-        const mm = Math.round((h - hh) * 60);
+        const absolute = h >= 24 ? h - 24 : h;
+        const hh = Math.floor(absolute);
+        const mm = Math.round((absolute - hh) * 60);
         return `${String(hh).padStart(2, "0")}h${String(mm).padStart(2, "0")}`;
     }
 
     totalHoursPerEmployee() {
         const totals = {};
-        for (const s of this.props.shifts) {
+        for (const s of this.props.shifts.filter((shift) => shift.state !== "cancelled")) {
             totals[s.employee_id] = (totals[s.employee_id] || 0) + s.duration;
         }
         return totals;

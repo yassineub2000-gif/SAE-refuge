@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.SummaryCards">
+    <div class="rp-summary">
+      <div t-foreach="props.employees" t-as="emp" t-key="emp.id"
+           class="rp-summary-card"
+           t-attf-style="--emp-bg:{{ colorFor(emp_index).bg }};--emp-border:{{ colorFor(emp_index).border }};--emp-fg:{{ colorFor(emp_index).fg }};">
+        <div class="rp-summary-head">
+          <span class="rp-summary-dot"/>
+          <span class="rp-summary-name"><t t-esc="emp.name"/></span>
+          <span t-if="alertFor(emp)" class="rp-summary-alert"
+                t-att-class="'is-' + alertFor(emp).kind">
+            <t t-esc="alertFor(emp).label"/>
+          </span>
+        </div>
+        <div class="rp-summary-hours">
+          <span class="rp-summary-planned"><t t-esc="fmtHours(plannedHours(emp.id))"/></span>
+          <span class="rp-summary-target"> / <t t-esc="fmtHours(targetFor(emp))"/></span>
+        </div>
+        <div class="rp-summary-bar">
+          <div class="rp-summary-bar-fill"
+               t-attf-style="width: {{ progressPct(emp) }}%"/>
+        </div>
+        <div class="rp-summary-pct"><t t-esc="progressPct(emp)"/>%</div>
+      </div>
+    </div>
+  </t>
+
+</templates>

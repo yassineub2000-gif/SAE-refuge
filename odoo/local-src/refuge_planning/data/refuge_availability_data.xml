@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo noupdate="1">
+<odoo>
+  <data noupdate="1">
   <record id="avail_pierre_leblanc_w1" model="refuge.planning.availability">
     <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
     <field name="weekday">1</field>
@@ -33,7 +34,7 @@
   <record id="avail_pierre_leblanc_w6" model="refuge.planning.availability">
     <field name="employee_id" ref="refuge_aventuriers.emp_pierre_leblanc"/>
     <field name="weekday">6</field>
-    <field name="status">on_request</field>
+    <field name="status">unavailable</field>
     <field name="hour_preference">morning</field>
   </record>
   <record id="avail_pierre_leblanc_w0" model="refuge.planning.availability">
@@ -129,7 +130,7 @@
   <record id="avail_julie_perrin_w1" model="refuge.planning.availability">
     <field name="employee_id" ref="refuge_aventuriers.emp_julie_perrin"/>
     <field name="weekday">1</field>
-    <field name="status">on_request</field>
+    <field name="status">unavailable</field>
     <field name="hour_preference">evening</field>
   </record>
   <record id="avail_julie_perrin_w2" model="refuge.planning.availability">
@@ -168,4 +169,16 @@
     <field name="status">unavailable</field>
     <field name="hour_preference">evening</field>
   </record>
+
+  </data>
+
+  <!--
+    Réapplique la spec officielle à chaque mise à jour du module. Cet appel
+    est dans un <data> distinct sans noupdate : Odoo skipe les <function>
+    qui se trouvent dans un bloc noupdate="1". La méthode upsert les valeurs
+    cibles, ce qui corrige notamment les préférences horaires divergentes.
+  -->
+  <data>
+    <function model="refuge.planning.availability" name="_refuge_set_defaults"/>
+  </data>
 </odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.MySpace">
+    <div class="rp-myspace">
+      <t t-if="!me">
+        <div class="rp-myspace-empty">
+          <div class="rp-myspace-empty-ico">👤</div>
+          <h3 t-if="props.isAdmin">Vous êtes le gérant</h3>
+          <h3 t-else="">Aucun compte employé lié</h3>
+          <p t-if="props.isAdmin">
+            En tant que gérant, vous n'avez pas de planning personnel. Utilisez
+            l'onglet <strong>Planning</strong> pour gérer les shifts de l'équipe.
+          </p>
+          <p t-else="">
+            Votre compte n'est pas rattaché à un employé du bar. Contactez
+            l'administrateur.
+          </p>
+        </div>
+      </t>
+
+      <t t-else="">
+        <header class="rp-myspace-head" t-attf-style="--emp-border:{{ myColor().border }};--emp-bg:{{ myColor().bg }};--emp-fg:{{ myColor().fg }}">
+          <div>
+            <div class="rp-myspace-greeting">Bonjour <t t-esc="me.name.split(' ')[0]"/></div>
+            <div class="rp-myspace-week">Semaine du <t t-esc="props.weekStart"/></div>
+          </div>
+          <div class="rp-myspace-totals">
+            <div class="rp-myspace-total"><t t-esc="myTotalHours.toFixed(1)"/>h</div>
+            <div class="rp-myspace-target">sur <t t-esc="myTarget"/>h cible</div>
+          </div>
+        </header>
+
+        <section class="rp-myspace-section">
+          <h4>Mes shifts cette semaine</h4>
+          <div t-if="!myShifts.length" class="rp-myspace-empty-list">
+            Aucun shift planifié cette semaine.
+          </div>
+          <ul t-else="" class="rp-myspace-shifts">
+            <li t-foreach="myShifts" t-as="s" t-key="s.id"
+                t-attf-class="rp-myspace-shift rp-state-#{s.state}">
+              <div class="rp-myspace-shift-day"><t t-esc="dateLabel(s.date)"/></div>
+              <div class="rp-myspace-shift-time">
+                <t t-esc="fmtRange(s.start_time, s.end_time)"/>
+                <span class="rp-myspace-shift-dur"> · <t t-esc="durationFor(s).toFixed(1)"/>h</span>
+              </div>
+              <div class="rp-myspace-shift-state">
+                <t t-if="s.state === 'draft'">🟡 Brouillon</t>
+                <t t-elif="s.state === 'confirmed'">✅ Confirmé</t>
+                <t t-elif="s.state === 'cancelled'">⊘ Annulé</t>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="rp-myspace-section">
+          <h4>
+            Mes disponibilités
+            <button class="refuge-btn refuge-btn-ghost refuge-btn-xs rp-myspace-edit"
+                    t-on-click="props.onGoToAvailabilities">👁 Consulter</button>
+          </h4>
+          <ul class="rp-myspace-avail">
+            <li t-foreach="myAvailabilities" t-as="a" t-key="a.id"
+                t-attf-class="rp-myspace-avail-item {{ availClass(a) }}">
+              <span class="rp-myspace-avail-day"><t t-esc="weekdayLabel(a.weekday)"/></span>
+              <span class="rp-myspace-avail-text"><t t-esc="availTextFor(a)"/></span>
+            </li>
+          </ul>
+        </section>
+      </t>
+    </div>
+  </t>
+
+</templates>

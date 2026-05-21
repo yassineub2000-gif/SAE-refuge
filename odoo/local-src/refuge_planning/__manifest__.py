@@ -1,7 +1,7 @@
 {
     "name": "Refuge des Aventuriers — Planning (OWL)",
     "summary": "Saisie des disponibilités employés et génération automatique du planning "
-               "hebdomadaire respectant les contraintes légales (10h/j, 11h repos, 20h/sem).",
+               "hebdomadaire respectant les contraintes légales (10h/j, 11h repos, 24h/sem).",
     "version": "17.0.1.0.0",
     "author": "Équipe SAÉ 6.Integ.01",
     "license": "AGPL-3",
@@ -33,6 +33,7 @@
             "web/static/lib/owl/odoo_module.js",
             ("include", "web._assets_core"),
             ("remove", "web/static/src/core/errors/error_handlers.js"),
+            "refuge_aventuriers/static/src/theme/**/*",
             "refuge_planning/static/src/**/*",
         ],
     },

@@ -4,3 +4,6 @@ access_refuge_avail_hr,refuge availability hr,model_refuge_planning_availability
 access_refuge_shift_user,refuge shift user,model_refuge_planning_shift,base.group_user,1,0,0,0
 access_refuge_shift_hr,refuge shift hr,model_refuge_planning_shift,hr.group_hr_user,1,1,1,1
 access_refuge_gen_hr,refuge generator hr,model_refuge_planning_generator,hr.group_hr_user,1,1,1,1
+access_refuge_avail_staff,refuge availability staff,model_refuge_planning_availability,refuge_aventuriers.group_refuge_staff,1,1,1,1
+access_refuge_shift_staff,refuge shift staff,model_refuge_planning_shift,refuge_aventuriers.group_refuge_staff,1,1,1,1
+access_refuge_gen_staff,refuge generator staff,model_refuge_planning_generator,refuge_aventuriers.group_refuge_staff,1,1,1,1

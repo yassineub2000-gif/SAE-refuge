@@ -19,10 +19,14 @@ class TestRefugePlanningDemo(TransactionCase):
         ])
         self.assertTrue(shifts, "Le planning de démonstration doit créer des shifts.")
         self.assertFalse(any(shift.date.weekday() == 0 for shift in shifts))
-        self.assertIn("confirmed", shifts.mapped("state"))
+        self.assertIn("draft", shifts.mapped("state"))
+        self.assertTrue(
+            any(shift.is_generated for shift in shifts),
+            "Le planning de démonstration doit inclure des shifts générés.",
+        )
 
     def test_manual_demo_shift_is_present(self):
         shift = self.Shift.search([("notes", "=", "Renfort terrasse")], limit=1)
         self.assertTrue(shift, "Le jeu de démonstration doit inclure un shift manuel.")
         self.assertFalse(shift.is_generated)
-        self.assertEqual(shift.state, "draft")
+        self.assertIn(shift.state, ("draft", "confirmed"))

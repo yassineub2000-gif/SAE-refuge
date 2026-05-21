@@ -106,9 +106,9 @@
             <field name="week_start"/>
           </group>
           <div class="alert alert-info" role="alert">
-            <p><strong>Algorithme :</strong> greedy sur 2 créneaux fixes par jour (10-18 / 18-01),
-              du mardi au dimanche. Respecte max 10h/j, 11h de repos, 20h/sem (tolérance +1h).
-              Les shifts ajoutés manuellement sont conservés, seuls les shifts générés sont écrasés.</p>
+            <p><strong>Algorithme :</strong> génération gloutonne par demi-heure sur l'amplitude 10h–01h,
+              du mardi au dimanche. Respecte 10h/jour max, 11h de repos et 24h/sem par employé.
+              Les shifts manuels sont conservés et servent de points fixes lors d'une nouvelle génération.</p>
             <p>Documentation complète : <code>addons/refuge_planning/docs/ALGORITHME.md</code>.</p>
           </div>
         </sheet>

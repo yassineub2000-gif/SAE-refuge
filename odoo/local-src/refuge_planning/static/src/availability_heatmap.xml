@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_planning.AvailabilityHeatmap">
+    <div class="rp-heatmap-list">
+      <div t-foreach="props.employees" t-as="emp" t-key="emp.id"
+           class="rp-heatmap-card"
+           t-att-class="canEdit(emp.id) ? 'is-editable' : 'is-readonly'">
+        <div class="rp-heatmap-head">
+          <div>
+            <div class="rp-heatmap-name">
+              <t t-esc="emp.name"/>
+              <span t-if="lockReason(emp.id)" class="rp-heatmap-lock-pill">🔒</span>
+            </div>
+            <div class="rp-heatmap-meta">
+              <t t-esc="emp.weekly_hours.toFixed(0)"/>h contractuelles
+              <span t-if="!canEdit(emp.id)"> · lecture seule</span>
+            </div>
+            <div t-if="lockReason(emp.id)" class="rp-heatmap-lock-reason">
+              <t t-esc="lockReason(emp.id)"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="rp-heatmap-scroll" t-ref="grid" t-on-mousemove="onMouseMoveGrid">
+          <div class="rp-heatmap-grid">
+            <div class="rp-heatmap-corner">Créneau</div>
+            <div t-foreach="days" t-as="day" t-key="day" class="rp-heatmap-day-head">
+              <t t-esc="dayLabel(day)"/>
+            </div>
+
+            <div class="rp-heatmap-status-label">Statut</div>
+            <t t-foreach="days" t-as="day" t-key="day">
+              <button class="rp-heatmap-status-btn"
+                      t-att-class="statusMeta(emp.id, day).cls"
+                      disabled="disabled"
+                      t-att-title="lockReason(emp.id)">
+                <span class="rp-heatmap-status-short"><t t-esc="statusMeta(emp.id, day).short"/></span>
+                <span class="rp-heatmap-status-text"><t t-esc="statusMeta(emp.id, day).label"/></span>
+              </button>
+            </t>
+
+            <t t-foreach="slotsList" t-as="slot" t-key="slot">
+              <div class="rp-heatmap-time">
+                <t t-esc="slotLabel(slot)"/>
+              </div>
+              <t t-foreach="days" t-as="day" t-key="day">
+                <button class="rp-heatmap-slot"
+                        t-att-class="isOn(emp.id, day, slot) ? 'is-on' : 'is-off'"
+                        disabled="disabled"
+                        t-att-title="slotTitle(emp.id, day, slot)"
+                        >
+                  <span class="rp-heatmap-slot-dot"/>
+                </button>
+              </t>
+            </t>
+          </div>
+        </div>
+
+        <div class="rp-heatmap-legend">
+          <span><strong>Lecture seule</strong> dans l’application planning.</span>
+          <span>Les disponibilités se consultent ici et se modifient directement dans Odoo.</span>
+          <span class="rp-heatmap-pill is-on">Disponible</span>
+          <span class="rp-heatmap-pill is-off">Indisponible</span>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>

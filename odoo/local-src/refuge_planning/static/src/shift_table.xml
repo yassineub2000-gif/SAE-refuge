@@ -16,6 +16,8 @@
               <div class="refuge-shift-state"><t t-esc="stateLabel(s.state)"/></div>
               <div t-if="s.notes" class="refuge-shift-notes"><t t-esc="s.notes"/></div>
               <div class="refuge-shift-actions">
+                <button class="refuge-btn refuge-btn-ghost"
+                        t-on-click="() => props.onEdit(s.id)">Modifier</button>
                 <button class="refuge-btn refuge-btn-ghost" t-if="s.state !== 'confirmed'"
                         t-on-click="() => props.onSetState(s.id, 'confirmed')">Valider</button>
                 <button class="refuge-btn refuge-btn-ghost" t-if="s.state !== 'draft'"
