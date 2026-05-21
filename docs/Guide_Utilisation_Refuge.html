@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Guide d'utilisation — Le Refuge des Aventuriers</title>
+<style>
+  :root{
+    --violet:#6a2c91; --violet-d:#4e1f6b; --violet-soft:#f3eaf8;
+    --blue:#2f6db0; --orange:#d9622b; --green:#2f8f5b;
+    --ink:#1f2330; --muted:#6b7280; --border:#e2d8ec; --bg:#faf7fd;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.55}
+  header{background:linear-gradient(135deg,var(--violet),var(--violet-d));
+         color:#fff;padding:2.2rem 2rem 1.6rem}
+  header .sub{opacity:.85;font-weight:500}
+  header h1{margin:.2rem 0 .4rem;font-size:2rem}
+  .wrap{max-width:1080px;margin:0 auto;padding:1.5rem 2rem 4rem}
+  h2{color:var(--violet-d);border-bottom:3px solid var(--violet);padding-bottom:.35rem;margin-top:2.4rem;font-size:1.35rem}
+  h3{color:var(--violet);margin-top:1.6rem;font-size:1.05rem}
+  p.lead{color:var(--muted)}
+  .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1rem 1.3rem;box-shadow:0 2px 8px rgba(80,30,110,.06);margin:1rem 0}
+  .role{border-left:5px solid var(--violet)}
+  .role.client{border-left-color:var(--green)}
+  .role.barman{border-left-color:var(--orange)}
+  .role.gerant{border-left-color:var(--blue)}
+  ol.steps{margin:.4rem 0 .4rem 1.2rem;padding:0}
+  ol.steps li{margin:.3rem 0}
+  table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.92rem}
+  th,td{border:1px solid var(--border);padding:.5rem .6rem;text-align:left;vertical-align:top}
+  th{background:var(--violet);color:#fff}
+  tr:nth-child(even) td{background:var(--violet-soft)}
+  code{background:#efe7f6;color:var(--violet-d);padding:.05rem .35rem;border-radius:5px;font-family:ui-monospace,Consolas,monospace;font-size:.86em}
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:.08rem .55rem;text-transform:uppercase}
+  .pill.client{background:#e9f6ee;color:var(--green)}
+  .pill.barman{background:#fff1e8;color:var(--orange)}
+  .pill.gerant{background:#eaf1fb;color:var(--blue)}
+  .note{border-left:4px solid var(--orange);background:#fff6ef;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin:1rem 0}
+  .diagram{overflow-x:auto}.mermaid{display:flex;justify-content:center}
+  .toc a{color:var(--violet-d);text-decoration:none}.toc a:hover{text-decoration:underline}
+  footer{color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header>
+  <div class="sub">SAÉ 6.Integ.01 — Bar « Le Refuge des Aventuriers »</div>
+  <h1>Guide d'utilisation</h1>
+  <div class="sub">Client · Barman · Gérant</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card toc">
+    <strong>Sommaire</strong>
+    <ul>
+      <li><a href="#acces">1. Accès &amp; comptes</a></li>
+      <li><a href="#client">2. Client — commander à table (QR Code)</a></li>
+      <li><a href="#barman">3. Barman — espace temps réel</a></li>
+      <li><a href="#clients">4. Gérant — fiches clients &amp; fidélité</a></li>
+      <li><a href="#planning">5. Gérant — planning des employés</a></li>
+      <li><a href="#qr">6. Gérant — QR Codes des tables</a></li>
+      <li><a href="#fidelite">7. Règles du programme de fidélité</a></li>
+    </ul>
+  </div>
+
+  <!-- ===================== ACCÈS ===================== -->
+  <h2 id="acces">1. Accès &amp; comptes</h2>
+  <table>
+    <tr><th>Profil</th><th>Connexion</th><th>Ce qu'il voit</th></tr>
+    <tr><td><span class="pill client">Client</span></td><td>Aucune — scan du QR Code de la table (public)</td><td>Le menu et son panier uniquement</td></tr>
+    <tr><td><span class="pill barman">Employé / Barman</span></td><td>Login = e-mail de travail, mot de passe initial <code>refuge</code></td><td>Page tablette <code>/refuge</code> → Planning · Espace barman · Clients</td></tr>
+    <tr><td><span class="pill gerant">Gérant / Admin</span></td><td><code>admin</code> / <code>admin</code></td><td>Back-office Odoo complet + toutes les apps</td></tr>
+  </table>
+  <div class="note">Un compte employé qui ouvre <code>/</code> ou <code>/web</code> est
+  automatiquement redirigé vers la page tablette <code>/refuge</code> (pas d'accès au
+  back-office). Le gérant n'est pas concerné.</div>
+
+  <!-- ===================== CLIENT ===================== -->
+  <h2 id="client">2. Client — commander à table</h2>
+  <div class="card role client">
+    <ol class="steps">
+      <li><strong>Scanner</strong> le QR Code posé sur la table avec son téléphone.</li>
+      <li><strong>S'identifier</strong> (pour cumuler des points) ou continuer <strong>en invité</strong>.</li>
+      <li>Parcourir le <strong>menu par catégorie</strong> (bières, vins, cocktails…) et ajouter des articles au <strong>panier</strong>.</li>
+      <li>Vérifier le <strong>total</strong>, puis <strong>« Passer la commande »</strong>.</li>
+      <li>Un <strong>écran de confirmation</strong> s'affiche : la commande part en cuisine. Le paiement se fait au comptoir.</li>
+    </ol>
+  </div>
+
+  <!-- ===================== BARMAN ===================== -->
+  <h2 id="barman">3. Barman — espace temps réel</h2>
+  <p class="lead">Ouvrir <code>/refuge/barman</code>. Le tableau se rafraîchit
+  <strong>tout seul toutes les 5 secondes</strong> : aucune action n'est nécessaire pour
+  voir une nouvelle commande arriver.</p>
+
+  <div class="card diagram">
+    <pre class="mermaid">
+flowchart LR
+    N["Nouvelles<br/>(partagées)"] -->|"Démarrer la préparation"| P["En préparation<br/>(à moi)"]
+    P -->|"Marquer prête"| R["Prêtes<br/>(à moi)"]
+    R -->|"Encaissement POS"| S["Servie / payée"]
+    P -.->|"Remettre en nouvelle"| N
+    R -.->|"Remettre en nouvelle"| N
+    style N fill:#f3eaf8,stroke:#6a2c91
+    style S fill:#e9f6ee,stroke:#2f8f5b
+    </pre>
+  </div>
+
+  <div class="card role barman">
+    <ul>
+      <li><strong>Nouvelles</strong> : visibles par tous les barmen. La plus ancienne est en haut (priorité).</li>
+      <li><strong>Démarrer la préparation</strong> : la commande <em>vous est attribuée</em> et n'apparaît plus que chez vous.</li>
+      <li><strong>Minuteur 5 min</strong> par étape : vert au-dessus d'1 min, rouge en dessous, clignote à <code>00:00</code> si dépassé.</li>
+      <li><strong>Reprendre</strong> : récupérer une commande prise par un collègue (la réattribue à vous).</li>
+      <li><strong>Remettre en nouvelle</strong> : relâcher une commande pour la rendre disponible à tous (remet le minuteur à zéro).</li>
+      <li><strong>Rattacher un client</strong> : associer une fiche client à la commande pour le cumul de points (recherche / création rapide).</li>
+    </ul>
+  </div>
+  <div class="note">Les <strong>points de fidélité gagnés</strong> ne sont crédités
+  qu'au moment où la commande est <strong>servie/encaissée</strong> — une commande jamais
+  servie ne rapporte aucun point.</div>
+
+  <!-- ===================== CLIENTS ===================== -->
+  <h2 id="clients">4. Gérant — fiches clients &amp; fidélité</h2>
+  <div class="card role gerant">
+    <p>Ouvrir <code>/refuge/clients</code>.</p>
+    <ol class="steps">
+      <li><strong>Rechercher</strong> un client (nom, e-mail, téléphone).</li>
+      <li>Consulter sa <strong>fiche</strong> : solde de points et historique de commandes (lecture seule).</li>
+      <li><strong>Modifier</strong> uniquement <em>nom, téléphone, e-mail</em>. Les points et l'historique ne sont pas éditables ici.</li>
+    </ol>
+  </div>
+
+  <!-- ===================== PLANNING ===================== -->
+  <h2 id="planning">5. Gérant — planning des employés</h2>
+  <div class="card role gerant">
+    <p>Ouvrir <code>/refuge/planning</code>. Trois onglets : <strong>Planning</strong>,
+    <strong>Disponibilités</strong>, <strong>Mon espace</strong>.</p>
+    <h3>Saisir les disponibilités</h3>
+    <ol class="steps">
+      <li>Onglet <strong>Disponibilités</strong> : grille par demi-heure (10h → 01h).</li>
+      <li>Cliquer le bouton <strong>Statut</strong> d'un jour pour le basculer disponible / indisponible, ou cliquer une <strong>case horaire</strong> pour activer/désactiver ce créneau précis.</li>
+      <li>Le gérant édite tout le monde ; un employé n'édite que sa propre ligne.</li>
+    </ol>
+    <h3>Générer &amp; valider le planning</h3>
+    <ol class="steps">
+      <li><strong>« Générer la proposition »</strong> : crée des shifts en <em>brouillon</em> qui respectent les contraintes (voir ci-dessous). Les créneaux non couverts sont signalés.</li>
+      <li>Ajuster si besoin via <strong>Édition manuelle</strong> (ajouter / déplacer un shift) ou les boutons des cartes.</li>
+      <li><strong>« Valider la semaine »</strong> : passe les brouillons en <em>confirmé</em>.</li>
+    </ol>
+    <table>
+      <tr><th>Contrainte respectée automatiquement</th></tr>
+      <tr><td>Fermé le lundi · max 10h / jour / employé · 11h de repos entre deux shifts · couverture continue 10h–01h · 24h hebdomadaires contractuelles.</td></tr>
+    </table>
+  </div>
+
+  <!-- ===================== QR ===================== -->
+  <h2 id="qr">6. Gérant — QR Codes des tables</h2>
+  <div class="card role gerant">
+    <p>Ouvrir <code>/refuge/admin/qr</code>.</p>
+    <ul>
+      <li><strong>Voir / imprimer</strong> les QR Codes de chaque table (une page imprimable est fournie).</li>
+      <li><strong>Régénérer le jeton</strong> d'une table (« rotate ») : invalide l'ancien QR — utile si un QR a fuité.</li>
+    </ul>
+  </div>
+
+  <!-- ===================== FIDÉLITÉ ===================== -->
+  <h2 id="fidelite">7. Programme de fidélité — règles</h2>
+  <table>
+    <tr><th>Règle</th><th>Détail</th></tr>
+    <tr><td>Acquisition</td><td>1 point par euro dépensé (crédité à l'encaissement).</td></tr>
+    <tr><td>Palier 50 pts</td><td>Réduction de 5 %.</td></tr>
+    <tr><td>Palier 100 pts</td><td>Réduction de 10 %.</td></tr>
+    <tr><td>Palier 200 pts</td><td>Boisson offerte (valeur max 8 €).</td></tr>
+    <tr><td>Expiration</td><td>Points perdus après 6 mois d'inactivité du client.</td></tr>
+    <tr><td>Visibilité</td><td>Solde consultable sur le ticket de caisse et dans l'interface POS.</td></tr>
+  </table>
+
+</div>
+
+<footer>Guide d'utilisation — Le Refuge des Aventuriers · SAÉ 6.Integ.01</footer>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+</script>
+</body>
+</html>
