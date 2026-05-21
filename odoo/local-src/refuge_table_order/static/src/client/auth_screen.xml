@@ -3,20 +3,51 @@
 
   <t t-name="refuge_table_order.AuthScreen">
     <div class="refuge-auth">
-      <h2 class="refuge-auth-title">Avant de commander…</h2>
 
       <div t-if="state.mode === 'choice'" class="refuge-auth-choices">
-        <p class="refuge-auth-lead">Identifiez-vous pour gagner et utiliser vos points fidélité,
-          ou continuez en invité.</p>
-        <button class="refuge-btn refuge-btn-primary refuge-auth-choice"
-                t-on-click="() => this.show('login')">J'ai déjà un compte</button>
-        <button class="refuge-btn refuge-btn-ghost refuge-auth-choice"
-                t-on-click="() => this.show('signup')">Créer un compte</button>
-        <button class="refuge-btn refuge-btn-ghost refuge-auth-choice refuge-auth-guest"
-                t-on-click="props.onGuest">Continuer en invité</button>
+        <div class="refuge-auth-hero">
+          <div class="refuge-auth-hero-badge">🍸</div>
+          <h2 class="refuge-auth-title">Avant de commander…</h2>
+          <p class="refuge-auth-lead">Identifiez-vous pour cumuler et utiliser vos
+            <span class="refuge-auth-hl">points fidélité</span>, ou continuez en invité.</p>
+        </div>
+
+        <button class="refuge-auth-option refuge-auth-option-primary"
+                t-on-click="() => this.show('login')">
+          <span class="refuge-auth-option-icon">👤</span>
+          <span class="refuge-auth-option-text">
+            <span class="refuge-auth-option-title">J'ai déjà un compte</span>
+            <span class="refuge-auth-option-sub">Connexion avec votre code à 4-6 chiffres</span>
+          </span>
+          <span class="refuge-auth-option-arrow">→</span>
+        </button>
+
+        <button class="refuge-auth-option"
+                t-on-click="() => this.show('signup')">
+          <span class="refuge-auth-option-icon">✨</span>
+          <span class="refuge-auth-option-text">
+            <span class="refuge-auth-option-title">Créer un compte</span>
+            <span class="refuge-auth-option-sub">1 point par € dépensé, dès la 1ʳᵉ commande</span>
+          </span>
+          <span class="refuge-auth-option-arrow">→</span>
+        </button>
+
+        <div class="refuge-auth-sep"><span>ou</span></div>
+
+        <button class="refuge-auth-option refuge-auth-option-ghost"
+                t-on-click="props.onGuest">
+          <span class="refuge-auth-option-icon">🥤</span>
+          <span class="refuge-auth-option-text">
+            <span class="refuge-auth-option-title">Continuer en invité</span>
+            <span class="refuge-auth-option-sub">Commander sans compte ni points fidélité</span>
+          </span>
+          <span class="refuge-auth-option-arrow">→</span>
+        </button>
       </div>
 
-      <form t-elif="state.mode === 'login' or state.mode === 'signup'"
+      <h2 t-else="" class="refuge-auth-title">Avant de commander…</h2>
+
+      <form t-if="state.mode === 'login' or state.mode === 'signup'"
             class="refuge-auth-form"
             t-on-submit.prevent="submit">
         <div class="refuge-auth-form-head">

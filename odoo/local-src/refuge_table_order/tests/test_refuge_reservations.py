@@ -17,7 +17,10 @@ class TestRefugeReservations(TransactionCase):
             ("reservation_datetime", "<=", now + timedelta(days=7)),
         ])
         self.assertTrue(reservations, "Des réservations de démonstration doivent être présentes.")
-        self.assertIn("confirmed", reservations.mapped("status"))
+        self.assertTrue(
+            set(reservations.mapped("status")).issubset({"confirmed", "seated"}),
+            "Les réservations de démo doivent rester dans des statuts actifs cohérents.",
+        )
         self.assertTrue(all(name.startswith("RES-") for name in reservations.mapped("name")))
 
     def test_create_reservation_prefills_phone_and_reference(self):

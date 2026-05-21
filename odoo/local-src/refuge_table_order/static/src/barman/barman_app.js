@@ -3,13 +3,13 @@
 import { Component, useState, onWillStart, onMounted, onWillUnmount } from "@odoo/owl";
 import { refugeRpc } from "@refuge_table_order/common/rpc";
 import { OrderCard } from "@refuge_table_order/barman/order_card";
-import { PartnerPicker } from "@refuge_table_order/barman/partner_picker";
+import { AppHeader } from "@refuge_aventuriers/theme/app_header";
 
 const POLLING_INTERVAL_MS = 5000;  // ≤ 10 s (cahier des charges §3.5)
 
 export class BarmanApp extends Component {
     static template = "refuge_table_order.BarmanApp";
-    static components = { OrderCard, PartnerPicker };
+    static components = { OrderCard, AppHeader };
 
     setup() {
         this.state = useState({
@@ -17,7 +17,6 @@ export class BarmanApp extends Component {
             loading: true,
             lastFetchedAt: null,
             error: null,
-            pickerOrder: null,  // commande pour laquelle on ouvre la modale client
         });
         this._timer = null;
         onWillStart(() => this.fetchOrders());
@@ -47,9 +46,39 @@ export class BarmanApp extends Component {
     async setStatus(orderId, status) {
         try {
             await refugeRpc("/refuge/api/barman/set_status", { order_id: orderId, status });
+            this.state.error = null;
+            await this.fetchOrders();
+        } catch (e) {
+            if (e.message === "not_yours") {
+                this.state.error =
+                    "Cette commande a été prise par un autre barman — clique sur « Reprendre » pour la récupérer.";
+                await this.fetchOrders();
+            } else {
+                this.state.error = e.message;
+            }
+        }
+    }
+
+    async takeOrder(orderId) {
+        try {
+            await refugeRpc("/refuge/api/barman/take", { order_id: orderId });
+            this.state.error = null;
             await this.fetchOrders();
         } catch (e) {
             this.state.error = e.message;
+        }
+    }
+
+    async releaseOrder(orderId) {
+        try {
+            await refugeRpc("/refuge/api/barman/release", { order_id: orderId });
+            this.state.error = null;
+            await this.fetchOrders();
+        } catch (e) {
+            this.state.error =
+                e.message === "not_yours"
+                    ? "Seul le barman en charge peut remettre cette commande en attente."
+                    : e.message;
         }
     }
 
@@ -59,13 +88,6 @@ export class BarmanApp extends Component {
             if (by[o.status]) by[o.status].push(o);
         }
         return by;
-    }
-
-    openPartnerPicker(order) {
-        this.state.pickerOrder = order;
-    }
-    closePartnerPicker() {
-        this.state.pickerOrder = null;
     }
 
     get lastFetchedAtLabel() {

@@ -26,7 +26,18 @@
                 <div class="refuge-card-name"><t t-esc="p.name"/></div>
                 <div t-if="p.description" class="refuge-card-desc"><t t-esc="p.description"/></div>
               </div>
-              <div class="refuge-card-add" aria-label="Ajouter">+</div>
+              <div class="refuge-card-add-area" t-on-click.stop="">
+                <button t-if="qtyOf(p.id) === 0"
+                        class="refuge-card-add" aria-label="Ajouter"
+                        t-on-click.stop="() => props.onAdd(p)">+</button>
+                <div t-else="" class="refuge-card-stepper" aria-label="Quantité">
+                  <button class="refuge-card-step" aria-label="Retirer"
+                          t-on-click.stop="() => this.decrement(p.id)">−</button>
+                  <span class="refuge-card-qty"><t t-esc="qtyOf(p.id)"/></span>
+                  <button class="refuge-card-step" aria-label="Ajouter"
+                          t-on-click.stop="() => props.onAdd(p)">+</button>
+                </div>
+              </div>
             </article>
           </div>
         </section>

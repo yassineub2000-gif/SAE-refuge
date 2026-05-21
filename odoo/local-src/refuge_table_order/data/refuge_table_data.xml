@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
-  <!-- Quelques tables de démo pour tester les QR codes. -->
+  <!-- Plan de salle complet : 10 tables synchronisées avec le POS restaurant. -->
   <record id="table_1" model="refuge.table">
     <field name="number">1</field>
-    <field name="name">Terrasse</field>
+    <field name="name">Salle 1</field>
     <field name="token">demo-token-table-1</field>
   </record>
   <record id="table_2" model="refuge.table">
     <field name="number">2</field>
-    <field name="name">Comptoir</field>
+    <field name="name">Salle 2</field>
     <field name="token">demo-token-table-2</field>
   </record>
   <record id="table_3" model="refuge.table">
     <field name="number">3</field>
-    <field name="name">Salle</field>
+    <field name="name">Salle 3</field>
     <field name="token">demo-token-table-3</field>
+  </record>
+  <record id="table_4" model="refuge.table">
+    <field name="number">4</field>
+    <field name="name">Salle 4</field>
+    <field name="token">demo-token-table-4</field>
+  </record>
+  <record id="table_5" model="refuge.table">
+    <field name="number">5</field>
+    <field name="name">Salle 5</field>
+    <field name="token">demo-token-table-5</field>
+  </record>
+  <record id="table_6" model="refuge.table">
+    <field name="number">6</field>
+    <field name="name">Salle 6</field>
+    <field name="token">demo-token-table-6</field>
+  </record>
+  <record id="table_7" model="refuge.table">
+    <field name="number">7</field>
+    <field name="name">Salle 7</field>
+    <field name="token">demo-token-table-7</field>
+  </record>
+  <record id="table_8" model="refuge.table">
+    <field name="number">8</field>
+    <field name="name">Salle 8</field>
+    <field name="token">demo-token-table-8</field>
+  </record>
+  <record id="table_9" model="refuge.table">
+    <field name="number">9</field>
+    <field name="name">Salle 9</field>
+    <field name="token">demo-token-table-9</field>
+  </record>
+  <record id="table_10" model="refuge.table">
+    <field name="number">10</field>
+    <field name="name">Salle 10</field>
+    <field name="token">demo-token-table-10</field>
   </record>
 </odoo>

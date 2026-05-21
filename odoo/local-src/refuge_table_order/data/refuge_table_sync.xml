@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <function model="refuge.table" name="_refuge_apply_default_tables"/>
+    <function model="refuge.table" name="sync_pos_restaurant_memory"/>
+    <function model="pos.order" name="normalize_refuge_pos_references"/>
+    <function model="pos.order" name="cleanup_refuge_table_drafts"/>
+</odoo>

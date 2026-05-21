@@ -2,33 +2,66 @@
 <templates xml:space="preserve">
 
   <t t-name="refuge_table_order.OrderCard">
-    <article class="refuge-order-card">
-      <div class="refuge-order-card-head">
-        <strong>Table <t t-esc="props.order.table"/></strong>
-        <span t-if="props.order.table_label">— <t t-esc="props.order.table_label"/></span>
-        <span class="refuge-order-time"><t t-esc="createdAt"/></span>
+    <article class="refuge-order-card" t-att-class="{ 'is-guest': isGuest }">
+      <div class="refuge-order-card-top">
+        <span class="refuge-order-table">
+          Table <t t-esc="props.order.table"/>
+          <span t-if="props.order.table_label" class="refuge-order-table-label">· <t t-esc="props.order.table_label"/></span>
+        </span>
+        <span t-if="timerLabel" class="refuge-order-timer"
+              t-att-class="timerClass"
+              t-att-title="'Temps restant sur cette étape (5 min)'">
+          ⏱ <t t-esc="timerLabel"/>
+        </span>
+        <span t-else="" class="refuge-order-time"><t t-esc="createdAt"/></span>
       </div>
-      <div class="refuge-order-partner">
-        <t t-if="props.order.partner_name">
-          <span class="refuge-order-client">👤 <t t-esc="props.order.partner_name"/></span>
-          <button class="refuge-btn refuge-btn-ghost refuge-btn-xs"
-                  t-on-click="props.onAttachPartner">Modifier</button>
+
+      <div class="refuge-order-identity">
+        <t t-if="!isGuest">
+          <div class="refuge-order-client-name">👤 <t t-esc="props.order.partner_name"/></div>
+          <div class="refuge-order-ref-big"><t t-esc="props.order.reference"/></div>
         </t>
         <t t-else="">
-          <button class="refuge-btn refuge-btn-ghost refuge-btn-xs"
-                  t-on-click="props.onAttachPartner">+ Associer un client</button>
+          <div class="refuge-order-ref-big"><t t-esc="props.order.reference"/></div>
+          <div class="refuge-order-guest-tag">Commande invité</div>
         </t>
       </div>
+
+      <div t-if="isAssigned" class="refuge-order-assignee"
+           t-att-class="isMine ? 'is-mine' : 'is-other'">
+        <t t-if="isMine">✋ Pris par vous</t>
+        <t t-else="">🔒 Pris par <t t-esc="props.order.assignee_name"/></t>
+      </div>
+
       <ul class="refuge-order-card-lines">
         <li t-foreach="props.order.lines" t-as="l" t-key="l_index">
           <span class="refuge-order-qty"><t t-esc="l.qty"/>×</span>
           <span class="refuge-order-name"><t t-esc="l.name"/></span>
+          <span t-if="l.qty_available !== undefined"
+                class="refuge-order-stock"
+                t-att-class="stockClass(l)"
+                t-att-title="l.is_bom ? 'Réalisables avec le stock d\'ingrédients actuel' : 'Stock disponible'">
+            <t t-esc="fmtStock(l.qty_available)"/>
+            <t t-esc="l.is_bom ? ' réalisables' : ' en stock'"/>
+          </span>
         </li>
       </ul>
+
       <div class="refuge-order-card-foot">
-        <span class="refuge-order-ref"><t t-esc="props.order.reference"/></span>
-        <button class="refuge-btn refuge-btn-primary" t-on-click="props.onNext">
+        <button t-if="canAdvance"
+                class="refuge-btn refuge-btn-primary refuge-order-action"
+                t-on-click="props.onNext">
           <t t-esc="props.nextLabel"/>
+        </button>
+        <button t-else=""
+                class="refuge-btn refuge-order-action refuge-order-take"
+                t-on-click="props.onTake">
+          Reprendre la commande
+        </button>
+        <button t-if="canRelease"
+                class="refuge-btn refuge-order-action refuge-order-release"
+                t-on-click="props.onRelease">
+          ↩ Remettre en nouvelle
         </button>
       </div>
     </article>

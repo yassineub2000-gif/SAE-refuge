@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <!--
-    Deux pages HTML standalone hébergent les bundles OWL :
-    - client_page : sert le bundle refuge_table_order.assets_client
-    - barman_page : sert le bundle refuge_table_order.assets_barman
-    Les deux pages sont minimales (un div de montage) et injectent la session
-    pour que le framework web se bootstrap correctement.
+    Pages HTML standalone qui hébergent les bundles OWL. Chaque <head>
+    applique le thème AVANT le rendu (anti-flash) : lit le choix mémorisé
+    (localStorage 'refuge-theme'), sinon suit la préférence système.
   -->
+
+  <template id="theme_boot" name="Refuge — boot thème (anti-flash)">
+    <script type="text/javascript">(function(){try{var k='refuge-theme',t=localStorage.getItem(k);if(!t){t=(window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  </template>
 
   <template id="client_page" name="Refuge — Commande sur table">&lt;!DOCTYPE html&gt;
     <html t-att-data-table-token="table_token">
@@ -16,6 +18,7 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <t t-call="refuge_table_order.theme_boot"/>
         <script type="text/javascript">
           var odoo = <t t-out="json.dumps({
             'csrf_token': request.csrf_token(None),
@@ -43,6 +46,7 @@
         <title>Le Refuge des Aventuriers — Espace barman</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <t t-call="refuge_table_order.theme_boot"/>
         <script type="text/javascript">
           var odoo = <t t-out="json.dumps({
             'csrf_token': request.csrf_token(None),
@@ -55,6 +59,226 @@
       </head>
       <body class="refuge-barman">
         <div id="refuge-root"/>
+      </body>
+    </html>
+  </template>
+
+  <template id="clients_page" name="Refuge — Clients">&lt;!DOCTYPE html&gt;
+    <html>
+      <head>
+        <title>Le Refuge des Aventuriers — Clients</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <t t-call="refuge_table_order.theme_boot"/>
+        <script type="text/javascript">
+          var odoo = <t t-out="json.dumps({
+            'csrf_token': request.csrf_token(None),
+            '__session_info__': request.env['ir.http'].session_info(),
+            'debug': debug,
+          })"/>;
+          odoo.loadMenusPromise = Promise.resolve();
+        </script>
+        <t t-call-assets="refuge_table_order.assets_clients"/>
+      </head>
+      <body class="refuge-client">
+        <div id="refuge-root"/>
+      </body>
+    </html>
+  </template>
+
+  <template id="qr_admin_page" name="Refuge — QR Codes admin">&lt;!DOCTYPE html&gt;
+    <html>
+      <head>
+        <title>Le Refuge des Aventuriers — QR Codes</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <t t-call="refuge_table_order.theme_boot"/>
+        <script type="text/javascript">
+          var odoo = <t t-out="json.dumps({
+            'csrf_token': request.csrf_token(None),
+            '__session_info__': request.env['ir.http'].session_info(),
+            'debug': debug,
+          })"/>;
+          odoo.loadMenusPromise = Promise.resolve();
+        </script>
+        <t t-call-assets="refuge_table_order.assets_admin"/>
+      </head>
+      <body class="refuge-client">
+        <div id="refuge-root"/>
+      </body>
+    </html>
+  </template>
+
+  <template id="qr_admin_print_page" name="Refuge — Impression QR">&lt;!DOCTYPE html&gt;
+    <html>
+      <head>
+        <title>Le Refuge des Aventuriers — Impression QR</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <style>
+          * { box-sizing: border-box; }
+          body { margin: 0; font-family: Inter, Arial, sans-serif; color: #23170f; background: #fffdf8; }
+          .rq-print-wrap { padding: 16px; }
+          .rq-print-head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 18px; }
+          .rq-print-title { font-size: 28px; font-weight: 800; }
+          .rq-print-sub { color: #6b5a4b; font-size: 13px; }
+          .rq-print-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+          .rq-print-card {
+            border: 1px solid #d8c8ba; border-radius: 18px; padding: 18px;
+            display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: center;
+            break-inside: avoid; page-break-inside: avoid; background: #fff;
+          }
+          .rq-print-qr {
+            width: 140px; height: 140px; border-radius: 14px; border: 1px solid #e5d8cb;
+            background: #fff; display: flex; align-items: center; justify-content: center; padding: 8px;
+          }
+          .rq-print-qr img { width: 100%; height: 100%; object-fit: contain; }
+          .rq-print-table { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+          .rq-print-label { color: #8c5a35; font-weight: 700; margin-bottom: 10px; }
+          .rq-print-url {
+            font-size: 11px; line-height: 1.4; color: #6b5a4b; word-break: break-all;
+            padding: 8px 10px; border-radius: 10px; background: #f7f1ea;
+          }
+          @media print {
+            body { background: white; }
+            .rq-print-wrap { padding: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="rq-print-wrap">
+          <div class="rq-print-head">
+            <div>
+              <div class="rq-print-title">QR Codes des tables</div>
+              <div class="rq-print-sub">Le Refuge des Aventuriers</div>
+            </div>
+            <div class="rq-print-sub"><t t-esc="base_url"/></div>
+          </div>
+          <div class="rq-print-grid">
+            <t t-foreach="tables" t-as="table" t-key="table['id']">
+              <section class="rq-print-card">
+                <div class="rq-print-qr">
+                  <img t-att-src="table['qr_image_url']" t-att-alt="'QR table ' + table['number']"/>
+                </div>
+                <div>
+                  <div class="rq-print-table">Table <t t-esc="table['number']"/></div>
+                  <div class="rq-print-label"><t t-esc="table['name'] or ('Salle ' + table['number'])"/></div>
+                  <div class="rq-print-url"><t t-esc="table['qr_url']"/></div>
+                </div>
+              </section>
+            </t>
+          </div>
+        </div>
+        <script type="text/javascript">
+          window.addEventListener('load', function(){ window.print(); });
+        </script>
+      </body>
+    </html>
+  </template>
+
+  <template id="staff_home" name="Refuge — Accueil tablette">&lt;!DOCTYPE html&gt;
+    <html>
+      <head>
+        <title>Le Refuge des Aventuriers — Accueil</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <t t-call="refuge_table_order.theme_boot"/>
+        <link rel="stylesheet" type="text/css"
+              href="/refuge_aventuriers/static/src/theme/refuge_theme.css"/>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          .rh-main {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 2.5rem 1.5rem;
+          }
+          .rh-wrap { min-height: 100vh; display: flex; flex-direction: column; }
+          .rh-brand {
+            color: var(--rf-accent); font-weight: 800; letter-spacing: 0.08em;
+            text-transform: uppercase; font-size: 0.85rem; margin-bottom: 0.4rem;
+          }
+          .rh-welcome { font-size: 1.6rem; font-weight: 800; margin-bottom: 2.25rem;
+            color: var(--rf-text); text-align: center; }
+          .rh-tiles {
+            display: grid; grid-template-columns: repeat(3, minmax(190px, 250px));
+            gap: 1.4rem; width: 100%; max-width: 850px;
+          }
+          @media (max-width: 760px) { .rh-tiles { grid-template-columns: 1fr; } }
+          .rh-tile {
+            display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
+            text-decoration: none; color: var(--rf-text);
+            background: var(--rf-surface); border: 1px solid var(--rf-border);
+            border-radius: 20px; padding: 2.4rem 1.25rem;
+            box-shadow: var(--rf-shadow);
+            transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+            -webkit-tap-highlight-color: transparent;
+          }
+          .rh-tile:hover { transform: translateY(-3px); border-color: var(--rf-accent);
+            box-shadow: var(--rf-shadow-lg); }
+          .rh-tile:active { transform: scale(0.98); }
+          .rh-tile-ico {
+            font-size: 2rem; width: 4rem; height: 4rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--rf-accent-soft);
+          }
+          .rh-tile-title { font-size: 1.15rem; font-weight: 800; }
+          .rh-tile-sub { font-size: 0.85rem; color: var(--rf-muted); text-align: center; }
+        </style>
+      </head>
+      <body class="refuge-staff">
+        <div class="rh-wrap">
+          <header class="rf-header">
+            <div class="rf-header-titles">
+              <div class="rf-header-title">Bonjour <t t-esc="first_name"/></div>
+              <div class="rf-header-sub"><t t-esc="user_name"/></div>
+            </div>
+            <div class="rf-header-actions">
+              <button class="rf-iconbtn" type="button" id="rh-theme"
+                      title="Basculer le thème" aria-label="Basculer le thème clair/sombre">☾</button>
+              <a class="rf-iconbtn" href="/web/session/logout?redirect=/web/login"
+                 title="Déconnexion" aria-label="Déconnexion">⏻</a>
+            </div>
+          </header>
+          <main class="rh-main">
+            <div class="rh-brand">Le Refuge des Aventuriers</div>
+            <div class="rh-welcome">Que souhaitez-vous faire&#160;?</div>
+            <div class="rh-tiles">
+              <a class="rh-tile" href="/refuge/planning">
+                <span class="rh-tile-ico">📅</span>
+                <span class="rh-tile-title">Planning</span>
+                <span class="rh-tile-sub">Mon planning et celui de l'équipe</span>
+              </a>
+              <a class="rh-tile" href="/refuge/barman">
+                <span class="rh-tile-ico">🍸</span>
+                <span class="rh-tile-title">Espace barman</span>
+                <span class="rh-tile-sub">Commandes table en temps réel</span>
+              </a>
+              <a class="rh-tile" href="/refuge/clients">
+                <span class="rh-tile-ico">👥</span>
+                <span class="rh-tile-title">Clients</span>
+                <span class="rh-tile-sub">Fiches, points fidélité, coordonnées</span>
+              </a>
+              <a t-if="is_manager" class="rh-tile" href="/refuge/admin/qr">
+                <span class="rh-tile-ico">▣</span>
+                <span class="rh-tile-title">QR Codes</span>
+                <span class="rh-tile-sub">Imprimer, régénérer et vérifier les tables</span>
+              </a>
+            </div>
+          </main>
+        </div>
+        <script type="text/javascript">
+          (function(){
+            var b=document.getElementById('rh-theme');
+            function sync(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀':'☾';}
+            sync();
+            b.addEventListener('click',function(){
+              var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+              document.documentElement.setAttribute('data-theme',t);
+              try{localStorage.setItem('refuge-theme',t);}catch(e){}
+              sync();
+            });
+          })();
+        </script>
       </body>
     </html>
   </template>

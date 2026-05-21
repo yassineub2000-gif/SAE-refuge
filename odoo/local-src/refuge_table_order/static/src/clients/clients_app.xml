@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.ClientsApp">
+    <div class="refuge-clients-root">
+      <AppHeader title="'Clients'" subtitle="'Fiches, points fidélité, coordonnées'"
+                 showBack="true" backHref="'/refuge'" showLogout="true"/>
+
+      <div t-if="state.error" class="refuge-clients-error"><t t-esc="state.error"/></div>
+
+      <div class="refuge-clients-search">
+        <input type="text" class="refuge-input"
+               placeholder="Rechercher par nom, téléphone ou email…"
+               t-att-value="state.query" t-on-input="onInput"/>
+      </div>
+
+      <div class="refuge-clients-body">
+        <!-- Liste -->
+        <ul class="refuge-clients-list">
+          <li t-if="state.loading and !state.results.length" class="refuge-clients-empty">Recherche…</li>
+          <li t-if="!state.loading and !state.results.length" class="refuge-clients-empty">Aucun client trouvé.</li>
+          <li t-foreach="state.results" t-as="c" t-key="c.id"
+              class="refuge-clients-row"
+              t-att-class="{ 'is-active': state.selected and state.selected.client.id === c.id }"
+              t-on-click="() => this.open(c.id)">
+            <div class="refuge-clients-row-main">
+              <div class="refuge-clients-row-name"><t t-esc="c.name"/></div>
+              <div class="refuge-clients-row-sub">
+                <span t-if="c.phone"><t t-esc="c.phone"/></span>
+                <span t-if="c.phone and c.email"> · </span>
+                <span t-if="c.email"><t t-esc="c.email"/></span>
+              </div>
+            </div>
+            <div class="refuge-clients-row-pts">
+              <t t-esc="c.loyalty_points"/> pts
+              <span t-if="c.loyalty_expired" class="refuge-clients-expired">expirés</span>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Détail -->
+        <div t-if="state.selected" class="refuge-clients-detail">
+          <button class="refuge-clients-detail-close" t-on-click="closeDetail">✕</button>
+
+          <div class="refuge-clients-detail-head">
+            <div class="refuge-clients-detail-name"><t t-esc="state.selected.client.name"/></div>
+            <div class="refuge-clients-pts-badge"
+                 t-att-class="{ 'is-expired': state.selected.client.loyalty_expired }">
+              <span class="refuge-clients-pts-num"><t t-esc="state.selected.client.loyalty_points"/></span>
+              <span class="refuge-clients-pts-lbl">points fidélité<t t-if="state.selected.client.loyalty_expired"> · expirés</t></span>
+            </div>
+          </div>
+
+          <div t-if="state.savedFlash" class="refuge-clients-saved">✓ Coordonnées mises à jour</div>
+
+          <!-- Lecture -->
+          <div t-if="!state.edit" class="refuge-clients-fields">
+            <div class="refuge-clients-field">
+              <span class="refuge-clients-field-lbl">Téléphone</span>
+              <span class="refuge-clients-field-val"><t t-esc="state.selected.client.phone or '—'"/></span>
+            </div>
+            <div class="refuge-clients-field">
+              <span class="refuge-clients-field-lbl">Email</span>
+              <span class="refuge-clients-field-val"><t t-esc="state.selected.client.email or '—'"/></span>
+            </div>
+            <button class="refuge-btn refuge-btn-primary refuge-clients-edit-btn"
+                    t-on-click="startEdit">Modifier les coordonnées</button>
+          </div>
+
+          <!-- Édition -->
+          <div t-else="" class="refuge-clients-fields">
+            <label class="refuge-clients-edit-field">
+              <span>Nom</span>
+              <input type="text" class="refuge-input" t-att-value="state.edit.name"
+                     t-on-input="(ev) => this.updateField('name', ev)"/>
+            </label>
+            <label class="refuge-clients-edit-field">
+              <span>Téléphone</span>
+              <input type="tel" class="refuge-input" t-att-value="state.edit.phone"
+                     t-on-input="(ev) => this.updateField('phone', ev)"/>
+            </label>
+            <label class="refuge-clients-edit-field">
+              <span>Email</span>
+              <input type="email" class="refuge-input" t-att-value="state.edit.email"
+                     t-on-input="(ev) => this.updateField('email', ev)"/>
+            </label>
+            <div class="refuge-clients-edit-actions">
+              <button class="refuge-btn refuge-btn-ghost" t-on-click="cancelEdit"
+                      t-att-disabled="state.saving">Annuler</button>
+              <button class="refuge-btn refuge-btn-primary" t-on-click="save"
+                      t-att-disabled="state.saving">
+                <t t-if="state.saving">Enregistrement…</t>
+                <t t-else="">Enregistrer</t>
+              </button>
+            </div>
+          </div>
+
+          <!-- Historique -->
+          <div class="refuge-clients-history">
+            <h4>Historique des commandes</h4>
+            <div t-if="!state.selected.history.length" class="refuge-clients-empty">
+              Aucune commande enregistrée.
+            </div>
+            <ul t-else="">
+              <li t-foreach="state.selected.history" t-as="h" t-key="h_index">
+                <div class="refuge-clients-h-main">
+                  <span class="refuge-clients-h-ref"><t t-esc="h.reference"/></span>
+                  <span class="refuge-clients-h-src"><t t-esc="sourceLabel(h.source)"/></span>
+                </div>
+                <div class="refuge-clients-h-meta">
+                  <span><t t-esc="fmtDate(h.date)"/></span>
+                  <span class="refuge-clients-h-amount"><t t-esc="fmtAmount(h.amount)"/></span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div t-else="" class="refuge-clients-placeholder">
+          <div class="refuge-clients-placeholder-ico">👥</div>
+          <p>Sélectionnez un client pour voir sa fiche.</p>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>

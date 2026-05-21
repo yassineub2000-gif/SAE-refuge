@@ -6,6 +6,20 @@ from urllib.parse import quote
 from odoo import api, fields, models
 
 
+_REFUGE_DEFAULT_TABLES = {
+    "refuge_table_order.table_1": {"number": "1", "name": "Salle 1", "token": "demo-token-table-1"},
+    "refuge_table_order.table_2": {"number": "2", "name": "Salle 2", "token": "demo-token-table-2"},
+    "refuge_table_order.table_3": {"number": "3", "name": "Salle 3", "token": "demo-token-table-3"},
+    "refuge_table_order.table_4": {"number": "4", "name": "Salle 4", "token": "demo-token-table-4"},
+    "refuge_table_order.table_5": {"number": "5", "name": "Salle 5", "token": "demo-token-table-5"},
+    "refuge_table_order.table_6": {"number": "6", "name": "Salle 6", "token": "demo-token-table-6"},
+    "refuge_table_order.table_7": {"number": "7", "name": "Salle 7", "token": "demo-token-table-7"},
+    "refuge_table_order.table_8": {"number": "8", "name": "Salle 8", "token": "demo-token-table-8"},
+    "refuge_table_order.table_9": {"number": "9", "name": "Salle 9", "token": "demo-token-table-9"},
+    "refuge_table_order.table_10": {"number": "10", "name": "Salle 10", "token": "demo-token-table-10"},
+}
+
+
 class RefugeTable(models.Model):
     """Table physique du bar. Chaque table a un jeton unique utilisé dans l'URL du QR Code,
     indépendant de l'ID technique pour éviter qu'un client puisse incrémenter l'URL et
@@ -53,6 +67,20 @@ class RefugeTable(models.Model):
         readonly=True,
         ondelete="set null",
     )
+    restaurant_floor_id = fields.Many2one(
+        "restaurant.floor",
+        string="Plan de salle POS",
+        readonly=True,
+        ondelete="set null",
+        help="Plan de salle POS natif Odoo utilisé pour la mémoire de table.",
+    )
+    restaurant_table_id = fields.Many2one(
+        "restaurant.table",
+        string="Table POS",
+        readonly=True,
+        ondelete="set null",
+        help="Table native du POS restaurant synchronisée avec cette table QR.",
+    )
 
     _sql_constraints = [
         ("token_unique", "unique(token)", "Le jeton QR doit être unique."),
@@ -62,6 +90,147 @@ class RefugeTable(models.Model):
     def _qr_menu_label(self):
         self.ensure_one()
         return f"Table {self.number}" + (f" — {self.name}" if self.name else "")
+
+    def _restaurant_table_label(self):
+        self.ensure_one()
+        return f"Table {self.number}" + (f" - {self.name}" if self.name else "")
+
+    def _refuge_sorted_by_number(self):
+        return self.sorted(
+            key=lambda table: (
+                int(table.number) if str(table.number).isdigit() else 10**9,
+                table.number or "",
+            )
+        )
+
+    @api.model
+    def _refuge_pos_config(self):
+        refuge_config = self.env.ref("refuge_aventuriers.pos_config_refuge", raise_if_not_found=False)
+        if refuge_config and refuge_config.module_pos_restaurant:
+            return refuge_config
+        restaurant_config = self.env["pos.config"].search([
+            ("company_id", "=", (refuge_config.company_id.id if refuge_config else self.env.company.id)),
+            ("module_pos_restaurant", "=", True),
+            ("active", "=", True),
+        ], limit=1, order="id")
+        return restaurant_config or refuge_config
+
+    @api.model
+    def _ensure_refuge_restaurant_floor(self):
+        pos_config = self._refuge_pos_config()
+        if not pos_config:
+            return self.env["restaurant.floor"]
+        opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != "closed")
+        updates = {}
+        if not pos_config.module_pos_restaurant and not opened_sessions:
+            updates["module_pos_restaurant"] = True
+        if not pos_config.iface_splitbill and not opened_sessions:
+            updates["iface_splitbill"] = True
+        if not pos_config.iface_printbill and not opened_sessions:
+            updates["iface_printbill"] = True
+        if not pos_config.iface_orderline_notes and not opened_sessions:
+            updates["iface_orderline_notes"] = True
+        if updates:
+            pos_config.write(updates)
+
+        floor = self.env["restaurant.floor"].search([
+            ("name", "=", "Refuge des Aventuriers"),
+            ("pos_config_ids", "=", pos_config.id),
+        ], limit=1)
+        if not floor:
+            floor = pos_config.floor_ids[:1]
+        if not floor:
+            floor = self.env["restaurant.floor"].create({
+                "name": "Refuge des Aventuriers",
+                "background_color": "rgb(240, 232, 214)",
+                "pos_config_ids": [(4, pos_config.id)],
+            })
+        else:
+            vals = {}
+            if floor.name != "Refuge des Aventuriers":
+                vals["name"] = "Refuge des Aventuriers"
+            if floor.background_color != "rgb(240, 232, 214)":
+                vals["background_color"] = "rgb(240, 232, 214)"
+            if pos_config not in floor.pos_config_ids:
+                vals["pos_config_ids"] = [(4, pos_config.id)]
+            if vals:
+                floor.write(vals)
+        if floor not in pos_config.floor_ids:
+            pos_config.write({"floor_ids": [(4, floor.id)]})
+        return floor
+
+    @api.model
+    def _refuge_apply_default_tables(self):
+        for xmlid, values in _REFUGE_DEFAULT_TABLES.items():
+            table = self.env.ref(xmlid, raise_if_not_found=False)
+            if table:
+                table.sudo().write(values)
+        return True
+
+    @api.model
+    def _table_layout_values(self, index):
+        # Plan compact et lisible pour 10 tables : 2 rangées de 5, avec un léger
+        # décalage vertical sur la seconde rangée pour éviter l'effet "grille brute".
+        columns = 5
+        width = 118
+        height = 88
+        gap_h = 24
+        gap_v = 42
+        column = index % columns
+        row = index // columns
+        row_offset = 24 if row % 2 else 0
+        return {
+            "position_h": 52 + column * (width + gap_h),
+            "position_v": 72 + row * (height + gap_v) + row_offset,
+            "width": width,
+            "height": height,
+            "shape": "round",
+            "color": "#8c5a35",
+            "seats": 4,
+        }
+
+    def _sync_restaurant_table(self, floor):
+        RestaurantTable = self.env["restaurant.table"].sudo()
+        for index, rec in enumerate(self._refuge_sorted_by_number()):
+            table = rec.restaurant_table_id
+            if not table:
+                table = RestaurantTable.search([
+                    ("floor_id", "=", floor.id),
+                    ("name", "in", [rec._restaurant_table_label(), rec.number]),
+                ], limit=1)
+            layout = self._table_layout_values(index)
+            vals = {
+                "name": rec._restaurant_table_label(),
+                "floor_id": floor.id,
+                "active": rec.active,
+                **layout,
+            }
+            if table:
+                table.write(vals)
+            else:
+                table = RestaurantTable.create(vals)
+            rec.sudo().write({
+                "restaurant_floor_id": floor.id,
+                "restaurant_table_id": table.id,
+            })
+
+    def _sync_linked_pos_orders(self):
+        for rec in self.filtered("restaurant_table_id"):
+            self.env["pos.order"].sudo().search([
+                ("refuge_table_id", "=", rec.id),
+                ("table_id", "=", False),
+            ]).write({"table_id": rec.restaurant_table_id.id})
+
+    @api.model
+    def sync_pos_restaurant_memory(self):
+        tables = self.search([])
+        if not tables:
+            return True
+        floor = self._ensure_refuge_restaurant_floor()
+        if floor:
+            tables._sync_restaurant_table(floor)
+            tables._sync_linked_pos_orders()
+        return True
 
     def _sync_qr_menu(self):
         parent = self.env.ref("refuge_table_order.menu_refuge_table", raise_if_not_found=False)
@@ -93,20 +262,24 @@ class RefugeTable(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._sync_qr_menu()
+        self.sync_pos_restaurant_memory()
         return records
 
     def write(self, vals):
         res = super().write(vals)
         if {"number", "name", "token", "active"} & vals.keys():
             self._sync_qr_menu()
+            self.sync_pos_restaurant_memory()
         return res
 
     def unlink(self):
         menus = self.mapped("menu_id")
         actions = self.mapped("menu_action_id")
+        restaurant_tables = self.mapped("restaurant_table_id")
         res = super().unlink()
         menus.sudo().unlink()
         actions.sudo().unlink()
+        restaurant_tables.filtered(lambda table: not table.are_orders_still_in_draft()).sudo().unlink()
         return res
 
     @api.depends("token")

@@ -15,16 +15,23 @@
             </t>
           </div>
         </div>
-        <button class="refuge-btn refuge-btn-ghost"
-                t-if="state.screen === 'menu' and state.cart.length"
-                t-on-click="() => this.goto('cart')">
-          Panier (<t t-esc="cartCount"/>)
-        </button>
-        <button class="refuge-btn refuge-btn-ghost"
-                t-if="state.screen === 'cart'"
-                t-on-click="() => this.goto('menu')">
-          ← Menu
-        </button>
+        <div class="refuge-client-head-actions">
+          <button class="refuge-btn refuge-btn-ghost"
+                  t-if="state.screen === 'menu' and state.cart.length"
+                  t-on-click="() => this.goto('cart')">
+            Panier (<t t-esc="cartCount"/>)
+          </button>
+          <button class="refuge-btn refuge-btn-ghost"
+                  t-if="state.screen === 'cart'"
+                  t-on-click="() => this.goto('menu')">
+            ← Menu
+          </button>
+          <button class="rf-iconbtn" type="button" t-on-click="flipTheme"
+                  t-att-title="ui.theme === 'dark' ? 'Passer en thème clair' : 'Passer en thème sombre'"
+                  aria-label="Basculer le thème">
+            <t t-esc="ui.theme === 'dark' ? '☀' : '☾'"/>
+          </button>
+        </div>
       </header>
 
       <main class="refuge-client-main">
@@ -32,7 +39,10 @@
         <div t-elif="state.error" class="refuge-client-error">Erreur : <t t-esc="state.error"/></div>
         <MenuScreen t-elif="state.screen === 'menu'"
                     categories="state.categories"
-                    onAdd.bind="addToCart"/>
+                    cart="state.cart"
+                    onAdd.bind="addToCart"
+                    onChangeQty.bind="changeQty"
+                    onRemove.bind="removeFromCart"/>
         <AuthScreen t-elif="state.screen === 'auth'"
                     tableToken="state.table.token"
                     onAuthenticated.bind="onAuthenticated"

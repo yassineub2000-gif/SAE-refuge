@@ -6,6 +6,7 @@ import { MenuScreen } from "@refuge_table_order/client/menu_screen";
 import { CartScreen } from "@refuge_table_order/client/cart_screen";
 import { ConfirmScreen } from "@refuge_table_order/client/confirm_screen";
 import { AuthScreen } from "@refuge_table_order/client/auth_screen";
+import { currentTheme, toggleTheme } from "@refuge_aventuriers/theme/theme";
 
 /**
  * Racine de l'application client (commande sur table).
@@ -18,6 +19,7 @@ export class ClientApp extends Component {
 
     setup() {
         const table = window.REFUGE_TABLE || { token: "", number: "?", label: "" };
+        this.ui = useState({ theme: currentTheme() });
         this.state = useState({
             // L'écran d'auth est l'entrée par défaut : on demande au client
             // s'il a un compte, veut en créer un, ou continue en invité, avant
@@ -112,6 +114,10 @@ export class ClientApp extends Component {
         this.state.partner = null;
         this.state.useTier = null;
         this.state.skipAuth = false;
+    }
+
+    flipTheme() {
+        this.ui.theme = toggleTheme();
     }
 
     async submitOrder() {

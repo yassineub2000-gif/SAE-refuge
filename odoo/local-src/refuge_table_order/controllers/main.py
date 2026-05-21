@@ -49,6 +49,46 @@ def _serialize_partner(partner):
 
 class RefugeTableOrderController(http.Controller):
 
+    def _is_manager(self):
+        user = request.env.user
+        return (
+            user._is_admin()
+            or user._is_system()
+            or user.has_group("point_of_sale.group_pos_manager")
+        )
+
+    def _require_manager(self):
+        if not self._is_manager():
+            raise UserError("Accès réservé au gérant du point de vente.")
+
+    def _table_card_payload(self, table):
+        return {
+            "id": table.id,
+            "number": table.number,
+            "name": table.name or "",
+            "token": table.token,
+            "active": bool(table.active),
+            "qr_url": table.qr_url or "",
+            "qr_image_url": table.qr_image_url or "",
+            "restaurant_table_name": table.restaurant_table_id.name or "",
+        }
+
+    def _sorted_tables(self, tables):
+        return tables.sorted(
+            key=lambda table: (
+                int(table.number) if str(table.number).isdigit() else 10**9,
+                table.number or "",
+            )
+        )
+
+    def _base_url_warning(self, base_url):
+        if not base_url:
+            return "Aucune URL publique n'est configurée."
+        lowered = base_url.lower()
+        if any(host in lowered for host in ("localhost", "127.0.0.1", "0.0.0.0", "host.docker.internal")):
+            return "Cette URL pointe vers un hôte local. Lancez ngrok avant d'imprimer les QR."
+        return ""
+
     # ---------------------------------------------------------------- pages HTML
 
     @http.route("/refuge/menu", type="http", auth="user")
@@ -67,6 +107,16 @@ class RefugeTableOrderController(http.Controller):
         return request.render(
             "refuge_table_order.client_page",
             {"table_number": table.number, "table_label": table.name or "", "table_token": token},
+        )
+
+    @http.route("/refuge", type="http", auth="user")
+    def page_staff_home(self, **kw):
+        """Accueil tablette : 3 tuiles vers Planning / Espace barman / Clients."""
+        user = request.env.user
+        first_name = (user.name or "").split(" ")[0] or user.name
+        return request.render(
+            "refuge_table_order.staff_home",
+            {"user_name": user.name, "first_name": first_name, "is_manager": self._is_manager()},
         )
 
     @http.route("/refuge/barman", type="http", auth="user")
@@ -163,8 +213,7 @@ class RefugeTableOrderController(http.Controller):
             return {"error": "invalid_token"}
         if not lines:
             return {"error": "empty_cart"}
-        PosConfig = request.env["pos.config"].sudo()
-        config = PosConfig.search([], limit=1, order="id")
+        config = request.env["refuge.table"].sudo()._refuge_pos_config()
         if not config:
             return {"error": "no_pos_config"}
         # Ouvrir une session si aucune n'est active
@@ -233,6 +282,7 @@ class RefugeTableOrderController(http.Controller):
         order = request.env["pos.order"].sudo().create({
             "session_id": session.id,
             "refuge_table_id": table.id,
+            "table_id": table.restaurant_table_id.id or False,
             "refuge_source": "qr",
             "refuge_kitchen_status": "new",
             "partner_id": partner.id or False,
@@ -241,15 +291,26 @@ class RefugeTableOrderController(http.Controller):
             "amount_total": total,
             "amount_paid": 0.0,
             "amount_return": 0.0,
-            "pos_reference": f"QR/{table.number}/{datetime.utcnow():%H%M%S}",
+            "pos_reference": request.env["pos.order"]._refuge_build_pos_reference(
+                table_number=table.number,
+                moment=datetime.utcnow(),
+            ),
         })
 
-        # Débit / crédit de la carte fidélité --------------------------------
+        # Fidélité : on DÉBITE les points dépensés tout de suite (sinon la
+        # remise serait gratuite), mais on DIFFÈRE le gain : il ne sera
+        # crédité que lorsque le barman marquera la commande « Servie »
+        # (cf. pos_order._refuge_credit_loyalty).
         if partner:
             earned = int(total)  # 1 pt / € — cahier des charges §3.1
             spent = tier["points"] if tier else 0
-            new_points = max(0, (loyalty_card.points or 0) - spent + earned)
-            loyalty_card.sudo().write({"points": new_points})
+            if spent:
+                loyalty_card.sudo().write(
+                    {"points": max(0, (loyalty_card.points or 0) - spent)})
+            order.sudo().write({
+                "refuge_loyalty_points_pending": earned,
+                "refuge_loyalty_credited": False,
+            })
             partner.sudo().write({"refuge_last_order_date": fields.Date.context_today(partner)})
 
         _logger.info("[refuge_table_order] QR order %s created for table %s (partner=%s, tier=%s)",
@@ -268,7 +329,43 @@ class RefugeTableOrderController(http.Controller):
             ("refuge_source", "=", "qr"),
             ("refuge_kitchen_status", "in", ["new", "in_preparation", "ready"]),
             ("create_date", ">=", since),
-        ], order="create_date asc")
+        ], order="create_date asc")  # plus anciennes d'abord = prioritaires
+
+        # Visibilité : « Nouvelles » est partagé (tous les barmans). Une fois
+        # prise en charge (En préparation / Prête), seul l'assigné voit sa
+        # commande. L'admin voit tout.
+        uid = request.env.user.id
+        is_admin = request.env.user._is_admin() or request.env.user._is_system()
+
+        def _visible(o):
+            if is_admin:
+                return True
+            if o.refuge_kitchen_status in ("in_preparation", "ready"):
+                return o.refuge_barman_user_id.id == uid
+            return True
+
+        orders = orders.filtered(_visible)
+
+        # Pré-calcul des BoM phantom (cocktails) pour tous les produits commandés :
+        # un produit "kit" n'a pas de stock propre, on n'affiche donc pas de
+        # quantité dispo pour lui dans l'espace barman.
+        all_products = orders.lines.product_id
+        phantom_bom = request.env["mrp.bom"].sudo()._bom_find(
+            all_products, bom_type="phantom"
+        ) if all_products else {}
+
+        def _line_payload(line):
+            product = line.product_id
+            data = {"name": product.display_name, "qty": line.qty}
+            is_bom = bool(phantom_bom.get(product))
+            data["is_bom"] = is_bom
+            # Pour un produit stockable, on renvoie qty_available. Pour un kit
+            # cocktail, Odoo calcule déjà qty_available comme le nombre de kits
+            # réalisables à partir du stock des ingrédients (composant limitant).
+            if product.type == "product":
+                data["qty_available"] = product.qty_available
+            return data
+
         return {
             "orders": [
                 {
@@ -279,16 +376,19 @@ class RefugeTableOrderController(http.Controller):
                     "status": o.refuge_kitchen_status,
                     "created": o.create_date.isoformat() if o.create_date else None,
                     "total": o.amount_total,
-                    "lines": [
-                        {"name": l.product_id.display_name, "qty": l.qty}
-                        for l in o.lines
-                    ],
+                    "lines": [_line_payload(l) for l in o.lines],
                     "partner_id": o.partner_id.id or False,
                     "partner_name": o.partner_id.display_name if o.partner_id else "",
+                    "assignee_id": o.refuge_barman_user_id.id or False,
+                    "assignee_name": o.refuge_barman_user_id.name or "",
+                    "is_mine": o.refuge_barman_user_id.id == request.env.user.id,
+                    "status_since": (o.refuge_status_since.isoformat() + "Z")
+                    if o.refuge_status_since else None,
                     "stock_picking_state": o.refuge_stock_picking_id.state or False,
                 }
                 for o in orders
             ],
+            "server_now": datetime.utcnow().isoformat() + "Z",
             "fetched_at": datetime.utcnow().isoformat(),
         }
 
@@ -299,14 +399,57 @@ class RefugeTableOrderController(http.Controller):
         order = request.env["pos.order"].browse(int(order_id)).exists()
         if not order:
             return {"error": "not_found"}
-        order.write({"refuge_kitchen_status": status})
+
+        uid = request.env.user.id
+        assignee = order.refuge_barman_user_id
+        vals = {"refuge_kitchen_status": status}
+        if not assignee and status in ("in_preparation", "ready", "served"):
+            # Première prise en charge (typiquement « Démarrer la préparation »).
+            vals["refuge_barman_user_id"] = uid
+        elif assignee and assignee.id != uid:
+            # Commande déjà prise par quelqu'un d'autre : il faut « Reprendre ».
+            return {"error": "not_yours", "assignee_name": assignee.name}
+
+        order.write(vals)
         # Retourne l'état mis à jour pour que l'UI sache si le picking stock a
         # été créé (utile pour le rapport du barman, surtout en cas d'échec).
         return {
             "ok": True,
+            "assignee_id": order.refuge_barman_user_id.id or False,
+            "assignee_name": order.refuge_barman_user_id.name or "",
             "stock_picking_id": order.refuge_stock_picking_id.id or False,
             "stock_picking_state": order.refuge_stock_picking_id.state or False,
         }
+
+    @http.route("/refuge/api/barman/take", type="json", auth="user")
+    def api_barman_take(self, order_id=None, **kw):
+        """« Reprendre » : réassigne la commande au barman courant (sans
+        confirmation — petite équipe de confiance)."""
+        order = request.env["pos.order"].browse(int(order_id)).exists()
+        if not order:
+            return {"error": "not_found"}
+        order.write({"refuge_barman_user_id": request.env.user.id})
+        return {"ok": True, "assignee_name": request.env.user.name}
+
+    @http.route("/refuge/api/barman/release", type="json", auth="user")
+    def api_barman_release(self, order_id=None, **kw):
+        """« Remettre en nouvelle » : repasse la commande en attente et libère
+        l'assignation pour qu'un autre barman puisse la prendre (utile si le
+        barman a un imprévu). Autorisé à l'assigné ou à l'admin."""
+        order = request.env["pos.order"].browse(int(order_id or 0)).exists()
+        if not order:
+            return {"error": "not_found"}
+        user = request.env.user
+        is_admin = user._is_admin() or user._is_system()
+        if order.refuge_barman_user_id and order.refuge_barman_user_id.id != user.id \
+                and not is_admin:
+            return {"error": "not_yours",
+                    "assignee_name": order.refuge_barman_user_id.name}
+        order.write({
+            "refuge_kitchen_status": "new",
+            "refuge_barman_user_id": False,
+        })
+        return {"ok": True}
 
     # -------------------------------------------------------- clients (barman)
 
@@ -379,3 +522,126 @@ class RefugeTableOrderController(http.Controller):
             return {"error": "partner_not_found"}
         order.write({"partner_id": partner.id})
         return {"ok": True, "partner_name": partner.display_name}
+
+    # ===================================================== app Clients (staff)
+
+    @http.route("/refuge/clients", type="http", auth="user")
+    def page_clients(self, **kw):
+        """Page tablette de gestion des fiches clients (app OWL Clients)."""
+        return request.render("refuge_table_order.clients_page", {})
+
+    @http.route("/refuge/admin/qr", type="http", auth="user")
+    def page_qr_admin(self, **kw):
+        self._require_manager()
+        return request.render("refuge_table_order.qr_admin_page", {})
+
+    @http.route("/refuge/admin/qr/print", type="http", auth="user")
+    def page_qr_admin_print(self, ids="", **kw):
+        self._require_manager()
+        table_ids = [int(part) for part in (ids or "").split(",") if part.strip().isdigit()]
+        tables = request.env["refuge.table"].sudo().browse(table_ids).exists()
+        if not tables:
+            tables = request.env["refuge.table"].sudo().search([("active", "=", True)])
+        tables = self._sorted_tables(tables)
+        base_url = request.env["ir.config_parameter"].sudo().get_param("web.base.url", "")
+        return request.render(
+            "refuge_table_order.qr_admin_print_page",
+            {
+                "tables": [self._table_card_payload(table) for table in tables],
+                "base_url": base_url,
+            },
+        )
+
+    def _client_card(self, partner):
+        return {
+            "id": partner.id,
+            "name": partner.name or "",
+            "email": partner.email or "",
+            "phone": partner.phone or "",
+            "loyalty_points": int(partner.refuge_loyalty_points() or 0),
+            "loyalty_expired": bool(partner.refuge_loyalty_expired),
+        }
+
+    @http.route("/refuge/api/clients/search", type="json", auth="user")
+    def api_clients_search(self, query="", limit=20, **kw):
+        """Recherche client par nom, email ou téléphone."""
+        query = (query or "").strip()
+        domain = [("customer_rank", ">", 0)]
+        if query:
+            domain = ["&", domain[0], "|", "|",
+                      ("name", "ilike", query),
+                      ("email", "ilike", query),
+                      ("phone", "ilike", query)]
+        partners = request.env["res.partner"].search(
+            domain, limit=int(limit), order="name")
+        return {"clients": [self._client_card(p) for p in partners]}
+
+    @http.route("/refuge/api/clients/detail", type="json", auth="user")
+    def api_clients_detail(self, partner_id=None, **kw):
+        """Fiche complète : coordonnées, points fidélité, historique commandes."""
+        partner = request.env["res.partner"].browse(int(partner_id or 0)).exists()
+        if not partner:
+            return {"error": "not_found"}
+        orders = request.env["pos.order"].search(
+            [("partner_id", "=", partner.id)],
+            order="date_order desc", limit=15)
+        history = [
+            {
+                "reference": o.pos_reference or o.name,
+                "date": o.date_order.isoformat() if o.date_order else None,
+                "amount": o.amount_total,
+                "source": o.refuge_source,
+                "kitchen_status": o.refuge_kitchen_status,
+            }
+            for o in orders
+        ]
+        return {"client": self._client_card(partner), "history": history}
+
+    @http.route("/refuge/api/clients/update", type="json", auth="user")
+    def api_clients_update(self, partner_id=None, name=None, phone=None,
+                           email=None, **kw):
+        """Met à jour UNIQUEMENT nom / téléphone / email.
+
+        Les points fidélité ne sont pas modifiables ici (intégrité du
+        programme — décision produit)."""
+        partner = request.env["res.partner"].browse(int(partner_id or 0)).exists()
+        if not partner:
+            return {"error": "not_found"}
+        name = (name or "").strip()
+        if not name:
+            return {"error": "name_required"}
+        partner.write({
+            "name": name,
+            "phone": (phone or "").strip() or False,
+            "email": (email or "").strip() or False,
+        })
+        _logger.info("[refuge_table_order] Client %s mis à jour par uid=%s",
+                     partner.id, request.env.uid)
+        return {"ok": True, "client": self._client_card(partner)}
+
+    @http.route("/refuge/api/admin/qr/state", type="json", auth="user")
+    def api_admin_qr_state(self, **kw):
+        self._require_manager()
+        params = request.env["ir.config_parameter"].sudo()
+        base_url = params.get_param("web.base.url", "")
+        tables = self._sorted_tables(request.env["refuge.table"].sudo().search([]))
+        return {
+            "base_url": base_url,
+            "base_url_warning": self._base_url_warning(base_url),
+            "ngrok_command": "./scripts/start_ngrok_refuge.sh",
+            "tables": [self._table_card_payload(table) for table in tables],
+        }
+
+    @http.route("/refuge/api/admin/qr/rotate", type="json", auth="user")
+    def api_admin_qr_rotate(self, table_ids=None, **kw):
+        self._require_manager()
+        ids = [int(value) for value in (table_ids or []) if value]
+        tables = request.env["refuge.table"].sudo().browse(ids).exists()
+        if not tables:
+            return {"error": "no_tables"}
+        tables.action_rotate_token()
+        tables._sync_qr_menu()
+        return {
+            "ok": True,
+            "tables": [self._table_card_payload(table) for table in tables],
+        }

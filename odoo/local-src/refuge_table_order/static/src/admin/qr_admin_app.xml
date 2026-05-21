@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="refuge_table_order.QrAdminApp">
+    <div class="rq-root">
+      <AppHeader title="'QR Codes'" subtitle="'Tables, impression et test mobile'"
+                 showBack="true" backHref="'/refuge'" showLogout="true"/>
+
+      <div t-if="state.error" class="rq-banner is-error"><t t-esc="state.error"/></div>
+      <div t-if="state.flash" class="rq-banner is-success"><t t-esc="state.flash"/></div>
+      <div t-if="state.baseUrlWarning" class="rq-banner is-warning">
+        <strong>Attention.</strong> <t t-esc="state.baseUrlWarning"/>
+      </div>
+
+      <div class="rq-shell">
+        <aside class="rq-side">
+          <section class="rq-panel">
+            <div class="rq-panel-kicker">Accès mobile</div>
+            <h3>Base publique</h3>
+            <div class="rq-base-url"><t t-esc="state.baseUrl or 'Non configurée'"/></div>
+            <p class="rq-side-copy">
+              Pour tester les QR depuis ton téléphone, lance :
+            </p>
+            <code class="rq-command"><t t-esc="state.ngrokCommand"/></code>
+          </section>
+
+          <section class="rq-panel">
+            <div class="rq-panel-kicker">Sélection</div>
+            <h3><t t-esc="selectedCount"/> table(s)</h3>
+            <div class="rq-actions-stack">
+              <button class="refuge-btn refuge-btn-primary" t-on-click="printSelection">
+                Imprimer la sélection
+              </button>
+              <button class="refuge-btn refuge-btn-ghost"
+                      t-att-disabled="state.rotating"
+                      t-on-click="rotateSelection">
+                <t t-if="state.rotating">Régénération…</t>
+                <t t-else="">Régénérer la sélection</t>
+              </button>
+              <button class="refuge-btn refuge-btn-ghost" t-on-click="selectAll">Tout sélectionner</button>
+              <button class="refuge-btn refuge-btn-ghost" t-on-click="selectFiltered">Sélectionner les visibles</button>
+              <button class="refuge-btn refuge-btn-ghost" t-on-click="clearSelection">Effacer la sélection</button>
+            </div>
+          </section>
+        </aside>
+
+        <main class="rq-main">
+          <div class="rq-toolbar">
+            <input class="refuge-input rq-search"
+                   type="text"
+                   placeholder="Rechercher une table, un libellé ou une URL…"
+                   t-att-value="state.query"
+                   t-on-input="setQuery"/>
+            <button class="refuge-btn refuge-btn-ghost" t-on-click="load">Actualiser</button>
+          </div>
+
+          <div t-if="state.loading" class="rq-empty">Chargement des QR codes…</div>
+          <div t-elif="!filteredTables.length" class="rq-empty">Aucune table ne correspond à la recherche.</div>
+
+          <div t-else="" class="rq-grid">
+            <article t-foreach="filteredTables" t-as="table" t-key="table.id"
+                     class="rq-card"
+                     t-att-class="isSelected(table.id) ? 'is-selected' : ''">
+              <label class="rq-select">
+                <input type="checkbox"
+                       t-att-checked="isSelected(table.id)"
+                       t-on-change="() => toggleSelection(table.id)"/>
+                <span>Sélectionner</span>
+              </label>
+
+              <div class="rq-card-top">
+                <div>
+                  <div class="rq-table-number">Table <t t-esc="table.number"/></div>
+                  <div class="rq-table-name"><t t-esc="table.name or ('Salle ' + table.number)"/></div>
+                </div>
+                <div class="rq-badge"><t t-esc="table.restaurant_table_name"/></div>
+              </div>
+
+              <div class="rq-qr-wrap">
+                <img t-att-src="table.qr_image_url" t-att-alt="'QR table ' + table.number"/>
+              </div>
+
+              <div class="rq-url"><t t-esc="table.qr_url"/></div>
+
+              <div class="rq-card-actions">
+                <button class="refuge-btn refuge-btn-primary" t-on-click="() => openTable(table)">Ouvrir</button>
+                <button class="refuge-btn refuge-btn-ghost" t-on-click="() => copyUrl(table)">Copier le lien</button>
+                <button class="refuge-btn refuge-btn-ghost" t-on-click="() => printSingle(table)">Imprimer</button>
+                <button class="refuge-btn refuge-btn-ghost"
+                        t-att-disabled="state.rotating"
+                        t-on-click="() => rotateSingle(table)">Régénérer</button>
+              </div>
+            </article>
+          </div>
+        </main>
+      </div>
+    </div>
+  </t>
+
+</templates>

@@ -10,12 +10,14 @@
         "base",
         "web",
         "point_of_sale",
+        "pos_restaurant",
         "refuge_aventuriers",
     ],
     "data": [
         "security/ir.model.access.csv",
         "data/refuge_table_data.xml",
         "data/loyalty_discount_product.xml",
+        "data/refuge_table_sync.xml",
         "data/refuge_reservation_setup.xml",
         "views/refuge_table_views.xml",
         "views/pos_order_views.xml",
@@ -35,6 +37,7 @@
             "web/static/lib/owl/odoo_module.js",
             ("include", "web._assets_core"),
             ("remove", "web/static/src/core/errors/error_handlers.js"),
+            "refuge_aventuriers/static/src/theme/**/*",
             "refuge_table_order/static/src/common/**/*",
         ],
         "refuge_table_order.assets_client": [
@@ -44,6 +47,14 @@
         "refuge_table_order.assets_barman": [
             ("include", "refuge_table_order.assets_app"),
             "refuge_table_order/static/src/barman/**/*",
+        ],
+        "refuge_table_order.assets_admin": [
+            ("include", "refuge_table_order.assets_app"),
+            "refuge_table_order/static/src/admin/**/*",
+        ],
+        "refuge_table_order.assets_clients": [
+            ("include", "refuge_table_order.assets_app"),
+            "refuge_table_order/static/src/clients/**/*",
         ],
     },
     "post_init_hook": "post_init_sync_qr_menus",
