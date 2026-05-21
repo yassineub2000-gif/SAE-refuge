@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Guide de reprise de développement — Le Refuge des Aventuriers</title>
+<style>
+  :root{
+    --violet:#6a2c91; --violet-d:#4e1f6b; --violet-soft:#f3eaf8;
+    --blue:#2f6db0; --orange:#d9622b; --green:#2f8f5b;
+    --ink:#1f2330; --muted:#6b7280; --border:#e2d8ec; --bg:#faf7fd;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+  header{background:linear-gradient(135deg,var(--violet),var(--violet-d));color:#fff;padding:2.2rem 2rem 1.6rem}
+  header .sub{opacity:.85}
+  header h1{margin:.2rem 0 .4rem;font-size:2rem}
+  .wrap{max-width:1080px;margin:0 auto;padding:1.5rem 2rem 4rem}
+  h2{color:var(--violet-d);border-bottom:3px solid var(--violet);padding-bottom:.35rem;margin-top:2.4rem;font-size:1.35rem}
+  h3{color:var(--violet);margin-top:1.6rem;font-size:1.05rem}
+  p.lead{color:var(--muted)}
+  .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1rem 1.3rem;box-shadow:0 2px 8px rgba(80,30,110,.06);margin:1rem 0}
+  table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.9rem}
+  th,td{border:1px solid var(--border);padding:.5rem .6rem;text-align:left;vertical-align:top}
+  th{background:var(--violet);color:#fff}
+  tr:nth-child(even) td{background:var(--violet-soft)}
+  code{background:#efe7f6;color:var(--violet-d);padding:.05rem .35rem;border-radius:5px;font-family:ui-monospace,Consolas,monospace;font-size:.85em}
+  pre{background:#2b2233;color:#f4eefb;padding:.9rem 1rem;border-radius:10px;overflow-x:auto;font-size:.84rem;line-height:1.5}
+  pre code{background:none;color:inherit;padding:0}
+  .note{border-left:4px solid var(--orange);background:#fff6ef;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin:1rem 0}
+  .danger{border-left:4px solid #c0392b;background:#fdeeec}
+  .toc a{color:var(--violet-d);text-decoration:none}.toc a:hover{text-decoration:underline}
+  footer{color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header>
+  <div class="sub">SAÉ 6.Integ.01 — Le Refuge des Aventuriers</div>
+  <h1>Guide de reprise de développement</h1>
+  <div class="sub">Tout ce qu'il faut pour reprendre le projet sans contexte préalable</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card toc">
+    <strong>Sommaire</strong>
+    <ul>
+      <li><a href="#stack">1. Stack &amp; arborescence du dépôt</a></li>
+      <li><a href="#env">2. Monter l'environnement de dev</a></li>
+      <li><a href="#deploy">3. Appliquer une modification (procédure clé)</a></li>
+      <li><a href="#quirks">4. Pièges connus (à lire avant de coder)</a></li>
+      <li><a href="#owl">5. Conventions OWL</a></li>
+      <li><a href="#tests">6. Tests</a></li>
+      <li><a href="#map">7. Où trouver quoi</a></li>
+    </ul>
+  </div>
+
+  <!-- ===================== STACK ===================== -->
+  <h2 id="stack">1. Stack &amp; arborescence</h2>
+  <p class="lead">Odoo 17 · Python 3.12 · PostgreSQL · OWL 2 · XML · JavaScript (ES Modules). Aucune dépendance JS tierce.</p>
+  <pre><code>refuge-des-aventuriers/
+├─ docs/                         # MCD, archi, guides (HTML), cahier des charges
+├─ AI_LOG.md                     # journal IA (livrable 5)
+├─ README.md
+└─ odoo17-iut/
+   ├─ docker-compose.yml         # services odoo / db / mailhog
+   └─ odoo/local-src/            # ADDONS DU PROJET
+      ├─ refuge_aventuriers/     # socle métier (produits, BoM, fidélité, POS, RH)
+      ├─ refuge_table_order/     # apps OWL : client (QR), barman, clients, QR admin
+      └─ refuge_planning/        # app OWL : planning + dispos</code></pre>
+
+  <p>Chaque module suit la structure Odoo standard :</p>
+  <table>
+    <tr><th>Dossier</th><th>Contenu</th></tr>
+    <tr><td><code>models/</code></td><td>Modèles Python (champs, contraintes, logique métier).</td></tr>
+    <tr><td><code>controllers/</code></td><td>Routes HTTP (pages) et JSON-RPC (API des apps OWL).</td></tr>
+    <tr><td><code>static/src/</code></td><td>Composants OWL (<code>.js</code> + <code>.xml</code> + <code>.css</code>), bundlés via le manifest.</td></tr>
+    <tr><td><code>data/</code></td><td>Données XML (employés, contrats, dispos par défaut, setup POS).</td></tr>
+    <tr><td><code>security/</code></td><td>Groupes &amp; droits d'accès.</td></tr>
+    <tr><td><code>tests/</code></td><td>Tests unitaires (<code>--test-tags</code>).</td></tr>
+  </table>
+
+  <!-- ===================== ENV ===================== -->
+  <h2 id="env">2. Monter l'environnement de dev</h2>
+  <div class="note"><strong>Docker Compose v2 n'est pas installé</strong> : utiliser
+  <code>docker-compose</code> (v1). L'image <code>nginx</code> du compose est morte — ne
+  lancer que <code>odoo db mailhog</code>.</div>
+  <pre><code>cd odoo17-iut
+docker-compose up -d odoo db mailhog</code></pre>
+  <table>
+    <tr><th>Service</th><th>Accès</th></tr>
+    <tr><td>Odoo</td><td><code>http://localhost:32776</code> — DB <code>refuge_aventuriers</code></td></tr>
+    <tr><td>Mailhog</td><td><code>http://localhost:8025</code></td></tr>
+    <tr><td>Conteneurs</td><td><code>odoo17-iut_odoo_1</code> · <code>odoo17-iut_db_1</code></td></tr>
+  </table>
+  <p>Comptes : gérant <code>admin/admin</code> ; 4 employés (login = e-mail de travail, mot de passe <code>refuge</code>).</p>
+
+  <!-- ===================== DEPLOY ===================== -->
+  <h2 id="deploy">3. Appliquer une modification — procédure clé</h2>
+
+  <h3>3.a — Python (modèles / contrôleurs) ou XML (data / vues / sécurité)</h3>
+  <pre><code># upgrade du / des modules concernés
+docker exec odoo17-iut_odoo_1 /odoo/.venv/bin/odoo \
+  -d refuge_aventuriers -u refuge_planning --stop-after-init --no-http
+docker-compose restart odoo</code></pre>
+  <p>Une modif <em>contrôleur seul</em> (sans nouveau champ/route) ne nécessite qu'un
+  <code>docker-compose restart odoo</code>.</p>
+
+  <h3>3.b — Assets OWL (JS / XML / CSS)</h3>
+  <div class="danger note"><strong>Un rafraîchissement navigateur NE suffit PAS</strong>, et
+  un restart non plus : les bundles sont mis en cache en base comme
+  <code>ir.attachment</code> nommés <code>refuge_*.assets_%</code>. Il faut les
+  <strong>supprimer</strong> — ils se régénèrent au prochain chargement de page.</div>
+  <pre><code>echo "env['ir.attachment'].sudo().search([('name','like','refuge_planning.assets_%')]).unlink(); env.cr.commit()" \
+  | docker exec -i odoo17-iut_odoo_1 /odoo/.venv/bin/odoo shell -d refuge_aventuriers --no-http</code></pre>
+  <p>Vérifier qu'une modif est bien servie en récupérant l'URL
+  <code>/web/assets/&lt;hash&gt;/refuge_*.assets_*.min.js</code> depuis le HTML de la page
+  (pas seulement par le nom de l'<code>ir.attachment</code>).</p>
+
+  <!-- ===================== QUIRKS ===================== -->
+  <h2 id="quirks">4. Pièges connus (à lire avant de coder)</h2>
+  <table>
+    <tr><th>Piège</th><th>Conséquence &amp; parade</th></tr>
+    <tr><td><strong>Mots de passe staff effacés par <code>-u</code></strong></td>
+        <td>Le hook <code>post_init_refuge_staff</code> ne tourne qu'à l'installation, pas au <code>-u</code>. Après tout <code>-u</code> touchant <code>refuge_aventuriers</code>, ré-affecter en <code>odoo shell</code> : pour chaque login staff <code>u.password='refuge'</code>.</td></tr>
+    <tr><td><strong>Installation <code>hr_contract</code> à froid</strong></td>
+        <td>Crash <code>column res_company.&lt;X&gt; does not exist</code>. Pré-créer les colonnes en SQL (<code>contract_expiration_notice_period</code>, <code>work_permit_expiration_notice_period</code>) avant l'install.</td></tr>
+    <tr><td><strong>Dépendance manifest</strong></td>
+        <td>Ajouter un module aux <code>depends</code> rend TOUS les modules refuge ininstallables tant qu'il n'est pas installé.</td></tr>
+    <tr><td><strong><code>resource.calendar</code> en XML</strong></td>
+        <td>Sans <code>attendance_ids</code> inline, Odoo garde son 40h Lun–Ven par défaut. Définir <code>attendance_ids</code> avec un <code>(5,0,0)</code> en tête.</td></tr>
+    <tr><td><strong>24h vs 20h</strong></td>
+        <td>Le sujet dit 20h/sem ; le code utilise <strong>24h</strong> (4 × 20 = 80h &lt; 90h nécessaires pour couvrir 10h–01h sur 6 jours). Choix assumé — ne pas « corriger » sans en discuter.</td></tr>
+  </table>
+
+  <!-- ===================== OWL ===================== -->
+  <h2 id="owl">5. Conventions OWL</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Apps standalone</strong> : chaque page (<code>planning_page</code>, pages table_order) charge un bundle dédié <code>refuge_*.assets_app</code> via <code>t-call-assets</code> ; les fichiers sont inclus par glob <code>static/src/**/*</code> dans le manifest.</li>
+      <li><strong>Communication</strong> : wrapper <code>rpc.js</code> maison basé sur <code>fetch</code> (JSON-RPC 2.0), dupliqué volontairement par module pour rester indépendant. Toujours gérer l'erreur réseau et la remonter à l'utilisateur.</li>
+      <li><strong>État</strong> : <code>useState</code> ; un composant racine par app, sous-composants par responsabilité ; <code>AppHeader</code> partagé (thème <code>refuge_aventuriers</code>).</li>
+      <li><strong>Temps réel</strong> : <code>setInterval</code> dans <code>onMounted</code>, <strong>toujours</strong> <code>clearInterval</code> dans <code>onWillUnmount</code>.</li>
+      <li><strong>Permissions</strong> : vérifiées côté contrôleur (ex. <code>_is_admin</code>, <code>_check_can_edit_employee</code>) — le front masque, le back tranche.</li>
+      <li><strong>Cohabitation POS</strong> : écrire dans <code>pos.order</code> (champ <code>refuge_source</code>), jamais un modèle de commande parallèle.</li>
+    </ul>
+  </div>
+
+  <!-- ===================== TESTS ===================== -->
+  <h2 id="tests">6. Tests</h2>
+  <pre><code>docker exec odoo17-iut_odoo_1 odoo --stop-after-init --no-http \
+  -d refuge_aventuriers \
+  --test-tags refuge_aventuriers,refuge_table_order,refuge_planning</code></pre>
+
+  <!-- ===================== MAP ===================== -->
+  <h2 id="map">7. Où trouver quoi</h2>
+  <table>
+    <tr><th>Besoin</th><th>Fichier(s)</th></tr>
+    <tr><td>Algorithme de génération du planning</td><td><code>refuge_planning/models/refuge_planning_generator.py</code> + <code>docs/ALGORITHME.md</code></td></tr>
+    <tr><td>Contraintes légales des shifts</td><td><code>refuge_planning/models/refuge_shift.py</code> (<code>@api.constrains</code>)</td></tr>
+    <tr><td>Disponibilités (masque 30 min)</td><td><code>refuge_planning/models/refuge_availability.py</code></td></tr>
+    <tr><td>API planning (OWL)</td><td><code>refuge_planning/controllers/main.py</code></td></tr>
+    <tr><td>Workflow barman / commande table</td><td><code>refuge_table_order/controllers/main.py</code> + <code>static/src/barman/</code> &amp; <code>client/</code></td></tr>
+    <tr><td>Fidélité &amp; clients</td><td><code>refuge_aventuriers/models/res_partner.py</code>, <code>loyalty_card.py</code></td></tr>
+    <tr><td>BoM cocktails / coût / stock</td><td><code>refuge_aventuriers/models/product_template.py</code> + <code>refuge_demo_loader.py</code></td></tr>
+    <tr><td>Comptes staff &amp; verrouillage back-office</td><td><code>refuge_aventuriers/data/refuge_staff_users.xml</code>, <code>refuge_table_order/controllers/home.py</code></td></tr>
+    <tr><td>Modèle de données / architecture</td><td><code>docs/MCD_Refuge_des_Aventuriers.html</code>, <code>docs/Architecture_OWL_Refuge.html</code></td></tr>
+  </table>
+
+</div>
+
+<footer>Guide de reprise de développement — Le Refuge des Aventuriers · SAÉ 6.Integ.01</footer>
+</body>
+</html>
