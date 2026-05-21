@@ -12,6 +12,7 @@ class TestRefugePosCounterFlow(TransactionCase):
         cls.tequila = cls.env.ref("refuge_aventuriers.prod_tequila_75cl")
         cls.cointreau = cls.env.ref("refuge_aventuriers.prod_cointreau_1l")
         cls.lime = cls.env.ref("refuge_aventuriers.prod_citron_vert_la_piece")
+        cls.partner = cls.env.ref("refuge_aventuriers.partner_cli_jean_martin")
 
     def _open_session(self):
         return self.config.current_session_id or self.env["pos.session"].create({
@@ -114,3 +115,40 @@ class TestRefugePosCounterFlow(TransactionCase):
 
         self.assertFalse(order.picking_ids)
         self.assertFalse(order.refuge_stock_picking_id)
+
+    def test_qr_order_served_creates_single_stock_picking_and_loyalty_once(self):
+        session = self._open_session()
+        card = self.partner.refuge_loyalty_card(create_if_missing=True)
+        initial_points = card.points
+        order = self.env["pos.order"].create({
+            "session_id": session.id,
+            "refuge_source": "qr",
+            "partner_id": self.partner.id,
+            "refuge_loyalty_points_pending": 8,
+            "amount_tax": 0.0,
+            "amount_total": self.cocktail.lst_price,
+            "amount_paid": 0.0,
+            "amount_return": 0.0,
+            "pos_reference": "TEST/QR/SERVED/0001",
+            "lines": [
+                (0, 0, {
+                    "name": "L1",
+                    "product_id": self.cocktail.id,
+                    "qty": 1,
+                    "price_unit": self.cocktail.lst_price,
+                    "price_subtotal": self.cocktail.lst_price,
+                    "price_subtotal_incl": self.cocktail.lst_price,
+                }),
+            ],
+        })
+
+        order.write({"refuge_kitchen_status": "served"})
+        first_picking = order.refuge_stock_picking_id
+        order.write({"refuge_kitchen_status": "served"})
+        card.invalidate_recordset(["points"])
+        order.invalidate_recordset(["refuge_stock_picking_id", "refuge_loyalty_credited"])
+
+        self.assertTrue(first_picking)
+        self.assertEqual(order.refuge_stock_picking_id, first_picking)
+        self.assertEqual(card.points, initial_points + 8)
+        self.assertTrue(order.refuge_loyalty_credited)
