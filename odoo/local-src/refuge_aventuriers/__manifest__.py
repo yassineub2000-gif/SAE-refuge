@@ -18,9 +18,11 @@
         "pos_loyalty",
         "loyalty",
         "hr",
+        "hr_contract",
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/refuge_staff_groups.xml",
         "data/product_category.xml",
         "data/res_partner.xml",
         "data/product_template.xml",
@@ -28,6 +30,8 @@
         "data/mrp_bom.xml",
         "data/loyalty_program.xml",
         "data/hr_employee.xml",
+        "data/refuge_staff_contracts.xml",
+        "data/refuge_staff_users.xml",
         "data/pos_config.xml",
         "data/refuge_demo_setup.xml",
         "views/res_partner_views.xml",
@@ -36,6 +40,7 @@
         "views/stock_alert_views.xml",
         "views/menu_views.xml",
     ],
+    "post_init_hook": "post_init_refuge_staff",
     "application": True,
     "installable": True,
 }

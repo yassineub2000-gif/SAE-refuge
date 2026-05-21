@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
   <record id="emp_pierre_leblanc" model="hr.employee">
-    <field name="name">Pierre Leblanc</field>
+    <field name="name">Corentin Leblanc</field>
     <field name="job_title">Barman</field>
-    <field name="work_email">pierre.leblanc@refuge-aventuriers.fr</field>
+    <field name="work_email">corentin.leblanc@refuge-aventuriers.fr</field>
     <field name="work_phone">06 10 20 30 40</field>
-    <field name="refuge_weekly_hours">20</field>
+    <field name="refuge_weekly_hours">24</field>
     <field name="refuge_available_days">Mar, Mer, Jeu, Ven, Sam</field>
     <field name="refuge_hour_preference">10h–18h</field>
   </record>
@@ -14,7 +14,7 @@
     <field name="job_title">Barmaid</field>
     <field name="work_email">marlene.dupont@refuge-aventuriers.fr</field>
     <field name="work_phone">06 20 30 40 50</field>
-    <field name="refuge_weekly_hours">20</field>
+    <field name="refuge_weekly_hours">24</field>
     <field name="refuge_available_days">Mer, Jeu, Ven, Sam, Dim</field>
     <field name="refuge_hour_preference">18h–01h</field>
   </record>
@@ -23,17 +23,17 @@
     <field name="job_title">Barman</field>
     <field name="work_email">anthony.faure@refuge-aventuriers.fr</field>
     <field name="work_phone">06 30 40 50 60</field>
-    <field name="refuge_weekly_hours">20</field>
+    <field name="refuge_weekly_hours">24</field>
     <field name="refuge_available_days">Mar, Jeu, Ven, Sam, Dim</field>
-    <field name="refuge_hour_preference">10h–18h</field>
+    <field name="refuge_hour_preference">Flexible</field>
   </record>
   <record id="emp_julie_perrin" model="hr.employee">
     <field name="name">Julie Perrin</field>
     <field name="job_title">Barmaid</field>
     <field name="work_email">julie.perrin@refuge-aventuriers.fr</field>
     <field name="work_phone">06 40 50 60 70</field>
-    <field name="refuge_weekly_hours">20</field>
+    <field name="refuge_weekly_hours">24</field>
     <field name="refuge_available_days">Mer, Ven, Sam, Dim</field>
-    <field name="refuge_hour_preference">16h–01h</field>
+    <field name="refuge_hour_preference">Après 16h</field>
   </record>
 </odoo>

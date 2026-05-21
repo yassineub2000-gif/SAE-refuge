@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!--
+    Contrats des 4 employés du Refuge.
+
+    Bar ouvert du mardi au dimanche, 10h00–01h00, fermé le lundi.
+    Chaque employé est en CDI temps partiel 24h/semaine (contrainte SAÉ —
+    le « 20h » du sujet était une erreur, corrigé à 24h).
+
+    Le calendrier de travail dédié reflète le temps partiel (24h, lundi
+    fermé). Le champ refuge_weekly_hours du contrat est la source de vérité
+    des heures hebdo utilisée par le générateur de planning.
+  -->
+
+  <!--
+    Calendrier de travail : 24h/semaine, Mar→Dim (lundi fermé).
+    attendance_ids défini en entier avec (5,0,0) en tête pour PURGER le
+    gabarit 40h Lun-Ven qu'Odoo ajoute par défaut : on garde exactement
+    6 jours × 4h = 24h. Idempotent (se ré-aligne à chaque -u).
+  -->
+  <record id="resource_calendar_refuge_24h" model="resource.calendar">
+    <field name="name">Refuge — 24h/sem (temps partiel)</field>
+    <field name="tz">Europe/Paris</field>
+    <field name="hours_per_day">4.0</field>
+    <field name="attendance_ids" eval="[
+      (5, 0, 0),
+      (0, 0, {'name': 'Mardi',    'dayofweek': '1', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+      (0, 0, {'name': 'Mercredi', 'dayofweek': '2', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+      (0, 0, {'name': 'Jeudi',    'dayofweek': '3', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+      (0, 0, {'name': 'Vendredi', 'dayofweek': '4', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+      (0, 0, {'name': 'Samedi',   'dayofweek': '5', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+      (0, 0, {'name': 'Dimanche', 'dayofweek': '6', 'hour_from': 17.0, 'hour_to': 21.0, 'day_period': 'afternoon'}),
+    ]"/>
+  </record>
+
+  <!-- Contrats CDI temps partiel 24h. wage ≈ SMIC brut proratisé 24/35. -->
+  <!-- Dates d'embauche issues du fichier client (CDI temps partiel 24h). -->
+  <record id="contract_pierre_leblanc" model="hr.contract">
+    <field name="name">CDI temps partiel — Corentin Leblanc (24h)</field>
+    <field name="employee_id" ref="emp_pierre_leblanc"/>
+    <field name="wage">1236.0</field>
+    <field name="date_start">2021-06-03</field>
+    <field name="state">open</field>
+    <field name="resource_calendar_id" ref="resource_calendar_refuge_24h"/>
+    <field name="refuge_weekly_hours">24.0</field>
+  </record>
+  <record id="contract_marlene_dupont" model="hr.contract">
+    <field name="name">CDI temps partiel — Marlène Dupont (24h)</field>
+    <field name="employee_id" ref="emp_marlene_dupont"/>
+    <field name="wage">1236.0</field>
+    <field name="date_start">2021-09-15</field>
+    <field name="state">open</field>
+    <field name="resource_calendar_id" ref="resource_calendar_refuge_24h"/>
+    <field name="refuge_weekly_hours">24.0</field>
+  </record>
+  <record id="contract_anthony_faure" model="hr.contract">
+    <field name="name">CDI temps partiel — Anthony Faure (24h)</field>
+    <field name="employee_id" ref="emp_anthony_faure"/>
+    <field name="wage">1236.0</field>
+    <field name="date_start">2022-03-01</field>
+    <field name="state">open</field>
+    <field name="resource_calendar_id" ref="resource_calendar_refuge_24h"/>
+    <field name="refuge_weekly_hours">24.0</field>
+  </record>
+  <record id="contract_julie_perrin" model="hr.contract">
+    <field name="name">CDI temps partiel — Julie Perrin (24h)</field>
+    <field name="employee_id" ref="emp_julie_perrin"/>
+    <field name="wage">1236.0</field>
+    <field name="date_start">2022-11-14</field>
+    <field name="state">open</field>
+    <field name="resource_calendar_id" ref="resource_calendar_refuge_24h"/>
+    <field name="refuge_weekly_hours">24.0</field>
+  </record>
+
+  <!-- Fiches employé en noupdate=1 : on synchronise 24h + calendrier via méthode. -->
+  <function model="hr.employee" name="_refuge_sync_contract_hours"/>
+</odoo>

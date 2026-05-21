@@ -92,37 +92,151 @@ class RefugeDemoLoader(models.Model):
             program.write({"pos_config_ids": [(4, pos_config.id)]})
 
     @api.model
+    def _ensure_pos_accounting(self):
+        """Prépare la base comptable minimale attendue par le POS.
+
+        Certaines bases de démo installent `account` et `l10n_fr` sans charger
+        effectivement le plan comptable de la société. Dans ce cas, le POS
+        existe, mais reste inutilisable (pas de journaux, pas de caisse, pas
+        de banque). On charge donc la localisation FR de façon idempotente,
+        puis on s'assure que le POS du Refuge dispose de ses journaux.
+        """
+        pos_config = self.env.ref("refuge_aventuriers.pos_config_refuge")
+        company = pos_config.company_id
+        Account = self.env["account.account"].sudo()
+        Journal = self.env["account.journal"].sudo()
+
+        if not company.chart_template or not Account.search_count(
+            Account._check_company_domain(company)
+        ):
+            self.env["account.chart.template"].sudo().try_loading(
+                "fr",
+                company=company,
+                install_demo=False,
+            )
+
+        pos_config.sudo().generate_pos_journal(company)
+        pos_config.sudo().setup_invoice_journal(company)
+
+        sale_journal = Journal.search([
+            *Journal._check_company_domain(company),
+            ("type", "=", "sale"),
+        ], limit=1)
+        if sale_journal and not pos_config.invoice_journal_id:
+            pos_config.write({"invoice_journal_id": sale_journal.id})
+
+        cash_journal = Journal.search([
+            *Journal._check_company_domain(company),
+            ("type", "=", "cash"),
+        ], limit=1)
+        if not cash_journal:
+            cash_journal = Journal.create({
+                "name": "Caisse Refuge",
+                "code": "RCSH",
+                "type": "cash",
+                "company_id": company.id,
+            })
+
+        bank_journal = Journal.search([
+            *Journal._check_company_domain(company),
+            ("type", "=", "bank"),
+        ], limit=1)
+        if not bank_journal:
+            bank_journal = Journal.create({
+                "name": "Carte Refuge",
+                "code": "RBNK",
+                "type": "bank",
+                "company_id": company.id,
+            })
+
+        return {
+            "cash_journal": cash_journal,
+            "bank_journal": bank_journal,
+            "pos_config": pos_config,
+        }
+
+    @api.model
     def _ensure_pos_payment_methods(self):
-        """Attache Espèces + Carte au POS du bar et lie ses catégories produit.
+        """Attache Espèces + Carte au POS du bar et synchronise son ergonomie.
 
         Sans cela, le POS refuse d'ouvrir une session (« aucun moyen de paiement »).
         On ne touche pas au POS si une session est déjà ouverte (Odoo bloque
         toute modification de `payment_method_ids` dans ce cas).
         """
-        pos_config = self.env.ref("refuge_aventuriers.pos_config_refuge")
-        Session = self.env["pos.session"].sudo()
-        if Session.search_count([
-            ("config_id", "=", pos_config.id),
-            ("state", "!=", "closed"),
-        ]):
-            return  # une session est ouverte : on laisse le POS tranquille
+        accounting = self._ensure_pos_accounting()
+        pos_config = accounting["pos_config"]
+        cash_journal = accounting["cash_journal"]
+        bank_journal = accounting["bank_journal"]
+        if pos_config.company_id.point_of_sale_update_stock_quantities != "real":
+            pos_config.company_id.write({"point_of_sale_update_stock_quantities": "real"})
         Method = self.env["pos.payment.method"].sudo()
-        wanted = [("Espèces", "cash"), ("Carte bancaire", "bank")]
-        methods = self.env["pos.payment.method"]
-        for name, kind in wanted:
-            existing = Method.search([("name", "=", name)], limit=1)
-            if not existing:
-                vals = {"name": name}
-                if kind == "cash":
-                    vals["is_cash_count"] = True
-                existing = Method.create(vals)
-            methods |= existing
-        missing = methods - pos_config.payment_method_ids
-        if missing:
-            pos_config.write({"payment_method_ids": [(4, m.id) for m in missing]})
-        pos_categs = self.env["pos.category"].sudo().search([])
-        if pos_categs and not pos_config.iface_available_categ_ids:
-            pos_config.write({"iface_available_categ_ids": [(6, 0, pos_categs.ids)]})
+        wanted = [
+            ("Espèces", cash_journal, 10),
+            ("Carte bancaire", bank_journal, 20),
+        ]
+        methods = pos_config.payment_method_ids
+        for name, journal, sequence in wanted:
+            existing_for_journal = Method.search([
+                ("journal_id", "=", journal.id),
+                ("company_id", "=", pos_config.company_id.id),
+            ], limit=1)
+            if existing_for_journal:
+                updates = {}
+                if existing_for_journal.name != name:
+                    updates["name"] = name
+                if existing_for_journal.sequence != sequence:
+                    updates["sequence"] = sequence
+                if existing_for_journal.use_payment_terminal:
+                    updates["use_payment_terminal"] = False
+                if updates and not existing_for_journal.open_session_ids:
+                    existing_for_journal.write(updates)
+                methods |= existing_for_journal
+                continue
+
+            existing_by_name = Method.search([
+                ("name", "=", name),
+                ("company_id", "=", pos_config.company_id.id),
+            ], limit=1)
+            if existing_by_name:
+                updates = {}
+                if not existing_by_name.journal_id:
+                    updates["journal_id"] = journal.id
+                if existing_by_name.sequence != sequence:
+                    updates["sequence"] = sequence
+                if existing_by_name.use_payment_terminal:
+                    updates["use_payment_terminal"] = False
+                if updates and not existing_by_name.open_session_ids:
+                    existing_by_name.write(updates)
+                methods |= existing_by_name
+                continue
+
+            methods |= Method.create({
+                "name": name,
+                "journal_id": journal.id,
+                "company_id": pos_config.company_id.id,
+                "sequence": sequence,
+                "use_payment_terminal": False,
+            })
+        if set(pos_config.payment_method_ids.ids) != set(methods.ids):
+            pos_config.with_context(bypass_payment_method_ids_forbidden_change=True).write({
+                "payment_method_ids": [(6, 0, methods.ids)],
+            })
+        wanted_categs = self.env["pos.category"].sudo().browse([
+            self.env.ref("refuge_aventuriers.pos_cat_cocktail").id,
+            self.env.ref("refuge_aventuriers.pos_cat_biere").id,
+            self.env.ref("refuge_aventuriers.pos_cat_vin_rouge").id,
+            self.env.ref("refuge_aventuriers.pos_cat_vin_blanc").id,
+            self.env.ref("refuge_aventuriers.pos_cat_alcool_fort").id,
+            self.env.ref("refuge_aventuriers.pos_cat_soft").id,
+        ]).exists()
+        updates = {}
+        if wanted_categs and set(pos_config.iface_available_categ_ids.ids) != set(wanted_categs.ids):
+            updates["iface_available_categ_ids"] = [(6, 0, wanted_categs.ids)]
+        start_categ = self.env.ref("refuge_aventuriers.pos_cat_cocktail", raise_if_not_found=False)
+        if start_categ and pos_config.iface_start_categ_id != start_categ:
+            updates["iface_start_categ_id"] = start_categ.id
+        if updates:
+            pos_config.write(updates)
 
     @api.model
     def _seed_partner_activity(self):

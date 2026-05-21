@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
+  <record id="base.main_company" model="res.company">
+    <field name="point_of_sale_update_stock_quantities">real</field>
+  </record>
   <record id="pos_config_refuge" model="pos.config">
     <field name="name">Bar — Le Refuge des Aventuriers</field>
+    <field name="iface_start_categ_id" ref="refuge_aventuriers.pos_cat_cocktail"/>
+    <field name="iface_available_categ_ids" eval="[(6, 0, [
+      ref('refuge_aventuriers.pos_cat_cocktail'),
+      ref('refuge_aventuriers.pos_cat_biere'),
+      ref('refuge_aventuriers.pos_cat_vin_rouge'),
+      ref('refuge_aventuriers.pos_cat_vin_blanc'),
+      ref('refuge_aventuriers.pos_cat_alcool_fort'),
+      ref('refuge_aventuriers.pos_cat_soft')
+    ])]"/>
+    <field name="receipt_header">Le Refuge des Aventuriers
+Bar d'altitude • Annecy
+Fidelite active au comptoir et a table</field>
+    <field name="receipt_footer">Merci pour votre visite.
+Vos points fidelite sont consultables et utilises a la caisse.</field>
   </record>
 </odoo>

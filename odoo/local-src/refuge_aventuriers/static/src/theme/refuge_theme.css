@@ -1,0 +1,199 @@
+/* ============================================================================
+   Refuge des Aventuriers — Design system partagé
+   Thème clair "Aventurier" par défaut, thème sombre via :root[data-theme=dark].
+   Toutes les apps (client, barman, clients, planning, accueil) consomment
+   ces tokens via var(--rf-*). Source de vérité unique des couleurs.
+   ========================================================================== */
+
+:root {
+    /* Surfaces */
+    --rf-bg: #FBF7F0;
+    --rf-surface: #FFFFFF;
+    --rf-surface-2: #F4EDE1;
+    --rf-surface-3: #EBE0CD;
+    /* Bordures */
+    --rf-border: #E4D9C5;
+    --rf-border-strong: #D2C2A4;
+    /* Texte */
+    --rf-text: #2A2420;
+    --rf-text-soft: #5C5247;
+    --rf-muted: #897D6D;
+    /* Accent terracotta */
+    --rf-accent: #C0532B;
+    --rf-accent-hover: #A8431F;
+    --rf-accent-soft: #F6E7DC;
+    --rf-on-accent: #FFFFFF;
+    /* Or fidélité */
+    --rf-gold: #9A6608;
+    --rf-gold-strong: #E0A92E;
+    --rf-gold-bg: #F8E9C6;
+    --rf-gold-border: #E6BD63;
+    /* Sémantique */
+    --rf-success: #2E7D5B;
+    --rf-success-bg: #DDF0E7;
+    --rf-success-border: #A9D8C2;
+    --rf-warn: #9A6308;
+    --rf-warn-bg: #F8E7C7;
+    --rf-warn-border: #E6BD63;
+    --rf-danger: #C0392B;
+    --rf-danger-bg: #F8DCD7;
+    --rf-danger-border: #E6A79E;
+    /* Effets */
+    --rf-shadow: 0 1px 2px rgba(42,36,32,.06), 0 6px 18px rgba(42,36,32,.07);
+    --rf-shadow-lg: 0 10px 30px rgba(42,36,32,.14);
+    --rf-radius: 14px;
+    --rf-radius-sm: 10px;
+    --rf-radius-pill: 999px;
+    --rf-focus: 0 0 0 3px rgba(192,83,43,.32);
+    --rf-overlay: rgba(42,36,32,.42);
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    --rf-bg: #15151A;
+    --rf-surface: #1F1F26;
+    --rf-surface-2: #26262F;
+    --rf-surface-3: #2F2F3A;
+    --rf-border: #34343F;
+    --rf-border-strong: #474754;
+    --rf-text: #F1F1F1;
+    --rf-text-soft: #C9C9D2;
+    --rf-muted: #9A9AA6;
+    --rf-accent: #DC7A50;
+    --rf-accent-hover: #E9905F;
+    --rf-accent-soft: #3A2A22;
+    --rf-on-accent: #1B0F08;
+    --rf-gold: #FFD06B;
+    --rf-gold-strong: #FFD06B;
+    --rf-gold-bg: #3A2F12;
+    --rf-gold-border: #5A4A1F;
+    --rf-success: #6EE0A4;
+    --rf-success-bg: rgba(51,201,122,.16);
+    --rf-success-border: rgba(51,201,122,.38);
+    --rf-warn: #F0B34D;
+    --rf-warn-bg: rgba(240,160,32,.16);
+    --rf-warn-border: rgba(240,160,32,.4);
+    --rf-danger: #FF8A8A;
+    --rf-danger-bg: rgba(246,102,102,.16);
+    --rf-danger-border: rgba(246,102,102,.45);
+    --rf-shadow: 0 2px 10px rgba(0,0,0,.35);
+    --rf-shadow-lg: 0 12px 34px rgba(0,0,0,.5);
+    --rf-overlay: rgba(0,0,0,.6);
+    color-scheme: dark;
+}
+
+/* ----------------------------- Base ------------------------------------- */
+body.refuge-client, body.refuge-barman, body.refuge-staff, body.refuge-planning {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--rf-bg);
+    color: var(--rf-text);
+    -webkit-text-size-adjust: 100%;
+    transition: background-color .2s ease, color .2s ease;
+}
+* { scrollbar-color: var(--rf-border-strong) transparent; }
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-thumb {
+    background: var(--rf-border-strong); border-radius: var(--rf-radius-pill);
+}
+:focus-visible {
+    outline: none;
+    box-shadow: var(--rf-focus);
+    border-radius: 6px;
+}
+
+/* --------------------------- Boutons ------------------------------------ */
+.refuge-btn {
+    border: 1px solid transparent;
+    border-radius: var(--rf-radius-sm);
+    padding: 0.7rem 1.05rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1.15;
+    transition: background-color .15s ease, border-color .15s ease,
+                transform .08s ease, color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.refuge-btn:active { transform: translateY(1px); }
+.refuge-btn-primary { background: var(--rf-accent); color: var(--rf-on-accent); }
+.refuge-btn-primary:hover { background: var(--rf-accent-hover); }
+.refuge-btn-ghost {
+    background: transparent; color: var(--rf-text);
+    border-color: var(--rf-border-strong);
+}
+.refuge-btn-ghost:hover { background: var(--rf-surface-2); }
+.refuge-btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+.refuge-btn-xs { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+
+/* --------------------------- Champs ------------------------------------- */
+.refuge-input {
+    width: 100%; box-sizing: border-box;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--rf-border-strong);
+    background: var(--rf-surface);
+    color: var(--rf-text);
+    border-radius: var(--rf-radius-sm);
+    font-size: 1rem;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.refuge-input::placeholder { color: var(--rf-muted); }
+.refuge-input:focus { outline: none; border-color: var(--rf-accent); box-shadow: var(--rf-focus); }
+
+/* --------------------------- Badges ------------------------------------- */
+.refuge-badge {
+    display: inline-block; padding: 0.18rem 0.55rem;
+    border-radius: var(--rf-radius-pill);
+    font-size: 0.78rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    border: 1px solid transparent;
+}
+.refuge-badge-new   { background: var(--rf-accent-soft); color: var(--rf-accent); border-color: var(--rf-accent); }
+.refuge-badge-prep  { background: var(--rf-warn-bg); color: var(--rf-warn); border-color: var(--rf-warn-border); }
+.refuge-badge-ready { background: var(--rf-success-bg); color: var(--rf-success); border-color: var(--rf-success-border); }
+
+/* ---------------------- En-tête unifié (AppHeader) ---------------------- */
+.rf-header {
+    display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.85rem 1.15rem;
+    background: var(--rf-surface);
+    border-bottom: 1px solid var(--rf-border);
+    position: sticky; top: 0; z-index: 20;
+    box-shadow: 0 1px 0 var(--rf-border);
+}
+.rf-header-back {
+    flex: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.5rem; height: 2.5rem; border-radius: var(--rf-radius-sm);
+    background: var(--rf-surface-2); color: var(--rf-text);
+    border: 1px solid var(--rf-border); cursor: pointer;
+    font-size: 1.25rem; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+.rf-header-back:hover { background: var(--rf-surface-3); border-color: var(--rf-border-strong); }
+.rf-header-titles { flex: 1; min-width: 0; }
+.rf-header-title {
+    font-size: 1.15rem; font-weight: 800; color: var(--rf-text);
+    line-height: 1.15; letter-spacing: -0.01em;
+}
+.rf-header-sub {
+    font-size: 0.82rem; color: var(--rf-muted); margin-top: 0.1rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rf-header-actions { display: flex; align-items: center; gap: 0.6rem; flex: none; }
+.rf-header-user {
+    font-size: 0.9rem; font-weight: 700; color: var(--rf-text-soft);
+    max-width: 11rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rf-iconbtn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.5rem; height: 2.5rem; border-radius: var(--rf-radius-sm);
+    background: var(--rf-surface-2); color: var(--rf-text);
+    border: 1px solid var(--rf-border); cursor: pointer;
+    font-size: 1.1rem; text-decoration: none;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+.rf-iconbtn:hover { background: var(--rf-surface-3); border-color: var(--rf-border-strong); }
+
+/* Utilitaires */
+.rf-spacer { flex: 1; }

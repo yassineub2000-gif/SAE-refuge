@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!--
+    Comptes employés (un par tablette). Login = email pro. Chaque utilisateur
+    est interne (base.group_user) + Staff Refuge, et rattaché à sa fiche
+    hr.employee.
+
+    Le mot de passe commun par défaut ("refuge") est posé par le post_init_hook
+    `post_init_refuge_staff` : uniquement à l'installation, jamais sur -u, pour
+    ne pas réinitialiser un mot de passe changé en production. (Le champ
+    `password` n'est pas fiable via les données XML.)
+  -->
+
+  <!-- L'employé « Pierre Leblanc » du jeu de données initial est en réalité
+       Corentin Leblanc (correction spec client). On garde le xmlid pour la
+       continuité, on renomme name + login + email. -->
+  <record id="user_pierre_leblanc" model="res.users">
+    <field name="name">Corentin Leblanc</field>
+    <field name="login">corentin.leblanc@refuge-aventuriers.fr</field>
+    <field name="email">corentin.leblanc@refuge-aventuriers.fr</field>
+    <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('refuge_aventuriers.group_refuge_staff')])]"/>
+  </record>
+
+  <record id="user_marlene_dupont" model="res.users">
+    <field name="name">Marlène Dupont</field>
+    <field name="login">marlene.dupont@refuge-aventuriers.fr</field>
+    <field name="email">marlene.dupont@refuge-aventuriers.fr</field>
+    <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('refuge_aventuriers.group_refuge_staff')])]"/>
+  </record>
+
+  <record id="user_anthony_faure" model="res.users">
+    <field name="name">Anthony Faure</field>
+    <field name="login">anthony.faure@refuge-aventuriers.fr</field>
+    <field name="email">anthony.faure@refuge-aventuriers.fr</field>
+    <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('refuge_aventuriers.group_refuge_staff')])]"/>
+  </record>
+
+  <record id="user_julie_perrin" model="res.users">
+    <field name="name">Julie Perrin</field>
+    <field name="login">julie.perrin@refuge-aventuriers.fr</field>
+    <field name="email">julie.perrin@refuge-aventuriers.fr</field>
+    <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('refuge_aventuriers.group_refuge_staff')])]"/>
+  </record>
+
+  <!--
+    Rattachement employé ↔ utilisateur. Les fiches hr.employee sont en
+    noupdate=1 : impossible de poser user_id via <record>. On appelle donc
+    une méthode idempotente qui matche par email à chaque mise à jour.
+  -->
+  <function model="hr.employee" name="_refuge_link_staff_users"/>
+</odoo>
