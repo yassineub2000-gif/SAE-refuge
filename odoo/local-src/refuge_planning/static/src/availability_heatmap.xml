@@ -33,8 +33,9 @@
             <t t-foreach="days" t-as="day" t-key="day">
               <button class="rp-heatmap-status-btn"
                       t-att-class="statusMeta(emp.id, day).cls"
-                      disabled="disabled"
-                      t-att-title="lockReason(emp.id)">
+                      t-att-disabled="!canEdit(emp.id)"
+                      t-on-click="() => this.toggleDay(emp.id, day)"
+                      t-att-title="canEdit(emp.id) ? 'Cliquer pour basculer disponible / indisponible' : lockReason(emp.id)">
                 <span class="rp-heatmap-status-short"><t t-esc="statusMeta(emp.id, day).short"/></span>
                 <span class="rp-heatmap-status-text"><t t-esc="statusMeta(emp.id, day).label"/></span>
               </button>
@@ -47,7 +48,8 @@
               <t t-foreach="days" t-as="day" t-key="day">
                 <button class="rp-heatmap-slot"
                         t-att-class="isOn(emp.id, day, slot) ? 'is-on' : 'is-off'"
-                        disabled="disabled"
+                        t-att-disabled="!canEdit(emp.id)"
+                        t-on-click="() => this.toggleSlot(emp.id, day, slot)"
                         t-att-title="slotTitle(emp.id, day, slot)"
                         >
                   <span class="rp-heatmap-slot-dot"/>
@@ -58,8 +60,8 @@
         </div>
 
         <div class="rp-heatmap-legend">
-          <span><strong>Lecture seule</strong> dans l’application planning.</span>
-          <span>Les disponibilités se consultent ici et se modifient directement dans Odoo.</span>
+          <span t-if="canEdit(emp.id)">Cliquer le <strong>Statut</strong> bascule la journée ; cliquer une case bascule le créneau.</span>
+          <span t-else=""><strong>Lecture seule</strong> — vous ne pouvez éditer que votre propre ligne.</span>
           <span class="rp-heatmap-pill is-on">Disponible</span>
           <span class="rp-heatmap-pill is-off">Indisponible</span>
         </div>

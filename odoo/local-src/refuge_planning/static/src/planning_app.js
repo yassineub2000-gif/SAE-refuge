@@ -119,6 +119,36 @@ export class PlanningApp extends Component {
         this.state.tab = tab;
     }
 
+    /* ------------------------------------------- disponibilités (édition) */
+
+    /** Persiste un masque demi-heure pour un (employé, jour). Mise à jour
+     *  optimiste locale (retour visuel immédiat au clic), puis RPC ;
+     *  resync si le serveur refuse. */
+    async onAvailMask(empId, weekday, mask) {
+        const existing = this.state.availabilities.find(
+            (a) => a.employee_id === empId && a.weekday === weekday);
+        const status = mask.includes("1") ? "available" : "unavailable";
+        if (existing) {
+            existing.slot_mask = mask;
+            existing.status = status;
+        } else {
+            this.state.availabilities.push({
+                employee_id: empId, weekday, slot_mask: mask, status,
+                pref_start: 10, pref_end: 25, hour_preference: "flexible",
+            });
+        }
+        try {
+            await refugeRpc("/refuge/api/planning/set_mask", {
+                employee_id: empId, weekday, mask, status,
+            });
+        } catch (e) {
+            this.state.error = e.message === "not_allowed"
+                ? "Vous ne pouvez modifier que vos propres disponibilités."
+                : e.message;
+            await this.fetchState();
+        }
+    }
+
     /* ---------------------------------------------- shifts (manager) */
 
     async generate() {

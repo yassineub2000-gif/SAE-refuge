@@ -64,26 +64,23 @@
         <!-- ============================== Onglet PLANNING ============== -->
         <section t-if="state.tab === 'planning'" class="rp-tab-pane">
           <SummaryCards employees="state.employees" shifts="state.shifts"/>
-          <div class="rp-manager-layout">
-            <div class="rp-manager-main">
-              <WeekCalendar employees="state.employees"
-                            shifts="state.shifts"
-                            weekStart="state.weekStart"
-                            canManage="state.isAdmin"
-                            ownEmployeeId="state.ownEmployeeId"
-                            onValidateShift.bind="validateShift"
-                            onCancelShift.bind="cancelShift"
-                            onDeleteShift.bind="deleteShift"
-                            onEditShift.bind="editShift"/>
-              <ShiftTable shifts="state.shifts"
-                          employees="state.employees"
-                          weekStart="state.weekStart"
-                          onSetState.bind="_setShiftState"
-                          onDelete.bind="deleteShift"
-                          onEdit.bind="editShift"/>
-            </div>
+          <WeekCalendar employees="state.employees"
+                        shifts="state.shifts"
+                        weekStart="state.weekStart"
+                        canManage="state.isAdmin"
+                        ownEmployeeId="state.ownEmployeeId"
+                        onValidateShift.bind="validateShift"
+                        onCancelShift.bind="cancelShift"
+                        onDeleteShift.bind="deleteShift"
+                        onEditShift.bind="editShift"/>
+          <ShiftTable shifts="state.shifts"
+                      employees="state.employees"
+                      weekStart="state.weekStart"
+                      onSetState.bind="_setShiftState"
+                      onDelete.bind="deleteShift"
+                      onEdit.bind="editShift"/>
 
-            <aside t-if="state.isAdmin" class="rp-manager-side">
+          <div t-if="state.isAdmin" class="rp-manager-tools">
               <div class="rp-side-card">
                 <h3>Édition manuelle</h3>
                 <p class="rp-side-copy">
@@ -181,25 +178,31 @@
                   … +<t t-esc="state.lastReport.uncovered.length - 24"/> autres
                 </p>
               </div>
-            </aside>
           </div>
         </section>
 
         <section t-if="state.tab === 'avail'" class="rp-tab-pane">
           <p class="rp-avail-intro">
-            Les préférences de disponibilité sont consultables ici par
-            <strong>demi-heure</strong> sur toute l'amplitude d'ouverture du bar.
+            Disponibilités par <strong>demi-heure</strong> sur toute l'amplitude
+            d'ouverture du bar. Cliquer sur le bouton <strong>Statut</strong>
+            d'un jour pour le basculer disponible / indisponible, ou sur une
+            case horaire pour activer / désactiver ce créneau précis.
           </p>
           <div class="rp-avail-info">
-            <strong>Consultation uniquement.</strong>
-            <br/>
-            Les disponibilités affichées ici servent de référence au planning
-            automatique. Leur modification se fait directement dans Odoo.
+            <t t-if="state.isAdmin">
+              <strong>Gérant.</strong> Vous éditez les disponibilités de tous
+              les employés ; elles alimentent la génération automatique.
+            </t>
+            <t t-else="">
+              <strong>Édition personnelle.</strong> Vous ne modifiez que votre
+              propre ligne ; les autres sont en lecture seule.
+            </t>
           </div>
           <AvailabilityHeatmap employees="state.employees"
                                availabilities="state.availabilities"
                                ownEmployeeId="state.ownEmployeeId"
-                               isAdmin="state.isAdmin"/>
+                               isAdmin="state.isAdmin"
+                               onSetMask.bind="onAvailMask"/>
         </section>
 
         <section t-if="state.tab === 'me'" class="rp-tab-pane">

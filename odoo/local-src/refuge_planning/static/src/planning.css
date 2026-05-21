@@ -36,8 +36,20 @@
     gap: 1rem;
     align-items: start;
 }
-.rp-manager-main { display: flex; flex-direction: column; gap: 1rem; }
-.rp-manager-side { display: flex; flex-direction: column; gap: 1rem; }
+/* min-width:0 : sans ça, le contenu intrinsèque (tableau des shifts) déborde
+   de sa colonne de grille et recouvre l'aside « Édition manuelle ». */
+.rp-manager-main { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.rp-manager-side { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+/* Outils gérant sous le calendrier/tableau : cartes en pleine largeur qui
+   se répartissent et se replient sans jamais comprimer le tableau. */
+.rp-manager-tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    align-items: start;
+    margin-top: 1rem;
+}
+.rp-manager-tools > * { min-width: 0; }
 .rp-side-card {
     background: var(--rf-surface);
     border: 1px solid var(--rf-border);
@@ -115,6 +127,7 @@
     background: var(--rf-surface); border: 1px solid var(--rf-border);
     border-radius: var(--rf-radius); box-shadow: var(--rf-shadow);
     padding: 0.75rem; overflow-x: auto;
+    margin-bottom: 1rem;
 }
 .rp-cal {
     display: grid;
@@ -454,6 +467,11 @@
     border-radius: var(--rf-radius-sm);
     margin-bottom: 1rem;
 }
+/* Cases éditables du heatmap : curseur cliquable + retour au survol. */
+.rp-heatmap-slot:not([disabled]),
+.rp-heatmap-status-btn:not([disabled]) { cursor: pointer; }
+.rp-heatmap-slot:not([disabled]):hover { outline: 2px solid var(--rf-accent); outline-offset: -2px; }
+.rp-heatmap-status-btn:not([disabled]):hover { filter: brightness(0.95); }
 
 /* anciennes classes conservées */
 .refuge-planning-root { padding: 1.5rem; max-width: 1280px; margin: 0 auto; }
@@ -534,8 +552,9 @@
 }
 
 /* Shift week view */
-.refuge-shift-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
-@media (max-width: 900px) { .refuge-shift-week { grid-template-columns: repeat(2, 1fr); } }
+/* auto-fill : 6 jours d'ouverture occupent toute la largeur disponible et se
+   replient proprement sur écran étroit, sans colonne vide ni écrasement. */
+.refuge-shift-week { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; }
 .refuge-shift-day {
     background: var(--rf-surface); border: 1px solid var(--rf-border);
     border-radius: var(--rf-radius); padding: 0.5rem; min-height: 10rem;

@@ -40,8 +40,12 @@ class RefugePlanningController(http.Controller):
         )
 
     def _check_can_edit_employee(self, employee_id):
-        """Les disponibilités sont consultatives dans l'app OWL."""
-        return False
+        """Le gérant édite les disponibilités de tout le monde ; un employé
+        ne peut éditer que sa propre ligne."""
+        if self._is_admin():
+            return True
+        own = self._own_employee()
+        return bool(own) and own.id == int(employee_id)
 
     @http.route("/refuge/api/planning/state", type="json", auth="user")
     def api_state(self, week_start=None, **kw):

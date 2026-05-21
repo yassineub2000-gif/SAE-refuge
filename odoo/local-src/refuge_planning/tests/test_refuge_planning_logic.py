@@ -57,6 +57,43 @@ class TestRefugePlanningLogic(TransactionCase):
                 "end_time": 14.0,
             })
 
+    def test_shift_respects_weekly_contract_limit(self):
+        self.shift_model.create({
+            "employee_id": self.employee.id,
+            "date": self.tuesday,
+            "start_time": 10.0,
+            "end_time": 18.0,
+        })
+        self.shift_model.create({
+            "employee_id": self.employee.id,
+            "date": self.monday + timedelta(days=3),
+            "start_time": 10.0,
+            "end_time": 18.0,
+        })
+        self.shift_model.create({
+            "employee_id": self.employee.id,
+            "date": self.monday + timedelta(days=5),
+            "start_time": 10.0,
+            "end_time": 18.0,
+        })
+
+        with self.assertRaises(ValidationError):
+            self.shift_model.create({
+                "employee_id": self.employee.id,
+                "date": self.monday + timedelta(days=6),
+                "start_time": 10.0,
+                "end_time": 12.0,
+            })
+
+    def test_shift_requires_half_hour_granularity(self):
+        with self.assertRaises(ValidationError):
+            self.shift_model.create({
+                "employee_id": self.employee.id,
+                "date": self.tuesday,
+                "start_time": 10.25,
+                "end_time": 14.0,
+            })
+
     def test_generator_preserves_manual_shifts(self):
         manual_shift = self.shift_model.create({
             "employee_id": self.other_employee.id,

@@ -28,6 +28,7 @@ export class AvailabilityHeatmap extends Component {
         availabilities: Array,
         ownEmployeeId: { type: [Number, { value: false }], optional: true },
         isAdmin: { type: Boolean, optional: true },
+        onSetMask: { type: Function, optional: true },
     };
 
     /* --- Lecture du mask courant --- */
@@ -51,13 +52,36 @@ export class AvailabilityHeatmap extends Component {
     statusMeta(empId, weekday) {
         return STATUS_META[this.statusFor(empId, weekday)] || STATUS_META.unavailable;
     }
-    lockReason() {
-        return "Consultation uniquement : les disponibilités se modifient directement dans Odoo.";
+    lockReason(empId) {
+        if (this.canEdit(empId)) return "";
+        return "Lecture seule — vous ne pouvez éditer que votre propre ligne.";
     }
 
     /* --- Permissions --- */
+    /** Le gérant édite tout le monde ; un employé seulement sa propre ligne. */
     canEdit(empId) {
-        return false;
+        if (this.props.isAdmin) return true;
+        return !!this.props.ownEmployeeId && empId === this.props.ownEmployeeId;
+    }
+
+    /* --- Édition --- */
+    _emit(empId, weekday, mask) {
+        if (this.props.onSetMask) {
+            this.props.onSetMask(empId, weekday, mask);
+        }
+    }
+    /** Bascule la journée entière : si dispo → tout couper, sinon tout ouvrir. */
+    toggleDay(empId, weekday) {
+        if (!this.canEdit(empId)) return;
+        const on = this.maskFor(empId, weekday).includes("1");
+        this._emit(empId, weekday, (on ? "0" : "1").repeat(SLOTS));
+    }
+    /** Active / désactive un créneau de 30 min. */
+    toggleSlot(empId, weekday, slot) {
+        if (!this.canEdit(empId)) return;
+        const mask = this.maskFor(empId, weekday).padEnd(SLOTS, "0").split("");
+        mask[slot] = mask[slot] === "1" ? "0" : "1";
+        this._emit(empId, weekday, mask.join(""));
     }
 
     /* --- Affichage --- */
